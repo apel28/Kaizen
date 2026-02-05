@@ -58,15 +58,15 @@ export async function register(req, res) {
 
     
     if(await checkMailExists(email)) {
-        return res.json({
-            "error":1, 
-        })
+        return res.status(409).json({
+            error:"Mail exists",
+        });
     }
     
     if(await personExists(nid)) {
-        return res.json({
-            "error":2,
-        })
+        return res.status(409).json({
+            error:"Person exisits",
+        });
     }
     
     console.log("Here");
@@ -88,8 +88,8 @@ export async function register(req, res) {
         RETURNING *;
         `, [user_id, first_name, middle_name, last_name, date_of_birth, address, contact_info, emergency_contact, gender, nid, nationality]);
 
-    res.json({
-        "result":"ok",
+    res.satus(201).json({
+        result:"ok",
     })
 }
 

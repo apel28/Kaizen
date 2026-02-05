@@ -1,2 +1,41 @@
-1,emailExists
-2,personExists
+200 OK
+- Request succeeded
+- Use for successful GET, PATCH, general success
+
+201 Created
+- Resource successfully created
+- Use after POST that creates something
+
+204 No Content
+- Request succeeded, no response body
+- Use for DELETE, logout, silent updates
+
+
+400 Bad Request
+- Invalid request data
+- Validation errors, malformed JSON, missing fields
+
+401 Unauthorized
+- Authentication failed or missing
+- Invalid credentials, missing/invalid token
+
+403 Forbidden
+- Authenticated but not allowed
+- User lacks permission
+
+404 Not Found
+- Resource does not exist
+- Invalid route or missing resource
+
+409 Conflict
+- Request conflicts with current state
+- Duplicate email, unique constraint violation
+
+429 Too Many Requests
+- Rate limit exceeded
+- Too many login attempts or API calls
+
+
+500 Internal Server Error
+- Server-side failure
+- Unexpected crash, unhandled exception

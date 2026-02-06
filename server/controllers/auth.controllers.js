@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 
 export async function authorize(req, res) {
     const {email, password} = req.body;
+    const ipaddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    console.log(ipaddress);
     try {
 
         const queryResult = await pool.query(`
@@ -44,9 +46,9 @@ export async function authorize(req, res) {
         const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
         await pool.query(
-            `INSERT INTO refresh_tokens (user_id, token_hash, expires_at) 
-            VALUES ($1, $2, $3)`,
-            [user.user_id, hashedToken, expiresAt]
+            `INSERT INTO refresh_tokens (user_id, token_hash, expires_at, ipaddress) 
+            VALUES ($1, $2, $3, $4)`,
+            [user.user_id, hashedToken, expiresAt, ipaddress]
         );
 
         res.cookie("access_token", accessToken, {

@@ -1,4 +1,4 @@
-import pool from "./db.js";
+import pool from "../db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -24,8 +24,8 @@ export async function verifyAuth(req, res, next) {
 
         } catch (err) {
 
-            if (err.name !== "TokenExpiredError") {
-                return res.sendStatus(401);
+            if (err.name !== "TokenExpiredError") { //keep, as if i have to issue tokens for every case, lot to handle
+                return res.sendStatus(401); 
             }
 
         }

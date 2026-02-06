@@ -68,8 +68,6 @@ export async function register(req, res) {
             error:"Person exisits",
         });
     }
-    
-    console.log("Here");
 
     const user_id = await genUserId(role);
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -88,7 +86,7 @@ export async function register(req, res) {
         RETURNING *;
         `, [user_id, first_name, middle_name, last_name, date_of_birth, address, contact_info, emergency_contact, gender, nid, nationality]);
 
-    res.satus(201).json({
+    res.status(201).json({
         result:"ok",
     })
 }

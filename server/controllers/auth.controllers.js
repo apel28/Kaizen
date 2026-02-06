@@ -1,10 +1,11 @@
-import pool from "./db.js";
+import pool from "../db.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken"; 
 
 export async function authorize(req, res) {
     const {email, password} = req.body;
     try {
+
         const queryResult = await pool.query(`
             SELECT *
             FROM "user"
@@ -62,8 +63,7 @@ export async function authorize(req, res) {
             maxAge: 7 * 24 * 60 * 60 * 1000, 
         });
 
-        res.json({ message: "Login successful", user_id: user.user_id, role: user.role });
-
+        res.status(200).json({ message: "Login successful", user_id: user.user_id, role: user.role });
 
 
     } catch(error) {

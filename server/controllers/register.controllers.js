@@ -42,15 +42,15 @@ async function personExists(nid) {
 export async function register(req, res) {
     const {
         first_name,
-        middle_name,
+        middle_name, // null
         last_name,
         date_of_birth,
-        address,
+        address, //null
         contact_info, 
-        emergency_contact,
-        gender,
+        emergency_contact, //null
+        gender, //null
         nid, 
-        nationality,
+        nationality, //null
         email, 
         password,
         role

@@ -1,7 +1,50 @@
 .DS_Store
-
 server/.env
-
 tester.txt
-
 cookies.txt
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Distribution and build directories
+build/
+dist/
+*.tgz
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Environment variables
+.env
+.env.local
+
+# IDE-specific files
+.idea/         # JetBrains IDEs
+.vscode/       # VS Code
+*.iml          # IntelliJ project files
+
+# OS-specific files
+.DS_Store      # macOS
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+

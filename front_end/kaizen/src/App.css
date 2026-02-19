@@ -14,7 +14,7 @@ body {
     radial-gradient(
       ellipse 90% 70% at 50% 40%,
       rgba(30, 20, 60, 0.2) 0%,
-      rgba(10, 40, 30, 0.12) 40%,
+      rgba(55, 48, 163, 0.12) 40%,
       transparent 70%
     ),
     linear-gradient(
@@ -22,9 +22,9 @@ body {
       #0a0e14 0%,
       #0a0a18 18%,
       #0f0a1a 30%,
-      #0a1418 50%,
-      #0a1a14 65%,
-      #0d2818 80%,
+      #111827 50%,
+      #1f2937 65%,
+      #1e1b4b 80%,
       #0a0e14 100%
     );
   background-size:
@@ -102,7 +102,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.7),
-    rgba(10, 50, 40, 0.6)
+    rgba(30, 64, 175, 0.6)
   );
   border-radius: 4px;
 }
@@ -136,7 +136,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.65),
-    rgba(20, 40, 50, 0.55)
+    rgba(55, 48, 163, 0.55)
   );
 }
 
@@ -152,8 +152,8 @@ body {
 .particle-2::after {
   background: linear-gradient(
     135deg,
-    rgba(10, 50, 40, 0.65),
-    rgba(15, 35, 45, 0.55)
+    rgba(30, 64, 175, 0.65),
+    rgba(55, 48, 163, 0.55)
   );
 }
 
@@ -170,7 +170,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(25, 25, 55, 0.6),
-    rgba(10, 45, 35, 0.55)
+    rgba(55, 48, 163, 0.55)
   );
 }
 
@@ -186,8 +186,8 @@ body {
 .particle-4::after {
   background: linear-gradient(
     135deg,
-    rgba(10, 45, 35, 0.65),
-    rgba(20, 30, 50, 0.5)
+    rgba(30, 64, 175, 0.65),
+    rgba(55, 48, 163, 0.5)
   );
 }
 
@@ -204,7 +204,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.55),
-    rgba(10, 50, 40, 0.55)
+    rgba(30, 64, 175, 0.55)
   );
 }
 
@@ -221,7 +221,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(25, 25, 55, 0.6),
-    rgba(10, 50, 40, 0.55)
+    rgba(30, 64, 175, 0.55)
   );
 }
 
@@ -237,7 +237,7 @@ body {
 .particle-7::after {
   background: linear-gradient(
     135deg,
-    rgba(10, 50, 40, 0.6),
+    rgba(30, 64, 175, 0.6),
     rgba(25, 25, 55, 0.5)
   );
 }
@@ -255,7 +255,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.55),
-    rgba(10, 45, 35, 0.55)
+    rgba(55, 48, 163, 0.55)
   );
 }
 
@@ -399,7 +399,8 @@ body {
   padding: 2rem;
   position: relative;
   z-index: 2;
-  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+  transition:
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -433,7 +434,7 @@ body {
   height: auto;
   display: block;
   filter: drop-shadow(0 0 40px rgba(30, 20, 60, 0.25))
-    drop-shadow(0 0 80px rgba(10, 50, 40, 0.2));
+    drop-shadow(0 0 80px rgba(30, 64, 175, 0.2));
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 1.2s ease-out 0.3s forwards;
@@ -453,7 +454,7 @@ body {
   animation: fadeInUp 1.2s ease-out 0.6s forwards;
   text-shadow:
     0 2px 20px rgba(30, 20, 60, 0.3),
-    0 4px 40px rgba(10, 50, 40, 0.25);
+    0 4px 40px rgba(30, 64, 175, 0.25);
 }
 
 .btn-get-started {
@@ -467,7 +468,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.4),
-    rgba(10, 50, 40, 0.4)
+    rgba(30, 64, 175, 0.4)
   );
   border: 1px solid rgba(30, 20, 60, 0.5);
   border-radius: 8px;
@@ -477,18 +478,18 @@ body {
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 1.2s ease-out 0.9s forwards;
-  box-shadow: 0 4px 24px rgba(10, 50, 40, 0.25);
+  box-shadow: 0 4px 24px rgba(30, 64, 175, 0.25);
 }
 
 .btn-get-started:hover {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.55),
-    rgba(10, 50, 40, 0.55)
+    rgba(30, 64, 175, 0.55)
   );
   border-color: rgba(30, 20, 60, 0.65);
   box-shadow:
-    0 8px 40px rgba(10, 50, 40, 0.35),
+    0 8px 40px rgba(30, 64, 175, 0.35),
     0 0 60px rgba(30, 20, 60, 0.2);
   transform: translateY(-2px);
 }
@@ -501,7 +502,7 @@ body {
 
 .btn-get-started:active {
   transform: translateY(0);
-  box-shadow: 0 2px 16px rgba(10, 50, 40, 0.3);
+  box-shadow: 0 2px 16px rgba(30, 64, 175, 0.3);
 }
 
 .form-section {
@@ -512,7 +513,8 @@ body {
   padding: 2rem;
   position: relative;
   z-index: 2;
-  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+  transition:
+    opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -565,7 +567,9 @@ body {
   border: 1px solid rgba(30, 20, 60, 0.5);
   border-radius: 8px;
   color: rgba(255, 255, 255, 0.95);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .form-group input::placeholder {
@@ -588,7 +592,7 @@ body {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.5),
-    rgba(10, 50, 40, 0.5)
+    rgba(30, 64, 175, 0.5)
   );
   border: 1px solid rgba(30, 20, 60, 0.5);
   border-radius: 8px;
@@ -602,10 +606,10 @@ body {
   background: linear-gradient(
     135deg,
     rgba(30, 20, 60, 0.65),
-    rgba(10, 50, 40, 0.65)
+    rgba(30, 64, 175, 0.65)
   );
   border-color: rgba(30, 20, 60, 0.7);
-  box-shadow: 0 4px 24px rgba(10, 50, 40, 0.3);
+  box-shadow: 0 4px 24px rgba(30, 64, 175, 0.3);
 }
 
 .btn-submit:focus {

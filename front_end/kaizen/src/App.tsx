@@ -79,13 +79,12 @@ function App() {
             {/* Sign Up Container */}
             <div className="form-container sign-up-container">
               <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
-                <h1 className="font-bold text-2xl mb-4">Create Account</h1>
+                <h1 className="font-bold text-2xl mb-4 mt-10 pt-15">
+                  Create Account
+                </h1>
                 <div className="social-container">
                   {/* Social icons can go here if needed */}
                 </div>
-                <span className="text-sm mb-4">
-                  or use your email for registration
-                </span>
 
                 <div className="scrollable-inputs">
                   <div className="input-group-row">
@@ -139,12 +138,13 @@ function App() {
             {/* Sign In Container */}
             <div className="form-container sign-in-container">
               <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
-                <h1 className="font-bold text-3xl mb-4">Sign in</h1>
-                <div className="social-container">{/* Social icons */}</div>
-                <span className="text-sm mb-6">or use your account</span>
+                <h1 className="font-bold text-3xl mb-16">Sign in</h1>
                 <input type="email" placeholder="Email" required />
                 <input type="password" placeholder="Password" required />
-                <a href="#" className="forgot-password">
+                <a
+                  href="mailto:support@example.com?subject=Forgot Password&body=I forgot my password pls yelp"
+                  className="forgot-password"
+                >
                   Forgot your password?
                 </a>
                 <button className="btn-auth mt-4">Sign In</button>
@@ -168,9 +168,9 @@ function App() {
                   </button>
                 </div>
                 <div className="overlay-panel overlay-right">
-                  <h1 className="font-bold text-3xl mb-4">Hello, Friend!</h1>
+                  <h1 className="font-bold text-3xl mb-4">Hello, Newbie!</h1>
                   <p className="mb-8">
-                    Enter your personal details and start your journey with us
+                    New here? Enter your details and start your journey with us
                   </p>
                   <button
                     className="btn-ghost"
@@ -183,6 +183,18 @@ function App() {
             </div>
           </div>
         </section>
+        <footer className="footer-section">
+          <div className="footer-content">
+            <p>
+              &copy; {new Date().getFullYear()} Kaizen. All rights reserved.
+            </p>
+            <div className="footer-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Contact Us</a>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );

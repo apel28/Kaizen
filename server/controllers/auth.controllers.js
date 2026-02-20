@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken"; 
 
 export async function authorize(req, res) {
+
     const {email, password} = req.body;
     const ipaddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log(ipaddress);
     try {
 
         const queryResult = await pool.query(`

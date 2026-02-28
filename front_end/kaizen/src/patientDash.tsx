@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import "./landingPg.css";
+import { useEffect, useState } from "react";
 import "./patientDash.css";
-import kaizenLogo from "./assets/kaizen-logo.png";
 
 type PatientPage =
   | "Home"
@@ -11,375 +9,305 @@ type PatientPage =
   | "Tests"
   | "Medication";
 
-const NAV_ITEMS: { id: PatientPage; label: string }[] = [
-  { id: "Home", label: "Home" },
-  { id: "Appointment", label: "Appointment" },
-  { id: "Prescription", label: "Prescription" },
-  { id: "Schedule", label: "Schedule" },
-  { id: "Tests", label: "Tests" },
-  { id: "Medication", label: "Medication" },
+const NAV_ITEMS: { id: PatientPage; label: string; icon: string }[] = [
+  { id: "Home", label: "Home", icon: "🏠" },
+  { id: "Appointment", label: "Appointment", icon: "📅" },
+  { id: "Prescription", label: "Prescription", icon: "💊" },
+  { id: "Schedule", label: "Schedule", icon: "🕒" },
+  { id: "Tests", label: "Tests", icon: "🧪" },
+  { id: "Medication", label: "Medication", icon: "📦" },
 ];
 
-const TODAY_TIPS = [
-  "Pause for 3 deep breaths before you move to the next task.",
-  "Sip some water and straighten your posture for a moment.",
-  "A short stretch break can reset both body and mind.",
-  "Write down one small health win you had today.",
-  "Look away from the screen and soften your eyes for 20 seconds.",
-  "Stand up, roll your shoulders, and take a slow walk around the room.",
+const HEALTH_METRICS = [
+  {
+    label: "Heart Rate",
+    value: "72",
+    unit: "bpm",
+    status: "Normal",
+    icon: "❤️",
+    trend: "up",
+  },
+  {
+    label: "Blood Sugar",
+    value: "110",
+    unit: "mg/dL",
+    status: "Optimal",
+    icon: "🩸",
+    trend: "down",
+  },
+  {
+    label: "BMI",
+    value: "22.4",
+    unit: "kg/m²",
+    status: "Healthy",
+    icon: "⚖️",
+    trend: "stable",
+  },
+  {
+    label: "Sleep",
+    value: "7.5",
+    unit: "hrs",
+    status: "Good",
+    icon: "🌙",
+    trend: "up",
+  },
+];
+
+const UPCOMING_APPOINTMENTS = [
+  {
+    doctor: "Dr. Sarah Smith",
+    specialty: "Cardiologist",
+    date: "Feb 28",
+    time: "10:30 AM",
+    type: "Check-up",
+    status: "Confirmed",
+  },
+  {
+    doctor: "Dr. Mark Ranson",
+    specialty: "Dermatologist",
+    date: "Mar 02",
+    time: "02:15 PM",
+    type: "Follow-up",
+    status: "Pending",
+  },
+];
+
+const ACTIVE_MEDICATIONS = [
+  {
+    name: "Amoxicillin",
+    dosage: "500mg",
+    schedule: "Twice a day",
+    remaining: "12 days",
+    color: "#6366f1",
+  },
+  {
+    name: "Lisinopril",
+    dosage: "10mg",
+    schedule: "Once a day",
+    remaining: "Ongoing",
+    color: "#10b981",
+  },
 ];
 
 function PatientDash() {
   const [activePage, setActivePage] = useState<PatientPage>("Home");
-  const [isLightMain, setIsLightMain] = useState(false);
-  const [tipIndex, setTipIndex] = useState(
-    () => Math.floor(Math.random() * TODAY_TIPS.length),
-  );
-
-  const pageSubtitle = useMemo(() => {
-    switch (activePage) {
-      case "Appointment":
-        return "Review and manage your upcoming visits.";
-      case "Prescription":
-        return "See your current prescriptions at a glance.";
-      case "Schedule":
-        return "Plan your week and never miss a routine.";
-      case "Tests":
-        return "Track lab tests and recent results.";
-      case "Medication":
-        return "Stay on top of your daily medications.";
-      case "Home":
-      default:
-        return "Here’s a snapshot of your health today.";
-    }
-  }, [activePage]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (!TODAY_TIPS.length) return;
-    const id = window.setInterval(() => {
-      setTipIndex((prev) => (prev + 1) % TODAY_TIPS.length);
-    }, 60_000);
-    return () => window.clearInterval(id);
+    setIsLoaded(true);
   }, []);
 
   return (
-    <>
-      <div className="particles">
-        <div className="particle particle-1" />
-        <div className="particle particle-2" />
-        <div className="particle particle-3" />
-        <div className="particle particle-4" />
-        <div className="particle particle-5" />
-        <div className="particle particle-6" />
-        <div className="particle particle-7" />
-        <div className="particle particle-8" />
-      </div>
-
-      <div className="pdash-root">
-        <div className="pdash-shell">
-          <aside className="pdash-sidebar">
-            <div className="pdash-brand">
-              <div className="pdash-brand-logo-wrap">
-                <img
-                  src={kaizenLogo}
-                  alt="Kaizen logo"
-                  className="pdash-brand-logo"
-                />
+    <div className={`pd3-page ${isLoaded ? "pd3-page-loaded" : ""}`}>
+      <div className="pd3-shell">
+        <aside className="pd3-sidebar">
+          <div className="pd3-sidebar-inner">
+            <header className="pd3-brand">
+              <div className="pd3-brand-logo">
+                <div className="pd3-brand-icon" />
               </div>
-              <div className="pdash-brand-text">
-                <span className="pdash-brand-eyebrow">Kaizen</span>
-                <span className="pdash-brand-title">Patient Space</span>
-              </div>
-            </div>
+              <span className="pd3-brand-name">Kaizen</span>
+            </header>
 
-            <nav className="pdash-nav" aria-label="Patient navigation">
-              <ul className="pdash-nav-list">
+            <nav className="pd3-nav" aria-label="Patient navigation">
+              <ul className="pd3-nav-list">
                 {NAV_ITEMS.map((item) => {
-                  const isActive = activePage === item.id;
+                  const isActive = item.id === activePage;
                   return (
                     <li
                       key={item.id}
-                      className={`pdash-nav-item ${
-                        isActive ? "pdash-nav-item-active" : ""
+                      className={`pd3-nav-item ${
+                        isActive ? "pd3-nav-item-active" : ""
                       }`}
                     >
                       <button
                         type="button"
-                        className="pdash-nav-button"
+                        className="pd3-nav-button"
                         onClick={() => setActivePage(item.id)}
                       >
-                        <span className="pdash-nav-pill" />
-                        <span className="pdash-nav-label">{item.label}</span>
+                        <span className="pd3-nav-icon">{item.icon}</span>
+                        <span className="pd3-nav-label">{item.label}</span>
                       </button>
                     </li>
                   );
                 })}
               </ul>
             </nav>
+          </div>
+        </aside>
 
-            <div className="pdash-sidebar-footer">
-              <div className="pdash-mini-card pdash-mini-card-muted">
-                <p className="pdash-mini-card-title">Today&apos;s focus</p>
-                <p className="pdash-mini-card-body">
-                  {TODAY_TIPS[tipIndex]}
-                </p>
+        <main className="pd3-main">
+          <header className="pd3-main-header">
+            <div className="pd3-main-title-group">
+              <h1 className="pd3-main-title">Health Overview</h1>
+              <p className="pd3-main-subtitle">
+                Welcome back, Alex. Your stats look great today.
+              </p>
+            </div>
+            <div className="pd3-main-actions">
+              <button className="pd3-icon-btn">🔔</button>
+              <div className="pd3-main-user">
+                <div className="pd3-main-avatar">AK</div>
+                <div className="pd3-main-user-text">
+                  <span className="pd3-main-user-name">Alex Kaizen</span>
+                  <span className="pd3-main-user-role">Patient ID: #8821</span>
+                </div>
+                <span className="pd3-main-user-arrow">⌄</span>
               </div>
             </div>
-          </aside>
+          </header>
 
-          <main
-            className={`pdash-main ${
-              isLightMain ? "pdash-main-light" : "pdash-main-dark"
-            }`}
-          >
-            <header className="pdash-header">
-              <div className="pdash-header-text">
-                <p className="pdash-header-eyebrow">Patient dashboard</p>
-                <h1 className="pdash-header-title">Good evening, Alex</h1>
-                <p className="pdash-header-subtitle">{pageSubtitle}</p>
+          <section className="pd3-main-grid">
+            <div className="pd3-col-left">
+              {/* Health Metrics Grid */}
+              <div className="pd3-metrics-row">
+                {HEALTH_METRICS.map((metric, idx) => (
+                  <div key={idx} className="pd3-metric-card">
+                    <div className="pd3-metric-top">
+                      <div className="pd3-metric-icon">{metric.icon}</div>
+                      <div
+                        className={`pd3-metric-trend pd3-trend-${metric.trend}`}
+                      >
+                        {metric.trend === "up"
+                          ? "↑"
+                          : metric.trend === "down"
+                            ? "↓"
+                            : "→"}
+                      </div>
+                    </div>
+                    <div className="pd3-metric-content">
+                      <p className="pd3-metric-label">{metric.label}</p>
+                      <p className="pd3-metric-value">
+                        {metric.value}{" "}
+                        <span className="pd3-metric-unit">{metric.unit}</span>
+                      </p>
+                      <span
+                        className={`pd3-metric-status pd3-status-${metric.status.toLowerCase()}`}
+                      >
+                        {metric.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              <div className="pdash-header-actions">
-                <div className="pdash-search">
-                  <span className="pdash-search-icon">⌕</span>
-                  <input
-                    className="pdash-search-input"
-                    placeholder="Search appointments, doctors, tests…"
-                  />
+              {/* Upcoming Appointments */}
+              <section className="pd3-card pd3-card-appointments">
+                <header className="pd3-card-header">
+                  <h2 className="pd3-card-heading">Upcoming Appointments</h2>
+                  <button className="pd3-view-all">View Calendar</button>
+                </header>
+                <div className="pd3-appointment-list">
+                  {UPCOMING_APPOINTMENTS.map((apt, idx) => (
+                    <div key={idx} className="pd3-appointment-item">
+                      <div className="pd3-apt-date-box">
+                        <span className="pd3-apt-month">
+                          {apt.date.split(" ")[0]}
+                        </span>
+                        <span className="pd3-apt-day">
+                          {apt.date.split(" ")[1]}
+                        </span>
+                      </div>
+                      <div className="pd3-apt-info">
+                        <h4>{apt.doctor}</h4>
+                        <p>
+                          {apt.specialty} • {apt.type}
+                        </p>
+                        <div className="pd3-apt-meta">
+                          <span className="pd3-apt-time">🕒 {apt.time}</span>
+                          <span
+                            className={`pd3-apt-status status-${apt.status.toLowerCase()}`}
+                          >
+                            {apt.status}
+                          </span>
+                        </div>
+                      </div>
+                      <button className="pd3-apt-btn">Reschedule</button>
+                    </div>
+                  ))}
                 </div>
-                <button
-                  type="button"
-                  className="pdash-toggle"
-                  onClick={() => setIsLightMain((prev) => !prev)}
-                >
-                  {isLightMain ? "Dark panel" : "Light panel"}
-                </button>
-                <button
-                  type="button"
-                  className="pdash-icon-button pdash-icon-button-ghost"
-                  aria-label="Notifications"
-                >
-                  ●
-                </button>
-                <button
-                  type="button"
-                  className="pdash-avatar"
-                  aria-label="Patient profile"
-                >
-                  <span className="pdash-avatar-initials">AK</span>
-                </button>
-              </div>
-            </header>
+              </section>
+            </div>
 
-            <section className="pdash-content">
-              <section className="pdash-hero-card">
-                <div className="pdash-hero-main">
-                  <p className="pdash-hero-eyebrow">Care plan</p>
-                  <h2 className="pdash-hero-title">
-                    Your health, in one smooth flow.
-                  </h2>
-                  <p className="pdash-hero-body">
-                    Keep track of appointments, medications, and test results in
-                    a single, calming view. We surface what matters most, right
-                    when you need it.
-                  </p>
-
-                  <div className="pdash-hero-actions">
-                    <button type="button" className="pdash-primary-button">
-                      View full care plan
-                    </button>
-                    <button
-                      type="button"
-                      className="pdash-secondary-button"
-                    >
-                      Quick check-in
-                    </button>
+            <aside className="pd3-col-right">
+              {/* Overall Health Score Circle */}
+              <section className="pd3-card pd3-card-score">
+                <h2 className="pd3-card-heading">Overall Health</h2>
+                <div className="pd3-score-container">
+                  <div className="pd3-score-ring">
+                    <svg viewBox="0 0 36 36" className="pd3-score-svg">
+                      <path
+                        className="pd3-score-bg"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        className="pd3-score-progress"
+                        strokeDasharray="85, 100"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                    </svg>
+                    <div className="pd3-score-text">
+                      <span className="pd3-score-number">85</span>
+                      <span className="pd3-score-label">Excellent</span>
+                    </div>
                   </div>
                 </div>
+                <p className="pd3-score-desc">
+                  You are in the top 5% of healthy individuals this week!
+                </p>
+              </section>
 
-                <div className="pdash-hero-visual">
-                  <div className="pdash-hero-orbit">
-                    <div className="pdash-hero-orbit-ring pdash-hero-orbit-ring-outer" />
-                    <div className="pdash-hero-orbit-ring pdash-hero-orbit-ring-inner" />
-                    <div className="pdash-hero-orbit-pulse" />
-                  </div>
-                  <div className="pdash-hero-metric-chip">
-                    <span className="pdash-chip-label">Next appointment</span>
-                    <span className="pdash-chip-value">Tue, 7:30 PM</span>
-                  </div>
-                  <div className="pdash-hero-metric-chip pdash-hero-metric-chip-secondary">
-                    <span className="pdash-chip-label">Medication streak</span>
-                    <span className="pdash-chip-value">12 days</span>
+              {/* Active Medications */}
+              <section className="pd3-card pd3-card-medications">
+                <header className="pd3-card-header">
+                  <h2 className="pd3-card-heading">Active Medications</h2>
+                </header>
+                <div className="pd3-med-list">
+                  {ACTIVE_MEDICATIONS.map((med, idx) => (
+                    <div key={idx} className="pd3-med-item">
+                      <div
+                        className="pd3-med-icon"
+                        style={{
+                          backgroundColor: `${med.color}15`,
+                          color: med.color,
+                        }}
+                      >
+                        💊
+                      </div>
+                      <div className="pd3-med-details">
+                        <div className="pd3-med-row">
+                          <h4>{med.name}</h4>
+                          <span className="pd3-med-rem">{med.remaining}</span>
+                        </div>
+                        <p>
+                          {med.dosage} • {med.schedule}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button className="pd3-med-btn-add">+ Add Medication</button>
+              </section>
+
+              {/* Health Tip */}
+              <section className="pd3-card pd3-card-tip">
+                <div className="pd3-tip-content">
+                  <div className="pd3-tip-icon">💡</div>
+                  <div className="pd3-tip-text">
+                    <h3>Daily Health Tip</h3>
+                    <p>
+                      Stay hydrated! Drinking 8 glasses of water daily improves
+                      skin health and energy levels.
+                    </p>
                   </div>
                 </div>
               </section>
-
-              <section className="pdash-metrics" aria-label="Key metrics">
-                <article className="pdash-metric-card">
-                  <p className="pdash-metric-label">Upcoming visits</p>
-                  <p className="pdash-metric-value">3</p>
-                  <p className="pdash-metric-hint">Next in 2 days</p>
-                </article>
-
-                <article className="pdash-metric-card">
-                  <p className="pdash-metric-label">Active prescriptions</p>
-                  <p className="pdash-metric-value">5</p>
-                  <p className="pdash-metric-hint">2 need refills soon</p>
-                </article>
-
-                <article className="pdash-metric-card">
-                  <p className="pdash-metric-label">Pending tests</p>
-                  <p className="pdash-metric-value">2</p>
-                  <p className="pdash-metric-hint">Blood work in progress</p>
-                </article>
-
-                <article className="pdash-metric-card">
-                  <p className="pdash-metric-label">Medication adherence</p>
-                  <p className="pdash-metric-value">92%</p>
-                  <p className="pdash-metric-hint">Great consistency</p>
-                </article>
-              </section>
-
-              <section className="pdash-grid" aria-label="Detailed overview">
-                <article className="pdash-card pdash-card-large">
-                  <header className="pdash-card-header">
-                    <h3 className="pdash-card-title">Appointments</h3>
-                    <span className="pdash-card-badge">This week</span>
-                  </header>
-                  <ul className="pdash-timeline">
-                    <li className="pdash-timeline-item">
-                      <span className="pdash-timeline-dot" />
-                      <div className="pdash-timeline-content">
-                        <p className="pdash-timeline-title">
-                          Dr. Patel — Cardiology
-                        </p>
-                        <p className="pdash-timeline-meta">
-                          Tue · 7:30 PM · Online
-                        </p>
-                      </div>
-                    </li>
-                    <li className="pdash-timeline-item">
-                      <span className="pdash-timeline-dot" />
-                      <div className="pdash-timeline-content">
-                        <p className="pdash-timeline-title">
-                          Lab visit — Blood panel
-                        </p>
-                        <p className="pdash-timeline-meta">
-                          Thu · 9:00 AM · City Diagnostics
-                        </p>
-                      </div>
-                    </li>
-                    <li className="pdash-timeline-item">
-                      <span className="pdash-timeline-dot" />
-                      <div className="pdash-timeline-content">
-                        <p className="pdash-timeline-title">
-                          Follow-up — General check
-                        </p>
-                        <p className="pdash-timeline-meta">
-                          Sat · 4:15 PM · In person
-                        </p>
-                      </div>
-                    </li>
-                  </ul>
-                </article>
-
-                <article className="pdash-card">
-                  <header className="pdash-card-header">
-                    <h3 className="pdash-card-title">Prescriptions</h3>
-                  </header>
-                  <ul className="pdash-list">
-                    <li className="pdash-list-item">
-                      <div>
-                        <p className="pdash-list-title">Atorvastatin</p>
-                        <p className="pdash-list-meta">
-                          10mg · Night · 2 refills left
-                        </p>
-                      </div>
-                      <span className="pdash-pill pdash-pill-soft">
-                        Heart
-                      </span>
-                    </li>
-                    <li className="pdash-list-item">
-                      <div>
-                        <p className="pdash-list-title">Metformin</p>
-                        <p className="pdash-list-meta">
-                          500mg · Morning &amp; Night
-                        </p>
-                      </div>
-                      <span className="pdash-pill pdash-pill-soft">
-                        Metabolic
-                      </span>
-                    </li>
-                    <li className="pdash-list-item">
-                      <div>
-                        <p className="pdash-list-title">Vitamin D</p>
-                        <p className="pdash-list-meta">Weekly · Sundays</p>
-                      </div>
-                      <span className="pdash-pill pdash-pill-soft">
-                        Supplement
-                      </span>
-                    </li>
-                  </ul>
-                </article>
-
-                <article className="pdash-card">
-                  <header className="pdash-card-header">
-                    <h3 className="pdash-card-title">Today&apos;s schedule</h3>
-                  </header>
-                  <ul className="pdash-checklist">
-                    <li className="pdash-checklist-item">
-                      <span className="pdash-check-toggle pdash-check-toggle-on" />
-                      <div>
-                        <p className="pdash-check-title">
-                          Morning medication
-                        </p>
-                        <p className="pdash-check-meta">Completed · 8:00 AM</p>
-                      </div>
-                    </li>
-                    <li className="pdash-checklist-item">
-                      <span className="pdash-check-toggle" />
-                      <div>
-                        <p className="pdash-check-title">
-                          10-minute breathing session
-                        </p>
-                        <p className="pdash-check-meta">
-                          Recommended · Any time today
-                        </p>
-                      </div>
-                    </li>
-                    <li className="pdash-checklist-item">
-                      <span className="pdash-check-toggle" />
-                      <div>
-                        <p className="pdash-check-title">
-                          Evening medication
-                        </p>
-                        <p className="pdash-check-meta">Due · 8:00 PM</p>
-                      </div>
-                    </li>
-                  </ul>
-                </article>
-
-                <article className="pdash-card pdash-card-tags">
-                  <header className="pdash-card-header">
-                    <h3 className="pdash-card-title">Tests &amp; meds</h3>
-                  </header>
-                  <div className="pdash-tags">
-                    <span className="pdash-tag">Blood panel</span>
-                    <span className="pdash-tag">ECG</span>
-                    <span className="pdash-tag">Glucose monitor</span>
-                    <span className="pdash-tag">Cholesterol</span>
-                    <span className="pdash-tag">Sleep</span>
-                    <span className="pdash-tag">Activity</span>
-                  </div>
-                </article>
-              </section>
-            </section>
-          </main>
-        </div>
+            </aside>
+          </section>
+        </main>
       </div>
-    </>
+    </div>
   );
 }
 
 export default PatientDash;
-

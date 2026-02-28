@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./patientDash.css";
+import kaizenLogo from "./assets/kaizen-logo.png";
 
 type PatientPage =
   | "Home"
@@ -92,10 +93,24 @@ const ACTIVE_MEDICATIONS = [
 function PatientDash() {
   const [activePage, setActivePage] = useState<PatientPage>("Home");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     setIsLoaded(true);
+    // Sync with system preference or local storage
+    const savedTheme = localStorage.getItem("kaizen-theme") as "light" | "dark";
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    }
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("kaizen-theme", newTheme);
+  };
 
   return (
     <div className={`pd3-page ${isLoaded ? "pd3-page-loaded" : ""}`}>
@@ -103,10 +118,11 @@ function PatientDash() {
         <aside className="pd3-sidebar">
           <div className="pd3-sidebar-inner">
             <header className="pd3-brand">
-              <div className="pd3-brand-logo">
-                <div className="pd3-brand-icon" />
-              </div>
-              <span className="pd3-brand-name">Kaizen</span>
+              <img
+                src={kaizenLogo}
+                alt="Kaizen"
+                className="pd3-brand-logo-img"
+              />
             </header>
 
             <nav className="pd3-nav" aria-label="Patient navigation">
@@ -139,17 +155,22 @@ function PatientDash() {
         <main className="pd3-main">
           <header className="pd3-main-header">
             <div className="pd3-main-title-group">
-              <h1 className="pd3-main-title">Health Overview</h1>
-              <p className="pd3-main-subtitle">
-                Welcome back, Alex. Your stats look great today.
-              </p>
+              <h1 className="pd3-main-title">Overview</h1>
+              <p className="pd3-main-subtitle">Welcome back, Alex.</p>
             </div>
             <div className="pd3-main-actions">
+              <button
+                className="pd3-icon-btn pd3-theme-toggle"
+                onClick={toggleTheme}
+                title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+              >
+                {theme === "light" ? "🌙" : "☀️"}
+              </button>
               <button className="pd3-icon-btn">🔔</button>
               <div className="pd3-main-user">
                 <div className="pd3-main-avatar">AK</div>
                 <div className="pd3-main-user-text">
-                  <span className="pd3-main-user-name">Alex Kaizen</span>
+                  <span className="pd3-main-user-name">Alex</span>
                   <span className="pd3-main-user-role">Patient ID: #8821</span>
                 </div>
                 <span className="pd3-main-user-arrow">⌄</span>

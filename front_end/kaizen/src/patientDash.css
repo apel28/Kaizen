@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   padding: 1.2rem;
-  background: #ffe9f4;
+  background: var(--bg-page);
   font-family:
     "Inter",
     system-ui,
@@ -14,12 +14,13 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #0f172a;
+  color: var(--text-primary);
   opacity: 0;
   transform: translateY(16px);
   transition:
     opacity 0.6s ease-out,
-    transform 0.6s ease-out;
+    transform 0.6s ease-out,
+    background-color 0.3s ease;
 }
 
 .pd3-page-loaded {
@@ -35,20 +36,15 @@
   grid-template-columns: 280px minmax(0, 1fr);
   overflow: hidden;
   border-radius: 40px;
-  box-shadow:
-    0 35px 80px rgba(15, 23, 42, 0.3),
-    0 0 0 1px rgba(15, 23, 42, 0.04);
+  box-shadow: var(--shadow-lg);
   /* Matching Sidebar Gradient + Radial Glows for consistency */
-  background:
-    radial-gradient(circle at 0 0, rgba(96, 165, 250, 0.4), transparent 45%),
-    radial-gradient(circle at 60% 0, rgba(192, 132, 252, 0.3), transparent 45%),
-    linear-gradient(180deg, #141b5f, #090f3b);
+  background: var(--bg-shell);
 }
 
 .pd3-sidebar {
   background: transparent; /* Inherits from shell */
   padding: 2.25rem 1.75rem;
-  color: #e5e7eb;
+  color: var(--text-inverse);
 }
 
 .pd3-sidebar-inner {
@@ -58,36 +54,15 @@
 }
 
 .pd3-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
   margin-bottom: 2.5rem;
-}
-
-.pd3-brand-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  border: 1px solid rgba(248, 250, 252, 0.4);
   display: flex;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.7);
 }
 
-.pd3-brand-icon {
-  width: 18px;
-  height: 18px;
-  border: 2px solid #e5e7eb;
-  border-radius: 999px;
-}
-
-.pd3-brand-name {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 1.1rem;
-  letter-spacing: 0.05em;
-  color: #f9fafb;
+.pd3-brand-logo-img {
+  width: 140px;
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
 }
 
 .pd3-nav {
@@ -192,18 +167,17 @@
 }
 
 .pd3-main {
-  background: #f5f7ff;
+  background: var(--bg-main);
   padding: 1.8rem 2.2rem;
   position: relative;
   border-radius: 40px;
   margin: 1.5rem 1.5rem 1.5rem 0.8rem;
   z-index: 1;
-  box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.04),
-    0 4px 12px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: background-color 0.3s ease;
 }
 
 .pd3-main-header {
@@ -224,40 +198,45 @@
   font-family: "Montserrat", sans-serif;
   font-weight: 700;
   font-size: 1.8rem;
-  color: #111827;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .pd3-main-subtitle {
   font-size: 0.95rem;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .pd3-main-actions {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
 }
 
 .pd3-icon-btn {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background: white;
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 1.1rem;
   transition: all 0.2s ease;
+  color: var(--text-primary);
 }
 
 .pd3-icon-btn:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+  background: var(--bg-card-alt);
+  border-color: var(--text-muted);
   transform: translateY(-1px);
+}
+
+.pd3-theme-toggle {
+  font-size: 1.2rem;
 }
 
 .pd3-main-user {
@@ -266,16 +245,16 @@
   gap: 0.75rem;
   padding: 0.4rem;
   padding-right: 0.8rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border-color);
 }
 
 .pd3-main-avatar {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1, #22d3ee);
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: white;
   display: flex;
   align-items: center;
@@ -292,17 +271,17 @@
 .pd3-main-user-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .pd3-main-user-role {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .pd3-main-user-arrow {
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 .pd3-main-grid {
@@ -336,21 +315,21 @@
 }
 
 .pd3-metric-card {
-  background: white;
+  background: var(--bg-card);
   padding: 1.2rem;
   border-radius: 24px;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-  border: 1px solid #f1f5f9;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .pd3-metric-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
-  border-color: #e2e8f0;
+  box-shadow: var(--shadow-md);
+  border-color: var(--text-muted);
 }
 
 .pd3-metric-top {
@@ -363,7 +342,7 @@
   font-size: 1.8rem;
   width: 52px;
   height: 52px;
-  background: #f8fafc;
+  background: var(--bg-card-alt);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -378,36 +357,36 @@
 }
 
 .pd3-trend-up {
-  color: #10b981;
-  background: #ecfdf5;
+  color: var(--accent-success);
+  background: rgba(16, 185, 129, 0.1);
 }
 .pd3-trend-down {
-  color: #ef4444;
-  background: #fef2f2;
+  color: var(--accent-danger);
+  background: rgba(239, 68, 68, 0.1);
 }
 .pd3-trend-stable {
-  color: #64748b;
-  background: #f1f5f9;
+  color: var(--text-secondary);
+  background: var(--bg-card-alt);
 }
 
 .pd3-metric-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .pd3-metric-value {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
   margin: 0.2rem 0;
 }
 
 .pd3-metric-unit {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .pd3-metric-status {
@@ -420,29 +399,29 @@
 }
 
 .pd3-status-normal {
-  color: #10b981;
-  background: #ecfdf5;
+  color: var(--accent-success);
+  background: rgba(16, 185, 129, 0.1);
 }
 .pd3-status-optimal {
-  color: #6366f1;
-  background: #eef2ff;
+  color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.1);
 }
 .pd3-status-healthy {
-  color: #0ea5e9;
-  background: #f0f9ff;
+  color: var(--accent-secondary);
+  background: rgba(34, 211, 238, 0.1);
 }
 .pd3-status-good {
-  color: #f59e0b;
-  background: #fffbeb;
+  color: var(--accent-warning);
+  background: rgba(245, 158, 11, 0.1);
 }
 
 /* General Card Styles */
 .pd3-card {
   border-radius: 24px;
-  background: #ffffff;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
   padding: 1.5rem;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--border-color);
   animation: pd3-fade-in-up 0.6s ease-out forwards;
 }
 
@@ -456,14 +435,14 @@
 .pd3-card-heading {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .pd3-view-all {
   background: transparent;
   border: none;
-  color: #6366f1;
+  color: var(--accent-primary);
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
@@ -486,18 +465,18 @@
   overflow-y: auto;
   padding-right: 0.5rem;
   scrollbar-width: thin;
-  scrollbar-color: #6366f1 #f1f5f9;
+  scrollbar-color: var(--accent-primary) var(--bg-card-alt);
 }
 
 .pd3-appointment-list::-webkit-scrollbar {
   width: 6px;
 }
 .pd3-appointment-list::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--bg-card-alt);
   border-radius: 10px;
 }
 .pd3-appointment-list::-webkit-scrollbar-thumb {
-  background-color: #6366f1;
+  background-color: var(--accent-primary);
   border-radius: 10px;
 }
 
@@ -506,16 +485,16 @@
   align-items: center;
   gap: 1.2rem;
   padding: 1.2rem;
-  background: #f8fafc;
+  background: var(--bg-card-alt);
   border-radius: 20px;
   border: 1px solid transparent;
   transition: all 0.2s ease;
 }
 
 .pd3-appointment-item:hover {
-  background: #ffffff;
-  border-color: #e2e8f0;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  background: var(--bg-card);
+  border-color: var(--border-card);
+  box-shadow: var(--shadow-sm);
   transform: scale(1.01);
 }
 
@@ -526,22 +505,22 @@
   justify-content: center;
   width: 64px;
   height: 64px;
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 .pd3-apt-month {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #6366f1;
+  color: var(--accent-primary);
   text-transform: uppercase;
 }
 
 .pd3-apt-day {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .pd3-apt-info {
@@ -552,13 +531,13 @@
   margin: 0 0 0.25rem;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .pd3-apt-info p {
   margin: 0 0 0.5rem;
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .pd3-apt-meta {
@@ -570,7 +549,7 @@
 .pd3-apt-time {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .pd3-apt-status {
@@ -581,30 +560,30 @@
 }
 
 .status-confirmed {
-  color: #10b981;
-  background: #ecfdf5;
+  color: var(--accent-success);
+  background: rgba(16, 185, 129, 0.1);
 }
 .status-pending {
-  color: #f59e0b;
-  background: #fffbeb;
+  color: var(--accent-warning);
+  background: rgba(245, 158, 11, 0.1);
 }
 
 .pd3-apt-btn {
   padding: 0.6rem 1rem;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
   border-radius: 12px;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .pd3-apt-btn:hover {
-  background: #0f172a;
-  color: white;
-  border-color: #0f172a;
+  background: var(--text-primary);
+  color: var(--bg-card);
+  border-color: var(--text-primary);
 }
 
 /* Health Score Card */
@@ -638,13 +617,13 @@
 
 .pd3-score-bg {
   fill: none;
-  stroke: #f1f5f9;
+  stroke: var(--bg-card-alt);
   stroke-width: 3;
 }
 
 .pd3-score-progress {
   fill: none;
-  stroke: #6366f1;
+  stroke: var(--accent-primary);
   stroke-width: 3;
   stroke-linecap: round;
   transition: stroke-dasharray 0.6s ease;
@@ -662,19 +641,19 @@
 .pd3-score-number {
   font-size: 2rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .pd3-score-label {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #10b981;
+  color: var(--accent-success);
   text-transform: uppercase;
 }
 
 .pd3-score-desc {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.5;
 }
@@ -695,18 +674,18 @@
   overflow-y: auto;
   padding-right: 0.5rem;
   scrollbar-width: thin;
-  scrollbar-color: #6366f1 #f1f5f9;
+  scrollbar-color: var(--accent-primary) var(--bg-card-alt);
 }
 
 .pd3-med-list::-webkit-scrollbar {
   width: 6px;
 }
 .pd3-med-list::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--bg-card-alt);
   border-radius: 10px;
 }
 .pd3-med-list::-webkit-scrollbar-thumb {
-  background-color: #6366f1;
+  background-color: var(--accent-primary);
   border-radius: 10px;
 }
 
@@ -715,7 +694,7 @@
   align-items: center;
   gap: 1rem;
   padding-bottom: 1.2rem;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .pd3-med-item:last-child {
@@ -747,19 +726,19 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .pd3-med-rem {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #ef4444;
+  color: var(--accent-danger);
 }
 
 .pd3-med-details p {
   margin: 0;
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 
 .pd3-med-btn-add {
@@ -767,9 +746,9 @@
   margin-top: 1.2rem;
   padding: 0.75rem;
   border-radius: 12px;
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed var(--text-muted);
   background: transparent;
-  color: #64748b;
+  color: var(--text-secondary);
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
@@ -777,9 +756,9 @@
 }
 
 .pd3-med-btn-add:hover {
-  background: #f8fafc;
-  border-color: #6366f1;
-  color: #6366f1;
+  background: var(--bg-card-alt);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
 }
 
 /* Health Tip */

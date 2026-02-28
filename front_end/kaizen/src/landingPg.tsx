@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import "./App.css";
+import "./landingPg.css";
 import kaizenLogo from "./assets/kaizen-logo.png";
 
-function App() {
+function LandingPg() {
   const heroRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLElement>(null);
   const [heroInView, setHeroInView] = useState(true);
@@ -99,7 +99,6 @@ function App() {
                       </option>
                       <option value="patient">Patient</option>
                       <option value="doctor">Doctor</option>
-                      <option value="admin">Admin</option>
                     </select>
                   </div>
                   <div className="input-group-row">
@@ -200,4 +199,4 @@ function App() {
   );
 }
 
-export default App;
+export default LandingPg;

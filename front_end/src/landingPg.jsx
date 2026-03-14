@@ -1,5 +1,5 @@
 import "./landingPg.css";
-import kaizenLogo from "./assets/kaizen-logo.png";
+import kaizenLogo from "./assets/kaizen-logo.webp";
 
 function LandingPg() {
   return (

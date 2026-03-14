@@ -1,9 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   background: linear-gradient(135deg, #0a0a3a 0%, #000000 100%);
   background-attachment: fixed; /* Needed to keep the background fixed while scrolling */

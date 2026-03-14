@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0a3a 0%, #000000 100%);
+  background-attachment: fixed; /* Needed to keep the background fixed while scrolling */
+  color: white;
+  font-family: "Gondens", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-section {
+  text-align: center;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  width: 550px;
+  margin-bottom: 20px;
+}
+
+.tagline {
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: 1px;
+}

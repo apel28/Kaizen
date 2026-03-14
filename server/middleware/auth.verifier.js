@@ -1,6 +1,7 @@
 import pool from "../db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { getRole } from "../query/role.js";
 
 
 //Checks if the token is valid using jwt.verify
@@ -12,18 +13,18 @@ import bcrypt from "bcrypt";
 export async function verifyAuth(req, res, next) {
     const accessToken = req.cookies.access_token;
     const refreshToken = req.cookies.refresh_token;
-
+    
     if (!accessToken && !refreshToken) return res.sendStatus(401);
-
+    
     if (accessToken) {
         try {
-
             const payload = jwt.verify(accessToken, process.env.JWT_SECRET);
-            req.user = { user_id: payload.user_id }; 
+            let role = await getRole(payload.user_id);
+            req.user = { user_id: payload.user_id, role: role }; 
             return next(); 
-
+            
         } catch (err) {
-
+            
             if (err.name !== "TokenExpiredError") { //keep, as if i have to issue tokens for every case, lot to handle
                 return res.sendStatus(401); 
             }
@@ -54,15 +55,18 @@ export async function verifyAuth(req, res, next) {
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_ACCESS_EXPIRES || "15m" }
         );
-
+        
+        
         res.cookie("access_token", newAccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "Strict",
             maxAge: 15 * 60 * 1000,
         });
+        
+        const role = await getRole(payload.user_id);
 
-        req.user = { user_id: payload.user_id }; 
+        req.user = { user_id: payload.user_id, role: role }; 
         next(); 
 
     } catch (err) {

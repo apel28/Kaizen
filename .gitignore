@@ -5,3 +5,5 @@ server/.env
 tester.txt
 
 cookies.txt
+
+node_modules/

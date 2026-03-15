@@ -3,25 +3,38 @@ body {
   background-attachment: fixed; /* Needed to keep the background fixed while scrolling */
   color: white;
   font-family: "Gondens", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.container {
+.landing-wrapper {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory; /* Creates the sliding effect*/
+  scroll-behavior: smooth;
+}
+
+.hero-section,
+.login-section {
+  height: 100vh;
+  width: 100%;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: start; /* Snaps to the top of the section */
+  position: relative;
+}
+
+.logo-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
 
-.logo-section {
-  text-align: center;
-}
-
 .logo {
-  max-width: 100%;
+  max-width: 90%;
   height: auto;
   width: 550px;
   margin-bottom: 20px;
@@ -31,4 +44,13 @@ body {
   font-size: 2rem;
   font-weight: 300;
   letter-spacing: 1px;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
 }

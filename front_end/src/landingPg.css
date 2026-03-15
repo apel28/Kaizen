@@ -7,9 +7,6 @@ body {
 
 .landing-wrapper {
   height: 100vh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory; /* Creates the sliding effect*/
-  scroll-behavior: smooth;
 }
 
 .hero-section,
@@ -20,7 +17,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  scroll-snap-align: start; /* Snaps to the top of the section */
   position: relative;
 }
 

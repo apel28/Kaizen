@@ -1,7 +1,14 @@
+# --- IDE & System Files ---
 .DS_Store
-server/.env
-tester.txt
-cookies.txt
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vscode/
+.idea/
+!.vscode/extensions.json
 
 # --- Dependencies ---
 node_modules/
@@ -17,28 +24,28 @@ pnpm-lock.yaml
 .env.test.local
 .env.production.local
 *.pem
+server/.env
 
 # --- Build & Output ---
 dist/
+dist-ssr/
 build/
-.vercel
-.netlify
-out/
-
-# --- Vite & Tailwind Specifics ---
-.vite/
 .vercel/
-*.log
-.eslintcache
-.stylelintcache
+.netlify/
+out/
+.vite/
 
-# --- Backend (Node/Express) ---
-logs
+# --- Logs & Debug ---
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pids
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Process Files ---
+pids/
 *.pid
 *.seed
 *.pid.lock
@@ -47,13 +54,8 @@ pids
 coverage/
 .nyc_output
 
-# --- IDE & System Files ---
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# --- Project Specific ---
+tester.txt
+cookies.txt
+.eslintcache
+.stylelintcache

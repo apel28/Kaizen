@@ -1,2 +1,5 @@
-import pool from "../db";
+import * as patientCode from "../query/patient.js"
+
+
+
 

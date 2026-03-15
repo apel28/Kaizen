@@ -41,3 +41,51 @@ export async function getLatestVitals(patientId) {
     )
     return vitalsResult.rows[0] ?? null;
 }
+
+export async function updatePatientProfile(userId, profile) {
+    const {
+        first_name,
+        middle_name,
+        last_name,
+        date_of_birth,
+        address,
+        contact_info,
+        emergency_contact,
+        gender,
+        nid,
+        nationality
+    } = profile;
+
+    const result = await pool.query(
+        `
+        UPDATE profile
+        SET first_name = $1,
+            middle_name = $2,
+            last_name = $3,
+            date_of_birth = $4,
+            address = $5,
+            contact_info = $6,
+            emergency_contact = $7,
+            gender = $8,
+            nid = $9,
+            nationality = $10
+        WHERE user_id = $11
+        RETURNING *;
+        `,
+        [
+            first_name,
+            middle_name,
+            last_name,
+            date_of_birth,
+            address,
+            contact_info,
+            emergency_contact,
+            gender,
+            nid,
+            nationality,
+            userId
+        ]
+    );
+
+    return result.rows[0] ?? null;
+}

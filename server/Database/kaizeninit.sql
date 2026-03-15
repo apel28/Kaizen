@@ -78,6 +78,7 @@ CREATE TABLE qualifications(
 	degree_name TEXT not null,
 	institute TEXT not null,
 	"year" INT not null,
+	department_name TEXT,
 	FOREIGN KEY(doctor_id) REFERENCES "doctor"(doctor_id) on DELETE CASCADE
 );
 

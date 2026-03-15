@@ -21,7 +21,7 @@ const LoginBlock = ({ onToggle }) => {
       console.log("Sign-in successful:", result);
       // alert("Login successful!"); // Minimum UI feedback
     } catch (err) {
-      setError("Authentication failed");
+      setError("err.message");
     } finally {
       setLoading(false);
     }

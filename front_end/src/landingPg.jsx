@@ -1,15 +1,21 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./landingPg.css";
 import kaizenLogo from "./assets/kaizen-logo.webp";
 import Button from "./components/Button";
 import LoginBlock from "./components/LoginBlock";
+import SignUpBlock from "./components/SignUpBlock";
 
 function LandingPg() {
   const loginRef = useRef(null);
+  const [isLogin, setIsLogin] = useState(true);
 
   const handleGetStarted = () => {
     loginRef.current?.scrollIntoView({ behavior: "smooth" });
   }; // Function for sliding animation
+
+  const toggleAuth = () => {
+    setIsLogin(!isLogin);
+  };
 
   return (
     <div className="landing-wrapper">
@@ -25,7 +31,11 @@ function LandingPg() {
 
       <section className="login-section" ref={loginRef}>
         <div className="login-container">
-          <LoginBlock />
+          {isLogin ? (
+            <LoginBlock onToggle={toggleAuth} />
+          ) : (
+            <SignUpBlock onToggle={toggleAuth} />
+          )}
         </div>
       </section>
     </div>

@@ -33,7 +33,7 @@ const LoginBlock = ({ onToggle }) => {
 
   return (
     <div className="login-block w-full max-w-md p-8 bg-gray-900/80 border border-gray-700 rounded-2xl shadow-2xl backdrop-blur-sm">
-      <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r text-blue-400 bg-clip-text text-transparent">
+      <h2 className="text-3xl font-bold text-center mb-6 text-blue-400">
         Login
       </h2>
 

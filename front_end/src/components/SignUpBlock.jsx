@@ -24,7 +24,7 @@ const SignUpBlock = ({ onToggle }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "patient", // Default role
+    role: "p", // Default role
   });
 
   const handleChange = (e) => {
@@ -98,8 +98,8 @@ const SignUpBlock = ({ onToggle }) => {
             value={formData.role}
             required
           >
-            <option value="patient">Patient</option>
-            <option value="doctor">Doctor</option>
+            <option value="p">Patient</option>
+            <option value="d">Doctor</option>
           </select>
         </div>
 

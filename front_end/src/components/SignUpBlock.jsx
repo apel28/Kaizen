@@ -24,11 +24,15 @@ const SignUpBlock = ({ onToggle }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "p", // Default role
+    role: 2,
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === "role" ? Number(value) : value,
+    });
   };
 
   // Optimized handleSignUp - validates and calls API
@@ -43,8 +47,29 @@ const SignUpBlock = ({ onToggle }) => {
 
     setLoading(true);
     try {
+      const trimOrNull = (v) => {
+        const t = typeof v === "string" ? v.trim() : v;
+        return t === "" ? null : t;
+      };
+
+      const payload = {
+        first_name: formData.first_name.trim(),
+        middle_name: trimOrNull(formData.middle_name),
+        last_name: formData.last_name.trim(),
+        date_of_birth: formData.date_of_birth, // must be YYYY-MM-DD
+        address: trimOrNull(formData.address),
+        contact_info: formData.contact_info.trim(),
+        emergency_contact: trimOrNull(formData.emergency_contact),
+        gender: formData.gender, // MALE/FEMALE/OTHERS
+        nid: formData.nid.trim(),
+        nationality: trimOrNull(formData.nationality),
+        email: formData.email.trim(),
+        password: formData.password,
+        role: formData.role,
+      };
+
       // Send data to /signup endpoint
-      const result = await apiRequest("/signup", formData);
+      const result = await apiRequest("/signup", payload);
       console.log("Sign-up successful:", result);
       // alert("Registration successful! You can now log in.");
       onToggle(); // Switch to login view
@@ -98,8 +123,8 @@ const SignUpBlock = ({ onToggle }) => {
             value={formData.role}
             required
           >
-            <option value="p">Patient</option>
-            <option value="d">Doctor</option>
+            <option value={2}>Patient</option>
+            <option value={1}>Doctor</option>
           </select>
         </div>
 
@@ -115,14 +140,15 @@ const SignUpBlock = ({ onToggle }) => {
             name="gender"
             className={`${inputClasses} appearance-none cursor-pointer text-gray-400`}
             onChange={handleChange}
+            value={formData.gender}
             required
           >
             <option value="" disabled>
               Gender
             </option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+            <option value="OTHERS">Other</option>
           </select>
         </div>
 

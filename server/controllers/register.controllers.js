@@ -117,4 +117,56 @@ export async function register(req, res) {
   res.status(201).json({
     result: "ok",
   });
+
+  const queryResultRole = await pool.query(
+    `
+        INSERT INTO "role"(user_id, role_id)
+        VALUES ($1, $2);
+        `,
+    [user_id, role],
+  );
+
+  if (role == 1) {
+    const queryResultRole = await pool.query(
+      `
+        INSERT INTO "doctor"(user_id)
+        VALUES ($1);
+        `,
+      [user_id],
+    );
+  }
+
+  if (role == 2) {
+    const queryResultRole = await pool.query(
+      `
+        INSERT INTO "patient"(user_id)
+        VALUES ($1);
+        `,
+      [user_id],
+    );
+  }
+
+  if (role == 3) {
+    const queryResultRole = await pool.query(
+      `
+        INSERT INTO "nurse"(user_id)
+        VALUES ($1);
+        `,
+      [user_id],
+    );
+  }
+
+  if (role == 4) {
+    const queryResultRole = await pool.query(
+      `
+        INSERT INTO "staff"(user_id)
+        VALUES ($1);
+        `,
+      [user_id],
+    );
+  }
+
+  res.status(201).json({
+    result: "ok",
+  });
 }

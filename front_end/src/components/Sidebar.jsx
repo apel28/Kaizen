@@ -1,5 +1,6 @@
 import React from "react";
 import kaizenLogo from "../assets/kaizen-logo.webp";
+import {House, Calendar, FileText, Clock, FlaskConical, Pill} from "lucide-react";
 
 const Sidebar = ({ idx }) => {
   const navItems = [
@@ -9,6 +10,15 @@ const Sidebar = ({ idx }) => {
     "Schedule",
     "Tests",
     "Medication",
+  ];
+
+  const navIcons = [
+    <House key="home" />,
+    <Calendar key="appointment" />,
+    <FileText key="prescription" />,
+    <Clock key="schedule" />,
+    <FlaskConical key="tests" />,
+    <Pill key="medication" />,
   ];
 
   return (
@@ -28,7 +38,10 @@ const Sidebar = ({ idx }) => {
               key={item}
               className={`mb-4 p-3 rounded-lg cursor-pointer transition-all ${index === idx ? "bg-blue-600" : "hover:bg-gray-800"}`}
             >
-              {item}
+              <div className="flex items-center gap-2">
+                {navIcons[index]}
+                {item}
+              </div>
             </li>
           ))}
         </ul>

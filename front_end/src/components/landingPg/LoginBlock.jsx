@@ -21,7 +21,7 @@ const LoginBlock = ({ onToggle }) => {
     try {
       const result = await apiRequest("/signin", { email, password });
       console.log("Sign-in successful:", result);
-      navigate("/dashboard");
+      navigate("/pDashboard");
     } catch (err) {
       setError(err.message);
     } finally {

@@ -1,11 +1,6 @@
 import React from "react";
 
-const Button = ({
-  text = "Get Started",
-  onClick,
-  type = "button",
-  disabled = false,
-}) => {
+const Button = ({ text = "Get Started", onClick, type = "button", disabled = false }) => {
   return (
     <button
       type={type}

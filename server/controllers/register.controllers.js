@@ -114,10 +114,6 @@ export async function register(req, res) {
     ],
   );
 
-  res.status(201).json({
-    result: "ok",
-  });
-
   const queryResultRole = await pool.query(
     `
         INSERT INTO "role"(user_id, role_id)

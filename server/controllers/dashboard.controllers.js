@@ -2,8 +2,8 @@ import * as patientCode from "../query/patient.js"
 
 export async function patientDashboardData(req, res) {
     const user_id = req.user.user_id; //attached fromt the auth middleware using token
-    const patient_id = await patientCode.getPatientId(user_id);
-    if(patient_id == null) {
+    const patient_prof = await patientCode.getPatientProfile(user_id);
+    if(patient_prof.patient_id == null) {
         return res.json({
             'bp' : {
                 'systolic' : null,
@@ -11,11 +11,12 @@ export async function patientDashboardData(req, res) {
             },
             'heart rate': null,
             'blood sugar': null,
-            'height': null,
-            'weight': null,
+            'bmi': null,
+            'name': null,
+            'patientId': null,
         });
     }
-    const vitals = await patientCode.getLatestVitals(patient_id);
+    const vitals = await patientCode.getLatestVitals(patient_prof.patient_id);
     if(vitals == null) {
         return res.json({
             'bp' : {
@@ -24,12 +25,17 @@ export async function patientDashboardData(req, res) {
             },
             'heart rate': null,
             'blood sugar': null,
-            'height': null,
-            'weight': null,
+            'bmi': null,
+            'name': null,
+            'patientId': null,
         });
     }
  
     const bp = vitals.bp.split('/');
+
+    const bmi = vitals.weight/(vitals.height*vitals.height);
+
+    const patient_name = patient_prof.first_name + " " + (patient_prof.middle_name ? patient_prof.middle_name + " " : "") + patient_prof.last_name
 
     return res.json({
         'bp' : {
@@ -38,10 +44,12 @@ export async function patientDashboardData(req, res) {
         },
         'heart rate': vitals.heart_rate,
         'blood sugar': vitals.blood_sugar,
-        'height': vitals.height,
-        'weight': vitals.weight,
+        'bmi': bmi,
+        'name': patient_name,
+        'patientId': patient_prof.patient_id,
     });
-}
+
+  }
 
 // async function test() {
 //     const req = {

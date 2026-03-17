@@ -8,6 +8,7 @@ export const apiRequest = async (endpoint, data) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(data),
     });
 

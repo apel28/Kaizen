@@ -6,7 +6,9 @@ body {
 }
 
 .landing-wrapper {
-  height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
 }
 
 .hero-section,
@@ -18,6 +20,7 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
+  scroll-snap-align: start;
 }
 
 .logo-section {

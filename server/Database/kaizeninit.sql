@@ -31,7 +31,8 @@ CREATE TABLE refresh_tokens (
     user_id TEXT NOT NULL REFERENCES "user"(user_id),
     token_hash TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    expires_at TIMESTAMP NOT NULL
+    expires_at TIMESTAMP NOT NULL,
+	ipaddress TEXT
 );
 
 CREATE TABLE profile (

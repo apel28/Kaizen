@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Button from "./Button";
+import Button from "../Button";
 import { Eye, EyeOff } from "lucide-react";
-import { apiRequest } from "../utils/api"; // Importing helper
+import { apiRequest } from "../../utils/api"; // Importing helper
 
 const SignUpBlock = ({ onToggle }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -56,7 +56,7 @@ const SignUpBlock = ({ onToggle }) => {
         first_name: formData.first_name.trim(),
         middle_name: trimOrNull(formData.middle_name),
         last_name: formData.last_name.trim(),
-        date_of_birth: formData.date_of_birth, // must be YYYY-MM-DD
+        date_of_birth: formData.date_of_birth, // This is required, so it should not be empty
         address: trimOrNull(formData.address),
         contact_info: formData.contact_info.trim(),
         emergency_contact: trimOrNull(formData.emergency_contact),
@@ -71,7 +71,7 @@ const SignUpBlock = ({ onToggle }) => {
       // Send data to /signup endpoint
       const result = await apiRequest("/signup", payload);
       console.log("Sign-up successful:", result);
-      // alert("Registration successful! You can now log in.");
+      alert("Registration successful! You can now log in.");
       onToggle(); // Switch to login view
     } catch (err) {
       setError(err.message);
@@ -249,7 +249,7 @@ const SignUpBlock = ({ onToggle }) => {
         <div className="flex justify-center mt-6">
           <Button
             text={loading ? "Signing Up..." : "Sign Up"}
-            onClick={handleSignUp}
+            type="submit"
             disabled={loading}
           />
         </div>

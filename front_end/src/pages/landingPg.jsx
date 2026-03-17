@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import "./landingPg.css";
-import kaizenLogo from "./assets/kaizen-logo.webp";
-import Button from "./components/Button";
-import LoginBlock from "./components/LoginBlock";
-import SignUpBlock from "./components/SignUpBlock";
+import kaizenLogo from "../assets/kaizen-logo.webp";
+import Button from "../components/Button";
+import LoginBlock from "../components/landingPg/LoginBlock";
+import SignUpBlock from "../components/landingPg/SignUpBlock";
 
 function LandingPg() {
   const loginRef = useRef(null);

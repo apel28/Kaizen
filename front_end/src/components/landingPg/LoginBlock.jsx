@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import Button from "./Button";
+import { useNavigate } from "react-router-dom";
+import Button from "../Button";
 import { Eye, EyeOff } from "lucide-react";
-import { apiRequest } from "../utils/api"; // Importing helper
+import { apiRequest } from "../../utils/api"; // Importing helper
 
 const LoginBlock = ({ onToggle }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,6 +10,7 @@ const LoginBlock = ({ onToggle }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Optimized handleSignIn - simple and direct connection to backend
   const handleSignIn = async (e) => {
@@ -19,7 +21,7 @@ const LoginBlock = ({ onToggle }) => {
     try {
       const result = await apiRequest("/signin", { email, password });
       console.log("Sign-in successful:", result);
-      // alert("Login successful!"); // Minimum UI feedback
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -80,7 +82,7 @@ const LoginBlock = ({ onToggle }) => {
         <div className="flex justify-center mt-4">
           <Button
             text={loading ? "Signing In..." : "Sign In"}
-            onClick={handleSignIn}
+            type="submit"
             disabled={loading} // Disables button while loading
           />
         </div>

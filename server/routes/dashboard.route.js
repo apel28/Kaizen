@@ -7,6 +7,9 @@ const router = express.Router();
 
 // Single dashboard route that handles both roles
 router.get('/', verifyAuth, async (req, res) => {
+
+    console.log("Hello")
+
     if (req.user.role === 'P') {
         return patientDashboardData(req, res);
     } else if (req.user.role === 'D') {

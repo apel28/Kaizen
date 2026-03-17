@@ -1,21 +1,23 @@
 import pool from "../db.js";
 import { getRole } from "./role.js";
 
-export async function getPatientId(userId) {
+export async function getPatientProfile(userId) {
 
     if(await getRole(userId) != 'P') return null;
 
     const result = await pool.query(
         `
-        SELECT patient_id
+        SELECT *
         FROM patient p
         JOIN "user" u
             ON p.user_id = u.user_id
+        JOIN profile pf
+            ON pf.user_id = u.user_id
         WHERE u.user_id = $1
         `, [userId]
     );
 
-    return result.rows[0]?.patient_id ?? null;
+    return result.rows[0] ?? null;
 }
 
 export async function getLatestVitals(patientId) {

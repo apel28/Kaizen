@@ -1,4 +1,0 @@
--> Middleware: Basically parses data before being sent to the routes for logical usage
-Data flow: Connection -> Middleware -> Routes -> Controllers;
-
--> Backend doesnt trust the frontend ever, it will query the db every time using auth-ed user_id, it wont allow the frontend to send it any credentials, all credentials will be handled internally by the db;

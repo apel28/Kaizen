@@ -49,7 +49,9 @@ const Sidebar = ({ idx }) => {
               </div>
             </li>
           ))}
-          <button
+        </ul>
+      </nav>
+      <div className="flex justify-center items-center"><button
             key="logout"
             onClick={logout}
             className={`mb-4 p-3 absolute bottom-4 rounded-lg cursor-pointer transition-all hover:bg-red-600/50`}
@@ -58,9 +60,7 @@ const Sidebar = ({ idx }) => {
               <LogOut key="logout" />
               Log Out
             </div>
-          </button>
-        </ul>
-      </nav>
+          </button></div>
     </aside>
   );
 };

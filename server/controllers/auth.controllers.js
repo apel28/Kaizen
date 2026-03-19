@@ -1,6 +1,7 @@
 import pool from "../db.js";
 import bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken"; 
+import jwt from "jsonwebtoken";
+import { getRole } from "../query/role.js";
 
 export async function authorize(req, res) {
 
@@ -65,7 +66,8 @@ export async function authorize(req, res) {
             maxAge: 7 * 24 * 60 * 60 * 1000, 
         });
 
-        res.status(200).json({ message: "Login successful", user_id: user.user_id, role: user.role });
+        const role = await getRole(user.user_id);
+        res.status(200).json({ message: "Login successful", user_id: user.user_id, role });
 
 
     } catch(error) {

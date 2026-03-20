@@ -46,3 +46,28 @@ export const apiGet = async (endpoint) => {
     throw error;
   }
 };
+
+// PUT helper — used for updating profile data
+export const apiPut = async (endpoint, data) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || "Something went wrong");
+    }
+
+    return result;
+  } catch (error) {
+    console.error(`API Error (${endpoint}):`, error.message);
+    throw error;
+  }
+};

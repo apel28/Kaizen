@@ -8,6 +8,7 @@ import DDashboard from "./pages/dDashboard.jsx";
 
 import LandingPg from "./pages/landingPg.jsx";
 import PDashboard from "./pages/pDashboard.jsx";
+import PatientProfile from "./pages/patientProfile.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -19,7 +20,7 @@ createRoot(document.getElementById("root")).render(
 
           {/* Patient-only route */}
           <Route
-            path="/pDashboard"
+            path="/PatientDashboard"
             element={
               <ProtectedRoute allowedRole="P">
                 <PDashboard />
@@ -27,9 +28,19 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
+          {/* Patient profile route */}
+          <Route
+            path="/PatientDashboard/Profile"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <PatientProfile />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Doctor-only route */}
           <Route
-            path="/dDashboard"
+            path="/DoctorDashboard"
             element={
               <ProtectedRoute allowedRole="D">
                 <DDashboard />

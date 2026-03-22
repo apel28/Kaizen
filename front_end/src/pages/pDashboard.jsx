@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import StatCard from "../components/pdashboard/StatCard.jsx";
-import AppointmentsList from "../components/pdashboard/AppointmentsList";
-import MedicationList from "../components/pdashboard/MedicationList";
+import StatCard from "../components/pDashboard/StatCard";
+import AppointmentsList from "../components/pDashboard/AppointmentsList";
+import MedicationList from "../components/pDashboard/MedicationList";
 import { apiGet } from "../utils/api";
 import { Activity, Droplets, Scale, Heart } from "lucide-react";
 
 const PDashboard = () => {
+  const navigate = useNavigate();
   const [DbData, setDbData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -80,7 +82,11 @@ const PDashboard = () => {
               Welcome, {loading ? "..." : displayName}.
             </p>
           </div>
-          <div className="flex items-center bg-gray-700/30 px-4 py-2 rounded-xl border border-gray-600">
+          <div
+            className="flex items-center bg-gray-700/30 px-4 py-2 rounded-xl border border-gray-600 cursor-pointer hover:border-blue-500 hover:bg-gray-600/30 transition-all"
+            onClick={() => navigate("/PatientDashboard/Profile")}
+            title="View / Edit Profile"
+          >
             <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center font-bold text-lg mr-3 shadow-lg shadow-blue-900/20">
               {loading ? "..." : displayInitials}
             </div>

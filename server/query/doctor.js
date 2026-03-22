@@ -14,6 +14,69 @@ export async function getDoctorId(userId) {
     return result.rows[0]?.doctor_id ?? null;
 }
 
+export async function insertQualifications(doctorId, qualifications) {
+    if (!Array.isArray(qualifications)) qualifications = [qualifications];
+    if (qualifications.length === 0) return [];
+
+    const values = [];
+    const params = [];
+    let idx = 1;
+
+    for (const q of qualifications) {
+        values.push(`($${idx++}, $${idx++}, $${idx++}, $${idx++}, $${idx++})`);
+        params.push(
+            doctorId,
+            q.degree_name,
+            q.institute,
+            q.year,
+            q.department_name
+        );
+    }
+
+    const result = await pool.query(
+        `
+        INSERT INTO qualifications (doctor_id, degree_name, institute, "year", department_name)
+        VALUES ${values.join(", ")}
+        RETURNING *;
+        `,
+        params
+    );
+
+    return result.rows;
+}
+
+export async function getQualifications(doctorId) {
+    const result = await pool.query(
+        `
+        SELECT q_id, degree_name, institute, "year", department_name
+        FROM qualifications
+        WHERE doctor_id = $1
+        ORDER BY "year" DESC;
+        `,
+        [doctorId]
+    );
+
+    return result.rows ?? null;
+}
+
+export async function deleteQualification(doctorId, qualificationId) {
+    const result = await pool.query(
+        `
+        DELETE FROM qualifications
+        WHERE doctor_id = $1
+          AND q_id = $2
+        RETURNING *;
+        `,
+        [doctorId, qualificationId]
+    );
+
+    return result.rows[0] ?? null;
+}
+
+export async function deleteQualifications(doctorId, qualificationId) {
+    return deleteQualification(doctorId, qualificationId);
+}
+
 export async function insertExperience(doctorId, experiences) {
     if (!Array.isArray(experiences)) experiences = [experiences];
     if (experiences.length === 0) return [];

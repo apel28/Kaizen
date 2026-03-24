@@ -58,3 +58,16 @@ export async function deleteAppointment(appId) {
 
     return result.rows[0] ?? null;
 }
+
+export async function getAppointmentCountByDoctorDateTime(doctorId, date, slotTime) {
+    const result = await pool.query(
+        `
+        SELECT COUNT(*) AS count
+        FROM appointments
+        WHERE doctor_id = $1 AND date = $2 AND slot_time = $3;
+        `,
+        [doctorId, date, slotTime]
+    );
+
+    return parseInt(result.rows[0].count, 10);
+}

@@ -1,7 +1,7 @@
 const API_BASE_URL = "http://localhost:5001/api";
 
 // POST helper — used for login, signup etc.
-export const apiRequest = async (endpoint, data) => {
+export const apiPost = async (endpoint, data) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: "POST",
@@ -65,6 +65,22 @@ export const apiPut = async (endpoint, data) => {
       throw new Error(result.error || "Something went wrong");
     }
 
+    return result;
+  } catch (error) {
+    console.error(`API Error (${endpoint}):`, error.message);
+    throw error;
+  }
+};
+
+// DELETE helper — used for cancelling appointments etc.
+export const apiDelete = async (endpoint) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Something went wrong");
     return result;
   } catch (error) {
     console.error(`API Error (${endpoint}):`, error.message);

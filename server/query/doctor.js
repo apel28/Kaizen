@@ -238,4 +238,26 @@ export async function getAvailability(doctorId) {
     );
 
     return result.rows ?? null;
+<<<<<<< HEAD
 }
+||||||| 9c4083d
+}
+=======
+}
+
+export async function searchDoctors(searchString) {
+    const result = await pool.query(
+        `
+        SELECT DISTINCT d.doctor_id,
+               (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS name
+        FROM doctor d
+        JOIN "user" u ON d.user_id = u.user_id
+        JOIN profile p ON u.user_id = p.user_id
+        WHERE (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) ILIKE $1
+        ORDER BY name ASC;
+        `,
+        [`%${searchString}%`]
+    );
+    return result.rows ?? null;
+}
+>>>>>>> origin/skb

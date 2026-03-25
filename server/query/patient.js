@@ -1,6 +1,14 @@
 import pool from "../db.js";
 import { getRole } from "./role.js";
 
+export async function getPatientId(userId) {
+    const result = await pool.query(
+        `SELECT patient_id FROM patient WHERE user_id = $1`,
+        [userId]
+    );
+    return result.rows[0]?.patient_id ?? null;
+}
+
 export async function getPatientProfile(userId) {
 
     if(await getRole(userId) != 'P') return null;

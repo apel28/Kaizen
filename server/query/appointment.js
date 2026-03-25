@@ -72,8 +72,19 @@ export async function getAppointmentCountByDoctorDateTime(doctorId, date, slotTi
     return parseInt(result.rows[0].count, 10);
 }
 
-async function test() {
-    insertAppointment(2, 4, '2026-03-23', '16:00', 0);
+export async function getAppointmentsByPatient(patientId) {
+    const result = await pool.query(
+        `
+        SELECT a.app_id, a.date, a.slot_time, a.queue,
+               (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS doctor_name
+        FROM appointments a
+        JOIN doctor d ON a.doctor_id = d.doctor_id
+        JOIN "user" u ON d.user_id = u.user_id
+        JOIN profile p ON u.user_id = p.user_id
+        WHERE a.patient_id = $1
+        ORDER BY a.date ASC, a.slot_time ASC;
+        `,
+        [patientId]
+    );
+    return result.rows;
 }
-
-//test()

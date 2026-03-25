@@ -1,6 +1,7 @@
 import pool from "../db.js"
 
 export async function insertAvailability(doctorId, slot) {
+    console.log(doctorId + " " + slot.slot_time);
     let result = await pool.query(
         `
         SELECT *
@@ -15,7 +16,8 @@ export async function insertAvailability(doctorId, slot) {
     );
 
     if(result.rowCount > 0) {
-        await deleteAvailability(result.rows[0].a_id);
+        console.log("hello");
+        await deletetAvailability(result.rows[0].a_id);
     }
 
     result = await pool.query(
@@ -34,7 +36,7 @@ export async function insertAvailability(doctorId, slot) {
     return result.rows ?? null;
 }
 
-export async function deleteAvailability(aId) {
+export async function deletetAvailability(aId) {
     const result = await pool.query(
         `
         DELETE from availability
@@ -53,31 +55,32 @@ export async function updateAvailability(doctorId, aId, slot) {
     await insertAvailability(doctorId, slot)
 }
 
-export async function getAvailability(doctorId, day) {
-    const result = await pool.query(
-        `
+export async function getAvailability(doctorId, weekDay = null) {
+    let queryStr = `
         SELECT * 
         FROM availability
-        WHERE doctor_id = $1 and week_day = $2
-        ORDER BY slot_time ASC;
-        `,
-        [
-            doctorId, day
-        ]
-    );
+        WHERE doctor_id = $1
+    `;
+    const params = [doctorId];
 
-    return result.rows ?? null
+    if (weekDay) {
+        queryStr += ` AND week_day = $2`;
+        params.push(weekDay);
+    }
+
+    const result = await pool.query(queryStr, params);
+
+    return result.rows ?? null;
 }
 
+// async function test() {
+//     await insertAvailability(2, 
+//         {
+//             week_day: 'MON',
+//             slot_time: '16:00',
+//             slot_duration_minutes: 3
+//         }
+//     );
+// }
 
-async function test() {
-    await insertAvailability(2, 
-        {
-            week_day: 'MON',
-            slot_time: '17:00',
-            slot_duration_minutes: 1
-        }
-    );
-}
-
-test();
+// test();

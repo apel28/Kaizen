@@ -9,6 +9,7 @@ import DDashboard from "./pages/dDashboard.jsx";
 import LandingPg from "./pages/landingPg.jsx";
 import PDashboard from "./pages/pDashboard.jsx";
 import PatientProfile from "./pages/patientProfile.jsx";
+import Appointment from "./pages/Appointment.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -34,6 +35,16 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="P">
                 <PatientProfile />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Patient appointment route */}
+          <Route
+            path="/Appointment"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <Appointment />
               </ProtectedRoute>
             }
           />

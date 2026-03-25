@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { apiGet, apiDelete } from "../../utils/api";
-import Button from "../Button";
+import { apiGet } from "../../utils/api";
 
 const AppointmentsList = () => {
   const [appointments, setAppointments] = useState([]);
@@ -18,15 +17,6 @@ const AppointmentsList = () => {
   };
 
   useEffect(() => { fetchAppointments(); }, []);
-
-  const handleCancel = async (appId) => {
-    try {
-      await apiDelete(`/appointment/${appId}`);
-      setAppointments((prev) => prev.filter((a) => a.app_id !== appId));
-    } catch (err) {
-      console.error("Cancel failed:", err.message);
-    }
-  };
 
   return (
     <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
@@ -49,12 +39,6 @@ const AppointmentsList = () => {
                   {" • Queue: #"}{appt.queue}
                 </p>
               </div>
-              <Button
-                text="Cancel"
-                onClick={() => handleCancel(appt.app_id)}
-                type="button"
-                color="bg-red-800"
-              />
             </li>
           ))}
         </ul>

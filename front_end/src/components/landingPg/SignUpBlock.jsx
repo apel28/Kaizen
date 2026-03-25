@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "../Button";
 import { Eye, EyeOff } from "lucide-react";
-import { apiRequest } from "../../utils/api"; // Importing helper
+import { apiPost } from "../../utils/api"; // Importing helper
 
 const SignUpBlock = ({ onToggle }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -69,7 +69,7 @@ const SignUpBlock = ({ onToggle }) => {
       };
 
       // Send data to /signup endpoint
-      const result = await apiRequest("/signup", payload);
+      const result = await apiPost("/signup", payload);
       console.log("Sign-up successful:", result);
       alert("Registration successful! You can now log in.");
       onToggle(); // Switch to login view

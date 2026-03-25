@@ -1,66 +1,53 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import kaizenLogo from "../assets/kaizen-logo.webp";
-import {House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut} from "lucide-react";
+import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
+const navItems = [
+  { label: "Home",         icon: <House />,         path: "/PatientDashboard" },
+  { label: "Appointment",  icon: <Calendar />,      path: "/Appointment" },
+  { label: "Prescription", icon: <FileText />,      path: null },
+  { label: "Schedule",     icon: <Clock />,         path: null },
+  { label: "Tests",        icon: <FlaskConical />,  path: null },
+  { label: "Medication",   icon: <Pill />,          path: null },
+];
+
 const Sidebar = ({ idx }) => {
-
-  const {logout} = useAuth();
-
-  const navItems = [
-    "Home",
-    "Appointment",
-    "Prescription",
-    "Schedule",
-    "Tests",
-    "Medication"
-  ];
-
-  const navIcons = [
-    <House key="home" />,
-    <Calendar key="appointment" />,
-    <FileText key="prescription" />,
-    <Clock key="schedule" />,
-    <FlaskConical key="tests" />,
-    <Pill key="medication" />,
-    <LogOut key="logout" />
-  ];
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <aside className="w-64 border border-gray-700 bg-gray-800/50 text-white p-6 rounded-l-2xl font-sans">
-      {/* <h1 className="text-3xl font-bold mb-10 text-blue-400">Kaizen</h1> */}
       <div className="flex justify-center items-center">
-        <img
-          src={kaizenLogo}
-          alt="Kaizen Logo"
-          className="w-40 mb-10 max-w-full"
-        />
+        <img src={kaizenLogo} alt="Kaizen Logo" className="w-40 mb-10 max-w-full" />
       </div>
       <nav>
         <ul>
-          {navItems.map((item, index) => (
+          {navItems.map(({ label, icon, path }, index) => (
             <li
-              key={item}
-              className={`mb-4 p-3 rounded-lg cursor-pointer transition-all ${index === idx ? "bg-blue-600" : "hover:bg-gray-800"}`}
+              key={label}
+              onClick={() => path && navigate(path)}
+              className={`mb-4 p-3 rounded-lg transition-all ${index === idx ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50"}`}
             >
               <div className="flex items-center gap-2">
-                {navIcons[index]}
-                {item}
+                {icon}
+                {label}
               </div>
             </li>
           ))}
         </ul>
       </nav>
-      <div className="flex justify-center items-center"><button
-            key="logout"
-            onClick={logout}
-            className={`mb-4 p-3 absolute bottom-4 rounded-lg cursor-pointer transition-all hover:bg-red-600/50`}
-          >
-            <div className="flex items-center gap-2">
-              <LogOut key="logout" />
-              Log Out
-            </div>
-          </button></div>
+      <div className="flex justify-center items-center">
+        <button
+          onClick={logout}
+          className="mb-4 p-3 absolute bottom-4 rounded-lg cursor-pointer transition-all hover:bg-red-600/50"
+        >
+          <div className="flex items-center gap-2">
+            <LogOut /> Log Out
+          </div>
+        </button>
+      </div>
     </aside>
   );
 };

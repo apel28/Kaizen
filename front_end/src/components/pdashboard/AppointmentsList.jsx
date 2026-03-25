@@ -1,46 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { apiGet, apiDelete } from "../../utils/api";
+import Button from "../Button";
 
 const AppointmentsList = () => {
-  const appointments = [
-    {
-      doctor: "Dr. Sarah Smith",
-      specialty: "Cardiologist",
-      date: "15-Jul-2026",
-      time: "10:30 AM",
-      status: "Confirmed",
-    },
-    {
-      doctor: "Dr. Sarah Smith",
-      specialty: "Cardiologist",
-      date: "15-Jul-2026",
-      time: "10:30 AM",
-      status: "Confirmed",
-    },
-  ];
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchAppointments = async () => {
+    try {
+      const data = await apiGet("/appointment");
+      setAppointments(data);
+    } catch {
+      setAppointments([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchAppointments(); }, []);
+
+  const handleCancel = async (appId) => {
+    try {
+      await apiDelete(`/appointment/${appId}`);
+      setAppointments((prev) => prev.filter((a) => a.app_id !== appId));
+    } catch (err) {
+      console.error("Cancel failed:", err.message);
+    }
+  };
 
   return (
     <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-bold">Upcoming Appointments</h3>
-      </div>
-      <ul>
-        {appointments.map((appt, index) => (
-          <li
-            key={index}
-            className="flex items-center justify-between py-3 border-b border-gray-700 last:border-b-0"
-          >
-            <div>
-              <p className="font-bold">{appt.doctor}</p>
-              <p className="text-sm text-gray-400">
-                {appt.specialty} • {appt.date} • {appt.time}
-              </p>
-            </div>
-            <span className="text-green-400 bg-green-900/50 px-3 py-1 rounded-full text-sm">
-              {appt.status}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <h3 className="text-xl font-bold mb-4">Upcoming Appointments</h3>
+      {loading ? (
+        <div className="space-y-3">
+          {[1, 2].map((i) => <div key={i} className="h-14 bg-gray-700/40 rounded-xl animate-pulse" />)}
+        </div>
+      ) : appointments.length === 0 ? (
+        <p className="text-gray-500 text-sm italic">No upcoming appointments.</p>
+      ) : (
+        <ul>
+          {appointments.map((appt) => (
+            <li key={appt.app_id} className="flex items-center justify-between py-3 border-b border-gray-700 last:border-b-0">
+              <div>
+                <p className="font-bold">Dr. {appt.doctor_name}</p>
+                <p className="text-sm text-gray-400">
+                  {new Date(appt.date).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
+                  {" • "}{appt.slot_time}
+                  {" • Queue: #"}{appt.queue}
+                </p>
+              </div>
+              <Button
+                text="Cancel"
+                onClick={() => handleCancel(appt.app_id)}
+                type="button"
+                color="bg-red-800"
+              />
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

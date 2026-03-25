@@ -6,6 +6,7 @@ import registerRoutes from "./routes/register.route.js"
 import authRoutes from "./routes/auth.route.js"
 import dashboardRoutes from "./routes/dashboard.route.js"
 import profileRoutes from "./routes/profile.route.js"
+import appointmentRoutes from "./routes/appointment.route.js"
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/signup", registerRoutes);
 app.use("/api/signin", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/appointment", appointmentRoutes);
 
 app.listen(5001, () => {
     console.log("Server started on node 5001");

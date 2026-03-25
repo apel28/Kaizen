@@ -394,4 +394,5 @@ create table test_orders(
 	foreign key(visit_id) references visits(visit_id)
 );
 
+ALTER TABLE experience ALTER COLUMN end_date DROP NOT NULL;
 

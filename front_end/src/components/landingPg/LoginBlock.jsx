@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import { Eye, EyeOff } from "lucide-react";
-import { apiRequest } from "../../utils/api";
+import { apiPost } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 
 const ROLE_REDIRECTS = { P: "/PatientDashboard", D: "/DoctorDashboard" };
@@ -22,7 +22,7 @@ const LoginBlock = ({ onToggle }) => {
     setLoading(true);
 
     try {
-      const result = await apiRequest("/signin", { email, password });
+      const result = await apiPost("/signin", { email, password });
       login(result.role);                           
       navigate(ROLE_REDIRECTS[result.role] ?? "/"); 
     } catch (err) {

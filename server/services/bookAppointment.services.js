@@ -1,5 +1,5 @@
-import { getAppointment, getAppointmentCountByDoctorDateTime } from "../query/appointment";
-import { getAvailability } from "../query/availability";
+import { getAppointment, getAppointmentCountByDoctorDateTime } from "../query/appointment.js";
+import { getAvailability } from "../query/availability.js";
 
 
 async function slotsAvailableByDate(doctorId, date) {
@@ -33,3 +33,9 @@ async function slotsAvailableByDate(doctorId, date) {
 
     return { rows: availableSlots };
 }
+
+async function test() {
+    console.log(await slotsAvailableByDate(2, '2026-03-23'));
+}
+
+test()

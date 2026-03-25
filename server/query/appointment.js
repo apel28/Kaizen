@@ -71,3 +71,9 @@ export async function getAppointmentCountByDoctorDateTime(doctorId, date, slotTi
 
     return parseInt(result.rows[0].count, 10);
 }
+
+async function test() {
+    insertAppointment(2, 4, '2026-03-23', '16:00', 0);
+}
+
+//test()

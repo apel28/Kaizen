@@ -396,3 +396,11 @@ create table test_orders(
 
 ALTER TABLE experience ALTER COLUMN end_date DROP NOT NULL;
 
+
+
+ALTER TABLE appointments
+DROP CONSTRAINT unique_appointment_slot;
+
+ALTER TABLE appointments
+ADD CONSTRAINT unique_appointment_slot UNIQUE (patient_id, "date", slot_time);
+

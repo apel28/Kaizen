@@ -1,0 +1,55 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import kaizenLogo from "../assets/kaizen-logo.webp";
+import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+
+const navItems = [
+  { label: "Home",      icon: <House />,        path: "/DoctorDashboard" },
+  { label: "Unknown 1", icon: <Calendar />,     path: null },
+  { label: "Unknown 2", icon: <FileText />,     path: null },
+  { label: "Unknown 3", icon: <Clock />,        path: null },
+  { label: "Unknown 4", icon: <FlaskConical />, path: null },
+  { label: "Unknown 5", icon: <Pill />,         path: null },
+];
+
+const DoctorSidebar = ({ idx }) => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  return (
+    <aside className="w-64 border border-gray-700 bg-gray-800/50 text-white p-6 rounded-l-2xl font-sans">
+      <div className="flex justify-center items-center">
+        <img src={kaizenLogo} alt="Kaizen Logo" className="w-40 mb-10 max-w-full" />
+      </div>
+      <nav>
+        <ul>
+          {navItems.map(({ label, icon, path }, index) => (
+            <li
+              key={label}
+              onClick={() => path && navigate(path)}
+              className={`mb-4 p-3 rounded-lg transition-all ${index === idx ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50"}`}
+            >
+              <div className="flex items-center gap-2">
+                {icon}
+                {label}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div className="flex justify-center items-center">
+        <button
+          onClick={logout}
+          className="mb-4 p-3 absolute bottom-4 rounded-lg cursor-pointer transition-all hover:bg-red-600/50"
+        >
+          <div className="flex items-center gap-2">
+            <LogOut /> Log Out
+          </div>
+        </button>
+      </div>
+    </aside>
+  );
+};
+
+export default DoctorSidebar;

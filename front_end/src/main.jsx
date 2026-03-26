@@ -59,6 +59,16 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
+          {/* Doctor profile route — placeholder until page is built */}
+          <Route
+            path="/DoctorDashboard/Profile"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DDashboard />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Catch-all — redirect unknown URLs back to landing */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

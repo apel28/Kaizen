@@ -3,7 +3,7 @@ import pool from '../db.js';
 export async function insertExperience(doctorId, experiences) {
     const result = await pool.query(
         `
-        INSERT INTO experience (doctor_id, institue, "role", start_date, end_date)
+        INSERT INTO experience (doctor_id, institute, "role", start_date, end_date)
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *;
         `,
@@ -22,7 +22,7 @@ export async function insertExperience(doctorId, experiences) {
 export async function getExperience(doctorId) {
     const result = await pool.query(
         `
-        SELECT e_id, institue, "role", start_date, end_date
+        SELECT e_id, institute, "role", start_date, end_date
         FROM experience
         WHERE doctor_id = $1
         ORDER BY start_date DESC;

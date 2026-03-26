@@ -1,66 +1,64 @@
-import React, { useState, useEffect } from "react";
-import { useCombobox } from "downshift"; // Custom hook for searchable dropdown
+import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/Sidebar";
 import Button from "../components/Button";
 import { apiGet, apiPost } from "../utils/api";
 import { Calendar, Search, Clock, ChevronDown } from "lucide-react";
 
-// Reusable searchable combobox powered by Downshift
-// displayKey – which object field to show (default "name").
-const SearchDropdown = ({ placeholder, items = [], onSelect, onQueryChange, disabled, displayKey = "name", value }) => { 
-  const filtered = (inputVal = "") =>
-    items.filter((i) => i[displayKey]?.toLowerCase().includes(inputVal.toLowerCase()));
+// Reusable searchable combobox — custom built to match Kaizen's dark theme
+const SearchDropdown = ({ placeholder, items = [], onSelect, onQueryChange, disabled, displayKey = "name", value }) => {
+  const [query, setQuery] = useState(value || "");
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
 
-  const {
-    isOpen,
-    getMenuProps,
-    getInputProps,
-    getItemProps,
-    highlightedIndex,
-    setInputValue,
-  } = useCombobox({
-    items: filtered(value),
-    itemToString: (item) => (item ? item[displayKey] : ""),
-    inputValue: value,
-    onInputValueChange: ({ inputValue }) => {
-      onSelect(null);
-      if (onQueryChange) onQueryChange(inputValue);
-    },
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) onSelect(selectedItem);
-    },
-  });
+  // Sync when parent resets value (e.g. form clear)
+  useEffect(() => { setQuery(value || ""); }, [value]);
 
-  // Sync external value reset (e.g. after form clear)
-  useEffect(() => { setInputValue(value || ""); }, [value]);
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
-  const visibleItems = filtered(value);
+  const filtered = items.filter((i) =>
+    i[displayKey]?.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const handleChange = (e) => {
+    const val = e.target.value;
+    setQuery(val);
+    setOpen(true);
+    onSelect(null);  // clear previous selection while typing
+    if (onQueryChange) onQueryChange(val);  // trigger server search for doctors
+  };
 
   return (
-    <div className="relative">
-      <div className={`flex items-center gap-2 bg-gray-900/60 border rounded-xl px-4 py-3 transition-all ${disabled ? "opacity-40 border-gray-700" : "border-gray-600 hover:border-blue-500"}`}>
+    <div ref={ref} className="relative">
+      <div className={`flex items-center gap-2 bg-gray-900/60 border rounded-xl px-4 py-3 transition-all ${disabled ? "opacity-40 cursor-not-allowed border-gray-700" : "border-gray-600 hover:border-blue-500"}`}>
         <Search size={16} className="text-gray-400 shrink-0" />
         <input
-          {...getInputProps({ disabled })}
-          placeholder={placeholder}
           className="bg-transparent flex-1 outline-none text-white placeholder-gray-500 text-sm disabled:cursor-not-allowed"
+          placeholder={placeholder}
+          value={query}
+          disabled={disabled}
+          onChange={handleChange}
+          onFocus={() => !disabled && setOpen(true)}
         />
         <ChevronDown size={16} className="text-gray-400 shrink-0" />
       </div>
-      <ul
-        {...getMenuProps()}
-        className={`absolute z-50 mt-1 w-full bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-xl max-h-52 overflow-y-auto transition-all ${isOpen && !disabled && visibleItems.length > 0 ? "block" : "hidden"}`}
-      >
-        {isOpen && !disabled && visibleItems.map((item, index) => (
-          <li
-            key={index}
-            {...getItemProps({ item, index })}
-            className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${highlightedIndex === index ? "bg-blue-600/60 text-white" : "text-gray-200 hover:bg-blue-600/40"}`}
-          >
-            {item[displayKey]}
-          </li>
-        ))}
-      </ul>
+      {open && !disabled && filtered.length > 0 && (
+        <ul className="absolute z-50 mt-1 w-full bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-xl max-h-52 overflow-y-auto">
+          {filtered.map((item, i) => (
+            <li
+              key={i}
+              className="px-4 py-2.5 text-sm text-gray-200 hover:bg-blue-600/40 cursor-pointer transition-colors"
+              onMouseDown={() => { setQuery(item[displayKey]); setOpen(false); onSelect(item); }}
+            >
+              {item[displayKey]}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
@@ -75,10 +73,12 @@ const Appointment = () => {
 
   const today = new Date().toISOString().split("T")[0];
 
+  // Load all departments once on mount
   useEffect(() => {
     apiGet("/appointment/departments").then(setDepartments).catch(console.error);
   }, []);
 
+  // Reload doctors when dept or free-text query changes
   useEffect(() => {
     const params = new URLSearchParams();
     if (form.dept) params.set("departmentId", form.dept.department_id);
@@ -86,6 +86,7 @@ const Appointment = () => {
     apiGet(`/appointment/doctors?${params}`).then(setDoctors).catch(console.error);
   }, [form.dept, doctorQuery]);
 
+  // Load available slots when both doctor and date are set
   useEffect(() => {
     if (!form.doctor || !form.date) return setSlots([]);
     apiGet(`/appointment/slots?doctorId=${form.doctor.doctor_id}&date=${form.date}`)
@@ -125,7 +126,7 @@ const Appointment = () => {
         <form onSubmit={handleSubmit}>
           <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm space-y-5">
 
-            {/* Department */}
+            {/* Department (optional filter) */}
             <div>
               <label className="block text-sm text-gray-400 mb-2">
                 Department <span className="text-gray-600">(optional)</span>
@@ -152,7 +153,7 @@ const Appointment = () => {
               />
             </div>
 
-            {/* Date */}
+            {/* Date — locked until doctor is selected */}
             <div>
               <label className="block text-sm text-gray-400 mb-2">Date</label>
               <div className={`flex items-center gap-2 bg-gray-900/60 border rounded-xl px-4 py-3 transition-all ${!form.doctor ? "opacity-40 border-gray-700" : "border-gray-600 hover:border-blue-500"}`}>
@@ -168,7 +169,7 @@ const Appointment = () => {
               </div>
             </div>
 
-            {/* Time Slots */}
+            {/* Available time slots */}
             {slots.length > 0 && (
               <div>
                 <label className="block text-sm text-gray-400 mb-3">

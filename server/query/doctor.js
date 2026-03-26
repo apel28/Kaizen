@@ -238,11 +238,6 @@ export async function getAvailability(doctorId) {
     );
 
     return result.rows ?? null;
-<<<<<<< HEAD
-}
-||||||| 9c4083d
-}
-=======
 }
 
 export async function searchDoctors(searchString) {
@@ -260,4 +255,3 @@ export async function searchDoctors(searchString) {
     );
     return result.rows ?? null;
 }
->>>>>>> origin/skb

@@ -394,6 +394,8 @@ create table test_orders(
 	foreign key(visit_id) references visits(visit_id)
 );
 
+
+
 ALTER TABLE experience ALTER COLUMN end_date DROP NOT NULL;
 
 
@@ -401,8 +403,19 @@ ALTER TABLE experience ALTER COLUMN end_date DROP NOT NULL;
 ALTER TABLE appointments
 DROP CONSTRAINT unique_appointment_slot;
 
+
+
+
 ALTER TABLE appointments
 ADD CONSTRAINT unique_appointment_slot UNIQUE (patient_id, "date", slot_time);
 
-ALTER TABLE experience ALTER COLUMN end_date DROP NOT NULL;
 
+
+ALTER TABLE all_medicines
+ALTER COLUMN ppu TYPE TEXT;
+
+ALTER TABLE all_medicines
+ALTER COLUMN generic_name DROP NOT NULL;
+
+ALTER TABLE all_medicines
+ALTER COLUMN ppu DROP NOT NULL;

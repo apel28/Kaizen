@@ -1,6 +1,6 @@
 import express from 'express';
 import { patientDashboardData } from '../controllers/dashboard.controllers.js';
-// import { doctorDashboardData } from '../controllers/doctor.controllers.js'; // Uncomment when created
+import { doctorDashboardData } from '../controllers/doctorDashboard.controller.js';
 import { verifyAuth } from '../middleware/auth.verifier.js';
 
 const router = express.Router();
@@ -10,8 +10,7 @@ router.get('/', verifyAuth, async (req, res) => {
     if (req.user.role === 'P') {
         return patientDashboardData(req, res);
     } else if (req.user.role === 'D') {
-        // return doctorDashboardData(req, res); // Implement doctor dashboard
-        return res.json({ message: 'Doctor dashboard not implemented yet' });
+        return doctorDashboardData(req, res);
     } else {
         return res.status(403).json({ error: 'Invalid role' });
     }

@@ -88,3 +88,20 @@ export async function getAppointmentsByPatient(patientId) {
     );
     return result.rows;
 }
+
+export async function getAppointmentsByDoctorForDate(doctorId, date) {
+    const result = await pool.query(
+        `
+        SELECT a.app_id, a.date, a.slot_time, a.queue,
+               (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS patient_name
+        FROM appointments a
+        JOIN patient pt ON a.patient_id = pt.patient_id
+        JOIN "user" u ON pt.user_id = u.user_id
+        JOIN profile p ON u.user_id = p.user_id
+        WHERE a.doctor_id = $1 AND a.date = $2
+        ORDER BY a.slot_time ASC;
+        `,
+        [doctorId, date]
+    );
+    return result.rows;
+}

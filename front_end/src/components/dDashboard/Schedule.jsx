@@ -36,14 +36,14 @@ const Schedule = ({ appointments = [], date, loading, onCancel }) => {
         <p className="text-gray-500 text-sm italic">No appointments scheduled for today.</p>
       ) : (
         <ul className="space-y-3">
-          {appointments.map((appt) => (
+          {appointments.map((appt, index) => (
             <li
               key={appt.app_id}
               className="flex items-center gap-4 bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 hover:border-blue-500/50 transition-colors"
             >
               {/* Queue badge */}
               <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-full bg-blue-600/20 border border-blue-500/40 text-blue-400 font-bold text-sm">
-                #{appt.queue}
+                #{index + 1}
               </div>
 
               {/* Patient info */}
@@ -51,10 +51,6 @@ const Schedule = ({ appointments = [], date, loading, onCancel }) => {
                 <p className="font-semibold truncate flex items-center gap-1.5">
                   <User size={13} className="text-gray-400 shrink-0" />
                   {appt.patient_name}
-                </p>
-                <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
-                  <Clock size={12} className="shrink-0" />
-                  {appt.slot_time}
                 </p>
               </div>
 
@@ -80,7 +76,7 @@ const Schedule = ({ appointments = [], date, loading, onCancel }) => {
           {appointments.length} patient{appointments.length > 1 ? "s" : ""} today
         </p>
       )} */}
-      
+
     </div>
   );
 };

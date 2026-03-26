@@ -17,7 +17,7 @@ export async function getDoctorId(userId) {
 export async function getDoctorProfile(userId) {
     const result = await pool.query(
         `
-        SELECT d.doctor_id,
+        SELECT d.doctor_id, p.*,
                (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS doctor_name
         FROM doctor d
         JOIN "user" u ON d.user_id = u.user_id

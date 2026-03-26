@@ -6,7 +6,7 @@ import Button from "../components/Button";
 const INIT = {
   first_name: "", middle_name: "", last_name: "",
   date_of_birth: "", gender: "", nationality: "",
-  address: "", contact_info: "", emergency_contact: "",
+  address: "", contact_info: "",
 };
 
 function Field({ label, children, wide }) {
@@ -18,36 +18,35 @@ function Field({ label, children, wide }) {
   );
 }
 
-export default function PatientProfile() {
+export default function DoctorProfile() {
   const navigate = useNavigate();
   const [form, setForm] = useState(INIT);
   const [nid, setNid] = useState("—");
+  const [specialization, setSpecialization] = useState("—");
+  const [doctorId, setDoctorId] = useState("—");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState({ text: "", ok: true });
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const d = await apiGet("/profile");
-        console.log(d);
+    apiGet("/profile")
+      .then((d) => {
         setForm({
-          first_name: d.first_name ?? "", middle_name: d.middle_name ?? "",
-          last_name: d.last_name ?? "",
+          first_name:    d.first_name    ?? "",
+          middle_name:   d.middle_name   ?? "",
+          last_name:     d.last_name     ?? "",
           date_of_birth: d.date_of_birth ? d.date_of_birth.split("T")[0] : "",
-          gender: d.gender ? d.gender.charAt(0).toUpperCase() + d.gender.slice(1).toLowerCase() : "", 
-          nationality: d.nationality ?? "",
-          address: d.address ?? "", contact_info: d.contact_info ?? "",
-          emergency_contact: d.emergency_contact ?? "",
+          gender:        d.gender ? d.gender.charAt(0).toUpperCase() + d.gender.slice(1).toLowerCase() : "",
+          nationality:   d.nationality   ?? "",
+          address:       d.address       ?? "",
+          contact_info:  d.contact_info  ?? "",
         });
         setNid(d.nid ?? "—");
-      } catch (e) {
-        setMsg({ text: e.message || "Failed to load.", ok: false });
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
+        setSpecialization(d.specialization ?? "—");
+        setDoctorId(d.doctor_id ?? "—");
+      })
+      .catch((e) => setMsg({ text: e.message || "Failed to load.", ok: false }))
+      .finally(() => setLoading(false));
   }, []);
 
   const onChange = (e) => {
@@ -62,21 +61,14 @@ export default function PatientProfile() {
 
     const formatTitleCase = (str) => {
       if (!str) return "";
-      return str.trim().split(/\s+/).map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      return str.trim().split(/\s+/).map((w) =>
+        w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
       ).join(" ");
     };
 
     const payload = { ...form };
-    const titleCaseFields = ["first_name", "middle_name", "last_name", "nationality", "gender"];
-    
-    Object.keys(payload).forEach(key => {
-      if (typeof payload[key] === "string") {
-        payload[key] = payload[key].trim();
-        if (titleCaseFields.includes(key)) {
-          payload[key] = formatTitleCase(payload[key]);
-        }
-      }
+    ["first_name", "middle_name", "last_name", "nationality", "gender"].forEach((k) => {
+      if (typeof payload[k] === "string") payload[k] = formatTitleCase(payload[k]);
     });
 
     try {
@@ -94,8 +86,11 @@ export default function PatientProfile() {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center p-6 bg-gradient-to-br from-[#0a0a3a] to-black bg-fixed font-['Segoe_UI',sans-serif]">
-      <div className="w-full max-w-4xl mb-6">
+      {/* Top nav row */}
+      <div className="w-full max-w-4xl mb-6 flex items-center gap-3">
         <Button text="Back" onClick={() => navigate(-1)} />
+        <Button text="Experience"   onClick={() => navigate("/DoctorDashboard/Experience")} />
+        <Button text="Qualification" onClick={() => navigate("/DoctorDashboard//Qualification")} />
       </div>
 
       <div className="w-full max-w-4xl bg-gray-800/50 rounded-2xl border border-gray-700 backdrop-blur-sm p-8">
@@ -106,19 +101,21 @@ export default function PatientProfile() {
           </div>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Patient Profile
+              Doctor Profile
             </h1>
+            <p className="text-xs text-gray-500 mt-1 font-mono">ID: #{doctorId} · {specialization}</p>
           </div>
         </div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {Array.from({ length: 9 }).map((_, i) => (
+            {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="h-14 bg-gray-700/50 rounded-xl animate-pulse" />
             ))}
           </div>
         ) : (
           <form onSubmit={onSubmit} noValidate>
+            {/* Read-only NID */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
               <Field label="National ID (NID)">
                 <div className="w-full bg-gray-900/30 border border-gray-700 rounded-xl px-4 py-2.5 text-gray-400 text-sm cursor-not-allowed">
@@ -129,11 +126,11 @@ export default function PatientProfile() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
               {[
-                { name: "first_name",        label: "First Name" },
-                { name: "middle_name",       label: "Middle Name" },
-                { name: "last_name",         label: "Last Name" },
-                { name: "date_of_birth",     label: "Date of Birth",     type: "date" },
-                { name: "nationality",       label: "Nationality" },
+                { name: "first_name",    label: "First Name" },
+                { name: "middle_name",   label: "Middle Name" },
+                { name: "last_name",     label: "Last Name" },
+                { name: "date_of_birth", label: "Date of Birth", type: "date" },
+                { name: "nationality",   label: "Nationality" },
               ].map(({ name, label, type = "text" }) => (
                 <Field key={name} label={label}>
                   <input name={name} type={type} value={form[name]} onChange={onChange}
@@ -145,7 +142,7 @@ export default function PatientProfile() {
                 <select name="gender" value={form.gender} onChange={onChange} className={input + " appearance-none"} disabled>
                   <option value="">Gender</option>
                   {["Male", "Female", "Other"].map((o) => (
-                    <option key={o} value={o=="Other" ? null : o}>{o}</option>
+                    <option key={o} value={o}>{o}</option>
                   ))}
                 </select>
               </Field>
@@ -158,11 +155,6 @@ export default function PatientProfile() {
               <Field label="Contact Info">
                 <input name="contact_info" value={form.contact_info} onChange={onChange}
                   placeholder="Enter contact info" className={input} />
-              </Field>
-
-              <Field label="Emergency Contact">
-                <input name="emergency_contact" value={form.emergency_contact} onChange={onChange}
-                  placeholder="Enter emergency contact" className={input} />
               </Field>
             </div>
 

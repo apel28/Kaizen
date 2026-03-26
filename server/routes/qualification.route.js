@@ -8,6 +8,6 @@ router.get('/', verifyAuth, getDoctorQualifications);
 
 router.post('/', verifyAuth, addDoctorQualification);
 
-router.delete('/', verifyAuth, removeDoctorQualification);
+router.delete('/:q_id', verifyAuth, removeDoctorQualification);
 
 export default router;

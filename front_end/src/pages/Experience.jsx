@@ -24,8 +24,10 @@ export default function Experience() {
   const [msg, setMsg] = useState({ text: "", ok: true });
 
   useEffect(() => {
-    apiGet("/experience").then(setExperiences).catch(err => console.log(err));
-    setLoading(false);
+    apiGet("/experience")
+      .then(setExperiences)
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
 
   const onChange = (e) => {

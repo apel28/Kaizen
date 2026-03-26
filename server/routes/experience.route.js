@@ -8,6 +8,6 @@ router.get('/', verifyAuth, getDoctorExperience);
 
 router.post('/', verifyAuth, addDoctorExperience);
 
-router.delete('/', verifyAuth, removeDoctorExperience);
+router.delete('/:e_id', verifyAuth, removeDoctorExperience);
 
 export default router;

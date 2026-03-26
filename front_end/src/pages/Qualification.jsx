@@ -26,14 +26,10 @@ export default function Qualification() {
   // Placeholder for fetching data — API to be added later
   useEffect(() => {
     // Example fetch structure:
-    apiGet("/qualification").then(setQualifications).catch(err => console.log(err));
-    
-    // Mock data for preview
-    setQualifications([
-      { q_id: 1, degree_name: "MBBS", institute: "Dhaka Medical College", year: "2012", department_name: "General Medicine" },
-      { q_id: 2, degree_name: "FCPS", institute: "BCPS", year: "2018", department_name: "Cardiology" }
-    ]);
-    setLoading(false);
+    apiGet("/qualification")
+      .then(setQualifications)
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
   }, []);
 
   const onChange = (e) => {
@@ -52,11 +48,7 @@ export default function Qualification() {
     setMsg({ text: "", ok: true });
 
     try {
-      // Placeholder for POST call:
-      // const newQual = await apiPost("/profile/qualification", form);
-      // setQualifications([newQual, ...qualifications]);
-      
-      const newQual = { ...form, q_id: Date.now() }; // Mock ID
+      const newQual = await apiPost("/qualification", form);
       setQualifications([newQual, ...qualifications]);
       setForm(INIT);
       setMsg({ text: "Qualification added successfully!", ok: true });
@@ -69,9 +61,8 @@ export default function Qualification() {
 
   const handleRemove = async (id) => {
     try {
-      // Placeholder for DELETE call:
-      // await apiDelete(`/profile/qualification/${id}`);
-      setQualifications(qualifications.filter(q => q.q_id !== id));
+      await apiDelete(`/qualification/${id}`);
+      apiGet("/qualification").then(setQualifications).catch(err => console.log(err));
     } catch (err) {
       setMsg({ text: "Failed to remove qualification.", ok: false });
     }
@@ -95,7 +86,6 @@ export default function Qualification() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Qualifications
             </h1>
-            <p className="text-xs text-gray-500 mt-1">Manage your degrees and certifications</p>
           </div>
         </div>
 

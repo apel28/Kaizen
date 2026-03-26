@@ -19,7 +19,7 @@ export async function insertQualifications(doctorId, qualifications) {
         ]
     );
 
-    return result.rows ?? null;
+    return result.rows[0] ?? null;
 }
 
 export async function getQualifications(doctorId) {
@@ -50,16 +50,16 @@ export async function deleteQualification(doctorId, qualificationId) {
     return result.rows[0] ?? null;
 }
 
-async function test() {
-    console.log(await insertQualifications(1, {
-        degree_name: 'FCPS',
-        institute: 'DMC',
-        year: '2005',
-        department_name: 'Medicine',
-    }))
-}
+// async function test() {
+//     console.log(await insertQualifications(1, {
+//         degree_name: 'FCPS',
+//         institute: 'DMC',
+//         year: '2005',
+//         department_name: 'Medicine',
+//     }))
+// }
 
-async function test2(params) {
-    console.log(await getQualifications(1));
-}
-await test2()
+// async function test2(params) {
+//     console.log(await getQualifications(1));
+// }
+// await test2()

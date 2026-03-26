@@ -1,7 +1,6 @@
 import pool from '../db.js';
 
 export async function insertExperience(doctorId, experiences) {
-
     const result = await pool.query(
         `
         INSERT INTO experience (doctor_id, institue, "role", start_date, end_date)
@@ -10,14 +9,14 @@ export async function insertExperience(doctorId, experiences) {
         `,
         [
             doctorId,
-            experiences.institue,
+            experiences.institute, 
             experiences.role,
             experiences.start_date,
-            experiences.end_date
+            experiences.end_date || null
         ]
     );
 
-    return result.rows;
+    return result.rows[0] ?? null; // Return the first row or null
 }
 
 export async function getExperience(doctorId) {
@@ -46,13 +45,13 @@ export async function deleteExperience(doctorId, e_id) {
     );
 }
 
-async function test() {
-    console.log(await insertExperience(2, {
-        institue: 'DMC',
-        role: 'HMO',
-        start_date: '2005-03-23',
-        end_date: null
-    }))
-}
+// async function test() {
+//     console.log(await insertExperience(2, {
+//         institue: 'DMC',
+//         role: 'HMO',
+//         start_date: '2005-03-23',
+//         end_date: null
+//     }))
+// }
 
-test()
+// test()

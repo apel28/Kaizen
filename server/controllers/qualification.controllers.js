@@ -47,9 +47,9 @@ export const removeDoctorQualification = async (req, res) => {
             return res.status(404).json({ message: "Doctor not found" });
         }
 
-        const { q_id } = req.body;
+        const { q_id } = req.params;
         if (!q_id) {
-            return res.status(400).json({ message: "Qualification ID (q_id) is required in request body" });
+            return res.status(400).json({ message: "Qualification ID (q_id) is required" });
         }
 
         const deleted = await deleteQualification(doctorId, parseInt(q_id));

@@ -22,16 +22,16 @@ export const addDoctorExperience = async (req, res) => {
             return res.status(404).json({ message: "Doctor not found" });
         }
 
-        const { institution, role, start_date, end_date } = req.body;
-        if (!institution || !role || !start_date || !end_date) {
-            return res.status(400).json({ message: "All fields are required: institution, role, start_date, end_date" });
+        const { institute, role, start_date, end_date } = req.body;
+        if (!institute || !role || !start_date) {
+            return res.status(400).json({ message: "Institute, Role, and Start Date are required" });
         }
 
         const experience = await insertExperience(doctorId, {
-            institue: institution, // Note: database uses 'institue' but API uses 'institution'
+            institute,
             role,
             start_date,
-            end_date
+            end_date: end_date || null
         });
 
         res.status(201).json(experience);
@@ -47,9 +47,9 @@ export const removeDoctorExperience = async (req, res) => {
             return res.status(404).json({ message: "Doctor not found" });
         }
 
-        const { e_id } = req.body;
+        const { e_id } = req.params;
         if (!e_id) {
-            return res.status(400).json({ message: "Experience ID (e_id) is required in request body" });
+            return res.status(400).json({ message: "Experience ID (e_id) is required" });
         }
 
         const deleted = await deleteExperience(doctorId, parseInt(e_id));

@@ -10,7 +10,6 @@ export async function doctorDashboardData(req, res) {
             return res.status(404).json({ error: "Doctor not found" });
         }
 
-        // Get today's date in YYYY-MM-DD format
         const today = new Date().toISOString().split('T')[0];
 
         const appointments = await getAppointmentsByDoctorForDate(doctorId, today);

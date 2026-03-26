@@ -419,3 +419,5 @@ ALTER COLUMN generic_name DROP NOT NULL;
 
 ALTER TABLE all_medicines
 ALTER COLUMN ppu DROP NOT NULL;
+
+ALTER TABLE experience RENAME COLUMN institue TO institute;

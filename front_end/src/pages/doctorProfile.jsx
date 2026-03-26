@@ -89,8 +89,8 @@ export default function DoctorProfile() {
       {/* Top nav row */}
       <div className="w-full max-w-4xl mb-6 flex items-center gap-3">
         <Button text="Back" onClick={() => navigate(-1)} />
-        <Button text="Experience"   onClick={() => navigate("/DoctorDashboard/Experience")} />
-        <Button text="Qualification" onClick={() => navigate("/DoctorDashboard//Qualification")} />
+        <Button text="Experience"   onClick={() => navigate("/DoctorDashboard/DoctorProfile/Experience")} />
+        <Button text="Qualification" onClick={() => navigate("/DoctorDashboard/DoctorProfile/Qualification")} />
       </div>
 
       <div className="w-full max-w-4xl bg-gray-800/50 rounded-2xl border border-gray-700 backdrop-blur-sm p-8">
@@ -103,7 +103,7 @@ export default function DoctorProfile() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Doctor Profile
             </h1>
-            <p className="text-xs text-gray-500 mt-1 font-mono">ID: #{doctorId} · {specialization}</p>
+            {/* <p className="text-xs text-gray-500 mt-1 font-mono">ID: #{doctorId} · {specialization}</p> */}
           </div>
         </div>
 

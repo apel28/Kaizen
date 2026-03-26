@@ -65,7 +65,7 @@ createRoot(document.getElementById("root")).render(
             path="/DoctorDashboard/Profile"
             element={
               <ProtectedRoute allowedRole="D">
-                <DDashboard />
+                <DoctorProfile />
               </ProtectedRoute>
             }
           />

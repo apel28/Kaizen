@@ -14,6 +14,22 @@ export async function getDoctorId(userId) {
     return result.rows[0]?.doctor_id ?? null;
 }
 
+export async function getDoctorProfile(userId) {
+    const result = await pool.query(
+        `
+        SELECT d.doctor_id,
+               (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS doctor_name
+        FROM doctor d
+        JOIN "user" u ON d.user_id = u.user_id
+        JOIN profile p ON u.user_id = p.user_id
+        WHERE u.user_id = $1
+        `,
+        [userId]
+    );
+
+    return result.rows[0] ?? null;
+}
+
 export async function insertQualifications(doctorId, qualifications) {
     if (!Array.isArray(qualifications)) qualifications = [qualifications];
     if (qualifications.length === 0) return [];

@@ -57,7 +57,7 @@ export async function addPrescription(req, res) {
 
         // 1. Add visit
         const visitResult = await client.query(
-            `INSERT INTO visits (patient_id, doctor_id, date) VALUES ($1, $2, CURRENT_DATE) RETURNING visit_id`,
+            `INSERT INTO visits (patient_id, doctor_id, date) VALUES ($1, $2, CURRENT_DATE) RETURNING *`,
             [patient_id, doctorId]
         );
         const visit_id = visitResult.rows[0].visit_id;
@@ -207,9 +207,10 @@ export async function getTodaysPatients(req, res) {
         const result = await pool.query(
             `SELECT DISTINCT a.patient_id,
                     p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name AS name
-             FROM appointments a
-             JOIN patients p ON a.patient_id = p.patient_id
-             WHERE a.doctor_id = $1 AND a.date = CURRENT_DATE`,
+            FROM appointments a
+			JOIN patient pf ON a.patient_id = pf.patient_id
+            JOIN profile p ON pf.user_id = p.user_id
+            WHERE a.doctor_id = $1 AND a.date = CURRENT_DATE`,
             [doctorId]
         );
 

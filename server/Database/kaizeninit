@@ -243,7 +243,7 @@ create table discharge_summary(
 );
 
 create table medical_history(
-	history_id BIGINT PRIMARY key,
+	history_id BIGSERIAL PRIMARY key,
 	patient_id int not null,
 	"condition" text not null,
 	department_id int not null,
@@ -307,7 +307,7 @@ create table vitals(
 );
 
 create table bills(
-	bill_id BIGINT PRIMARY key,
+	bill_id BIGSERIAL PRIMARY key,
 	patient_id int not null,
 	bill_name text not null,
 	bill_amount int not null,

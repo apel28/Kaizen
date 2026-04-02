@@ -82,7 +82,7 @@ export async function addPrescription(req, res) {
                 // Add medical_history
                 const histResult = await client.query(
                     `INSERT INTO medical_history (patient_id, condition, department_id, status) VALUES ($1, $2, $3, $4) RETURNING history_id`,
-                    [patient_id, cond.condition, cond.department_id, cond.status]
+                    [patient_id, cond.condition, cond.department_id, 'a']
                 );
                 const history_id = histResult.rows[0].history_id;
 

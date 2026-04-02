@@ -36,6 +36,21 @@ export async function addPrescription(req, res) {
     const patientAllergy = allergyCheck.rows[0];
 
     if (patientAllergy && patientAllergy.trigger_meds && medicines && medicines.length > 0) {
+        let triggers = [];
+        const rawTriggers = patientAllergy.trigger_meds;
+
+        if (Array.isArray(rawTriggers)) {
+            triggers = rawTriggers;
+        } else if (typeof rawTriggers === 'string') {
+            triggers = rawTriggers
+                .replace(/^\{|\}$/g, '') // remove Postgres array braces
+                .split(',')
+                .map(str => str.trim().replace(/^['"]|['"]$/g, ''))
+                .filter(Boolean);
+        }
+
+        const triggerSet = new Set(triggers.map(t => t.toLowerCase()));
+
         for (const med of medicines) {
             const medDetails = await pool.query(
                 `SELECT name, generic_name FROM all_medicines WHERE medicine_id = $1`,
@@ -43,8 +58,11 @@ export async function addPrescription(req, res) {
             );
             if (medDetails.rows.length > 0) {
                 const medicine = medDetails.rows[0];
-                if (medicine.name === patientAllergy.trigger_meds || medicine.generic_name === patientAllergy.trigger_meds) {
-                    return res.status(400).json({ error: `Patient has allergy to ${patientAllergy.trigger_meds}. Cannot prescribe this medicine.` });
+                const medNameLower = (medicine.name || '').toLowerCase();
+                const medGenericLower = (medicine.generic_name || '').toLowerCase();
+
+                if (triggerSet.has(medNameLower) || triggerSet.has(medGenericLower)) {
+                    return res.status(400).json({ error: "Patient has allergy to ${patientAllergy.trigger_meds}. Cannot prescribe this medicine." });
                 }
             }
         }
@@ -149,7 +167,7 @@ export async function addPrescription(req, res) {
             await client.query(
                 `INSERT INTO allergy (patient_id, allergy_trigger, trigger_meds, severity) 
                  VALUES ($1, $2, $3, $4) 
-                 ON CONFLICT (patient_id) DO UPDATE SET 
+                 ON CONFLICT (patient_id,trigger_meds) DO UPDATE SET 
                  allergy_trigger = EXCLUDED.allergy_trigger, 
                  trigger_meds = EXCLUDED.trigger_meds, 
                  severity = EXCLUDED.severity`,

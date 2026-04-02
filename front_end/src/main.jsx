@@ -21,6 +21,8 @@ import DoctorPatientConditions from "./pages/DoctorPatientConditions.jsx";
 import PatientConditions from "./pages/PatientConditions.jsx";
 import PatientAllergies from "./pages/PatientAllergies.jsx";
 import DoctorPatientAllergies from "./pages/DoctorPatientAllergies.jsx";
+import PatientMedications from "./pages/PatientMedications.jsx";
+import DoctorPatientMedications from "./pages/DoctorPatientMedications.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -166,6 +168,24 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="D">
                 <DoctorPatientAllergies />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/PatientDashboard/Medications"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <PatientMedications />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/PatientMedications"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DoctorPatientMedications />
               </ProtectedRoute>
             }
           />

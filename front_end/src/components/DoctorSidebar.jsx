@@ -11,6 +11,7 @@ const navItems = [
   { label: "Vitals",       icon: <Clock />,         path: "/DoctorDashboard/PatientVitals" },
   { label: "Conditions",   icon: <Stethoscope />, path: "/DoctorDashboard/PatientConditions" },
   { label: "Allergies",    icon: <AlertTriangle />, path: "/DoctorDashboard/PatientAllergies" },
+  { label: "Medication",   icon: <Pill />,          path: "/DoctorDashboard/PatientMedications" },
 ];
 
 const DoctorSidebar = () => {

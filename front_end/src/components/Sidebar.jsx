@@ -10,6 +10,7 @@ const navItems = [
   { label: "Vitals",       icon: <Activity />,      path: "/PatientDashboard/Vitals" },
   { label: "Conditions",   icon: <Stethoscope />,   path: "/PatientDashboard/Conditions" },
   { label: "Allergies",    icon: <AlertTriangle />, path: "/PatientDashboard/Allergies" },
+  { label: "Medication",   icon: <Pill />,          path: "/PatientDashboard/Medications" },
   { label: "Prescription", icon: <FileText />,      path: null },
   { label: "Tests",        icon: <FlaskConical />,  path: null },
 ];

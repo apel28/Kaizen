@@ -394,6 +394,14 @@ create table test_orders(
 	foreign key(visit_id) references visits(visit_id)
 );
 
+ create table past_medicines (
+	patient_id BIGINT,
+	medicine_id BIGINT,
+	history_id BIGINT,
+	
+	CONSTRAINT past_medicines_pk PRIMARY KEY(patient_id, medicine_id, history_id)
+);
+
 
 
 ALTER TABLE experience ALTER COLUMN end_date DROP NOT NULL;

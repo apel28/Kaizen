@@ -142,6 +142,8 @@ const Prescription = () => {
   // Notes, allergy, bill
   const [note, setNote] = useState("");
   const [allergy, setAllergy] = useState("");
+  const [triggerMed, setTriggerMed] = useState("");   // current input
+  const [triggerMeds, setTriggerMeds] = useState([]); // added list
   const [billAmount, setBillAmount] = useState("");
   const [admission, setAdmission] = useState(false);
 
@@ -217,7 +219,7 @@ const Prescription = () => {
       tests: selectedTests.map((t) => ({ test_id: t.test_id })),
       bill_amount: billAmount || 0,
       note: note || null,
-      allergy: allergy ? { allergy_trigger: allergy, severity: "Mild" } : null,
+      allergy: allergy ? { allergy_trigger: allergy, severity: "Mild", trigger_medicines: triggerMeds } : null,
       admission: admission,
     };
 
@@ -234,6 +236,8 @@ const Prescription = () => {
       setVitals({ bp: "", blood_sugar: "", heart_rate: "", height: "", weight: "" });
       setNote("");
       setAllergy("");
+      setTriggerMed("");
+      setTriggerMeds([]);
       setBillAmount("");
       setAdmission(false);
       setMedResetKey((k) => k + 1);
@@ -439,16 +443,61 @@ const Prescription = () => {
                 className="w-full bg-gray-900/60 border border-gray-600 hover:border-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 outline-none resize-none transition-all"
               />
             </div>
-            <div>
-              <label className="flex items-center gap-1 text-xs text-gray-400 mb-1">
-                <AlertTriangle size={12} className="text-yellow-400" /> Known Allergies
-              </label>
-              <input
-                type="text"
-                value={allergy}
-                onChange={(e) => setAllergy(e.target.value)}
-                className="w-full bg-gray-900/60 border border-gray-600 hover:border-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 outline-none transition-all"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Known Allergies */}
+              <div>
+                <label className="flex items-center gap-1 text-xs text-gray-400 mb-1">
+                  <AlertTriangle size={12} className="text-yellow-400" /> Known Allergies
+                </label>
+                <input
+                  type="text"
+                  value={allergy}
+                  onChange={(e) => setAllergy(e.target.value)}
+                  className="w-full bg-gray-900/60 border border-gray-600 hover:border-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 outline-none transition-all"
+                />
+              </div>
+
+              {/* Trigger Medicines */}
+              <div>
+                <label className="flex items-center gap-1 text-xs text-gray-400 mb-1">
+                  <AlertTriangle size={12} className="text-orange-400" /> Trigger Medicines
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={triggerMed}
+                    onChange={(e) => setTriggerMed(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        const v = triggerMed.trim();
+                        if (v && !triggerMeds.includes(v)) setTriggerMeds((p) => [...p, v]);
+                        setTriggerMed("");
+                      }
+                    }}
+                    
+                    className="flex-1 bg-gray-900/60 border border-gray-600 hover:border-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 outline-none transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const v = triggerMed.trim();
+                      if (v && !triggerMeds.includes(v)) setTriggerMeds((p) => [...p, v]);
+                      setTriggerMed("");
+                    }}
+                    className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-xl transition-all shrink-0"
+                  >
+                    Add
+                  </button>
+                </div>
+                {triggerMeds.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {triggerMeds.map((m) => (
+                      <TagBlock key={m} label={m} onRemove={() => setTriggerMeds((p) => p.filter((x) => x !== m))} />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             <div>
               <label className="flex items-center gap-1 text-xs text-gray-400 mb-1">

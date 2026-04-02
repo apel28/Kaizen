@@ -9,6 +9,7 @@ import profileRoutes from "./routes/profile.route.js"
 import appointmentRoutes from "./routes/appointment.route.js"
 import experienceRoutes from "./routes/experience.route.js"
 import qualificationRoutes from "./routes/qualification.route.js"
+import availabilityRoutes from "./routes/availability.route.js"
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/appointment", appointmentRoutes);
 app.use("/api/experience", experienceRoutes);
 app.use("/api/qualification", qualificationRoutes);
+app.use("/api/availability", availabilityRoutes);
 
 app.listen(5001, () => {
     console.log("Server started on node 5001");

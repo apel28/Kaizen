@@ -1,0 +1,107 @@
+import pool from "../db.js";
+import { getDoctorProfile } from "../query/doctor.js";
+
+export async function getPatientsForDoctor(req, res) {
+    try {
+        if (req.user.role !== 'D') {
+            return res.status(403).json({ error: "Only doctors can view their patients" });
+        }
+
+        const userId = req.user.user_id;
+        const doctorProfile = await getDoctorProfile(userId);
+
+        if (!doctorProfile) {
+            return res.status(404).json({ error: "Doctor not found" });
+        }
+
+        const doctorId = doctorProfile.doctor_id;
+
+        // Get distinct patient_ids who have visited this doctor
+        const result = await pool.query(
+            `SELECT DISTINCT patient_id FROM visits WHERE doctor_id = $1`,
+            [doctorId]
+        );
+
+        res.status(200).json({ data: result.rows.map(row => row.patient_id) });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function getPatientConditions(req, res) {
+    try {
+        const { patient_id } = req.params;
+
+        // Get conditions with latest first (by visit_id desc)
+        const result = await pool.query(
+            `SELECT mh.condition, mh.department_id, mh.status, d.name as department_name, diag.visit_id, v.date
+             FROM medical_history mh
+             JOIN diagnosis diag ON mh.history_id = diag.history_id
+             JOIN visits v ON diag.visit_id = v.visit_id
+             JOIN departments d ON mh.department_id = d.department_id
+             WHERE mh.patient_id = $1
+             ORDER BY diag.visit_id DESC`,
+            [patient_id]
+        );
+
+        res.status(200).json({ data: result.rows });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function getPatientVitals(req, res) {
+    try {
+        const { patient_id } = req.params;
+
+        const result = await pool.query(
+            `SELECT v.*, vis.date
+             FROM vitals v
+             JOIN visits vis ON v.visit_id = vis.visit_id
+             WHERE v.patient_id = $1
+             ORDER BY vis.date DESC`,
+            [patient_id]
+        );
+
+        res.status(200).json({ data: result.rows });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function getPatientAllergies(req, res) {
+    try {
+        const { patient_id } = req.params;
+
+        const result = await pool.query(
+            `SELECT * FROM allergy WHERE patient_id = $1`,
+            [patient_id]
+        );
+
+        res.status(200).json({ data: result.rows[0] || null });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function getPatientMedications(req, res) {
+    try {
+        const { patient_id } = req.params;
+
+        const result = await pool.query(
+            `SELECT m.*, am.name, am.brand, am.generic_name, am.ppu, mh.condition, v.date
+             FROM medicines m
+             JOIN all_medicines am ON m.medicine_id = am.medicine_id
+             JOIN medical_history mh ON m.history_id = mh.history_id
+             JOIN diagnosis d ON mh.history_id = d.history_id
+             JOIN visits v ON d.visit_id = v.visit_id
+             WHERE m.patient_id = $1
+             ORDER BY v.date DESC`,
+            [patient_id]
+        );
+
+        res.status(200).json({ data: result.rows });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}

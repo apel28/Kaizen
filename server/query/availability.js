@@ -1,26 +1,7 @@
 import pool from "../db.js"
 
 export async function insertAvailability(doctorId, slot) {
-    console.log(doctorId + " " + slot.slot_time);
-    let result = await pool.query(
-        `
-        SELECT *
-        FROM availability
-        WHERE doctor_id = $1 
-            AND slot_time = $2;
-        `,
-        [
-            doctorId,
-            slot.slot_time
-        ]
-    );
-
-    if(result.rowCount > 0) {
-        console.log("hello");
-        await deletetAvailability(result.rows[0].a_id);
-    }
-
-    result = await pool.query(
+    const result = await pool.query(
         `
         INSERT INTO availability(doctor_id, week_day, slot_time, slot_duration_minutes)
         VALUES ($1, $2, $3, $4)
@@ -36,7 +17,7 @@ export async function insertAvailability(doctorId, slot) {
     return result.rows ?? null;
 }
 
-export async function deletetAvailability(aId) {
+export async function deleteAvailability(aId) {
     const result = await pool.query(
         `
         DELETE from availability
@@ -48,11 +29,6 @@ export async function deletetAvailability(aId) {
     );
 
     return result.rows ?? null;
-}
-
-export async function updateAvailability(doctorId, aId, slot) {
-    await deletetAvailability(aId)
-    await insertAvailability(doctorId, slot)
 }
 
 export async function getAvailability(doctorId, weekDay = null) {

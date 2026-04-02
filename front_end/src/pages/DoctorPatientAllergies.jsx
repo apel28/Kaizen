@@ -84,15 +84,27 @@ const DoctorPatientAllergies = () => {
               No allergy information recorded for this patient.
             </div>
           ) : (
-            <div className={`border rounded-2xl p-6 flex items-start gap-5 ${colorClass}`}>
-              <AlertTriangle size={28} className="shrink-0 mt-0.5" />
-              <div>
-                <p className="text-xs uppercase tracking-widest mb-1 opacity-70">Allergy Trigger</p>
-                <p className="text-2xl font-bold text-white">{allergy.allergy_trigger}</p>
-                <span className={`inline-block mt-3 text-xs font-semibold px-3 py-1 rounded-full border ${colorClass}`}>
-                  Severity: {allergy.severity}
-                </span>
+            <div className="border rounded-2xl p-6 flex flex-col gap-5 bg-gray-900/60 border-gray-700">
+              <div className="flex items-start gap-5">
+                <AlertTriangle size={28} className="shrink-0 mt-0.5 text-red-500" />
+                <div>
+                  <p className="text-xs uppercase tracking-widest mb-1 opacity-70">Allergy Name</p>
+                  <p className="text-2xl font-bold text-white">{allergy.allergy_trigger}</p>
+                </div>
               </div>
+              
+              {allergy.trigger_meds && (
+                <div className="bg-gray-800/80 rounded-xl p-4 border border-gray-700 mt-2">
+                  <p className="text-xs uppercase tracking-widest mb-2 opacity-70">Triggering Medicines</p>
+                  <div className="flex flex-wrap gap-2">
+                    {allergy.trigger_meds.split(',').map((med, idx) => (
+                      <span key={idx} className="bg-red-900/40 text-red-300 border border-red-800/50 px-3 py-1 rounded-full text-sm font-medium">
+                        {med.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )
         )}

@@ -219,7 +219,7 @@ const Prescription = () => {
       tests: selectedTests.map((t) => ({ test_id: t.test_id })),
       bill_amount: billAmount || 0,
       note: note || null,
-      allergy: allergy ? { allergy_trigger: allergy, severity: 1, trigger_medicines: triggerMeds } : null,
+      allergy: allergy ? { allergy_trigger: allergy, severity: 1, trigger_meds: triggerMeds.length > 0 ? triggerMeds.join(', ') : null } : null,
       admission: admission,
     };
 

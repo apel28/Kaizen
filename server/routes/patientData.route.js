@@ -6,6 +6,7 @@ import {
     getPatientConditions,
     getPatientAllergies,
     getPatientMedications,
+    deletePatientMedications,
 } from "../controllers/patientData.controllers.js";
 
 const router = express.Router();
@@ -18,5 +19,6 @@ router.get("/:patient_id/vitals",        verifyAuth, getPatientVitals);
 router.get("/:patient_id/conditions",    verifyAuth, getPatientConditions);
 router.get("/:patient_id/allergies",     verifyAuth, getPatientAllergies);
 router.get("/:patient_id/medications",   verifyAuth, getPatientMedications);
+router.delete("/:patient_id/medications/:medicine_id", verifyAuth, deletePatientMedications);
 
 export default router;

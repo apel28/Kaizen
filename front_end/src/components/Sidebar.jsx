@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import kaizenLogo from "../assets/kaizen-logo.webp";
 import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Activity, Stethoscope } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -13,9 +13,10 @@ const navItems = [
   { label: "Prescription", icon: <FileText />,      path: null },
 ];
 
-const Sidebar = ({ idx }) => {
+const Sidebar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   return (
     <aside className="w-64 shrink-0 sticky top-0 h-[calc(100vh-2rem)] flex flex-col border border-gray-700 bg-gray-800/50 text-white p-6 rounded-2xl font-sans overflow-y-auto">
@@ -28,7 +29,7 @@ const Sidebar = ({ idx }) => {
             <li
               key={label}
               onClick={() => path && navigate(path)}
-              className={`mb-4 p-3 rounded-lg transition-all ${index === idx ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50"}`}
+              className={`mb-4 p-3 rounded-lg transition-all ${path && pathname === path ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50"}`}
             >
               <div className="flex items-center gap-2">
                 {icon}

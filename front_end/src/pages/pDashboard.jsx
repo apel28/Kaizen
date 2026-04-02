@@ -69,7 +69,7 @@ const PDashboard = () => {
 
   return (
     <div className="text-white min-h-screen flex items-start p-4 bg-gradient-to-br from-[#0a0a3a] to-black bg-fixed font-['Gondens','Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
-      <Sidebar idx={0} />
+      <Sidebar />
       <main className="flex-1 ml-6">
 
         {/* Header */}
@@ -136,3 +136,4 @@ const PDashboard = () => {
 };
 
 export default PDashboard;
+

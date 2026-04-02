@@ -57,7 +57,7 @@ const PatientVitals = () => {
 
   return (
     <div className="text-white min-h-screen flex items-start p-4 bg-gradient-to-br from-[#0a0a3a] to-black bg-fixed font-['Gondens','Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
-      <Sidebar idx={2} />
+      <Sidebar />
 
       <main className="flex-1 ml-6 space-y-5">
         <header className="flex items-center bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
@@ -95,3 +95,4 @@ const PatientVitals = () => {
 };
 
 export default PatientVitals;
+

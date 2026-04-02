@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from "express";
 import { getDoctorExperience, addDoctorExperience, removeDoctorExperience } from "../controllers/experience.controllers.js";
 import { verifyAuth } from "../middleware/auth.verifier.js";
@@ -11,3 +12,19 @@ router.post('/', verifyAuth, addDoctorExperience);
 router.delete('/', verifyAuth, removeDoctorExperience);
 
 export default router;
+||||||| 2f1fb71
+=======
+import express from "express";
+import { getDoctorExperience, addDoctorExperience, removeDoctorExperience } from "../controllers/experience.controllers.js";
+import { verifyAuth } from "../middleware/auth.verifier.js";
+
+const router = express.Router();
+
+router.get('/', verifyAuth, getDoctorExperience);
+
+router.post('/', verifyAuth, addDoctorExperience);
+
+router.delete('/:e_id', verifyAuth, removeDoctorExperience);
+
+export default router;
+>>>>>>> origin/skb

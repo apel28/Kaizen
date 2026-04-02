@@ -1,7 +1,6 @@
 import pool from '../db.js';
 
 export async function insertExperience(doctorId, experiences) {
-
     const result = await pool.query(
         `
         INSERT INTO experience (doctor_id, institute, "role", start_date, end_date)
@@ -10,20 +9,26 @@ export async function insertExperience(doctorId, experiences) {
         `,
         [
             doctorId,
+<<<<<<< HEAD
             experiences.institute,
+||||||| 2f1fb71
+            experiences.institue,
+=======
+            experiences.institute, 
+>>>>>>> origin/skb
             experiences.role,
             experiences.start_date,
-            experiences.end_date
+            experiences.end_date || null
         ]
     );
 
-    return result.rows;
+    return result.rows[0] ?? null; // Return the first row or null
 }
 
 export async function getExperience(doctorId) {
     const result = await pool.query(
         `
-        SELECT e_id, institue, "role", start_date, end_date
+        SELECT e_id, institute, "role", start_date, end_date
         FROM experience
         WHERE doctor_id = $1
         ORDER BY start_date DESC;

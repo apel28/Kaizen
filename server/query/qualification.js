@@ -19,7 +19,7 @@ export async function insertQualifications(doctorId, qualifications) {
         ]
     );
 
-    return result.rows ?? null;
+    return result.rows[0] ?? null;
 }
 
 export async function getQualifications(doctorId) {

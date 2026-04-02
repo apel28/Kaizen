@@ -5,6 +5,9 @@ import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DDashboard from "./pages/dDashboard.jsx";
+import DoctorProfile from "./pages/doctorProfile.jsx";
+import Experience from "./pages/Experience.jsx"
+import Qualification from "./pages/Qualification.jsx"
 
 import LandingPg from "./pages/landingPg.jsx";
 import PDashboard from "./pages/pDashboard.jsx";
@@ -55,6 +58,34 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="D">
                 <DDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Doctor profile route — placeholder until page is built */}
+          <Route
+            path="/DoctorDashboard/Profile"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DoctorProfile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/Profile/Experience"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <Experience />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/Profile/Qualification"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <Qualification />
               </ProtectedRoute>
             }
           />

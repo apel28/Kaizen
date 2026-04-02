@@ -127,7 +127,7 @@ const Availability = () => {
 
   return (
     <div className="text-white min-h-screen flex items-start p-4 bg-gradient-to-br from-[#0a0a3a] to-black bg-fixed font-['Gondens','Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
-      <DoctorSidebar idx={2} />
+      <DoctorSidebar />
 
       <main className="flex-1 ml-6 space-y-6">
 
@@ -245,3 +245,4 @@ const Availability = () => {
 };
 
 export default Availability;
+

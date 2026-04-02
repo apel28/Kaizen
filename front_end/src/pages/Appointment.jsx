@@ -111,7 +111,7 @@ const Appointment = () => {
 
   return (
     <div className="text-white min-h-screen flex items-start p-4 bg-gradient-to-br from-[#0a0a3a] to-black bg-fixed font-['Gondens','Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]">
-      <Sidebar idx={1} />
+      <Sidebar />
       <main className="flex-1 ml-6">
         <header className="flex items-center mb-8 bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <Calendar className="text-blue-400 mr-3" size={28} />
@@ -216,3 +216,4 @@ const Appointment = () => {
 };
 
 export default Appointment;
+

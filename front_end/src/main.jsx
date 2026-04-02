@@ -17,6 +17,10 @@ import PatientProfile from "./pages/patientProfile.jsx";
 import Appointment from "./pages/Appointment.jsx";
 import PatientVitals from "./pages/PatientVitals.jsx";
 import DoctorPatientVitals from "./pages/DoctorPatientVitals.jsx";
+import DoctorPatientConditions from "./pages/DoctorPatientConditions.jsx";
+import PatientConditions from "./pages/PatientConditions.jsx";
+import PatientAllergies from "./pages/PatientAllergies.jsx";
+import DoctorPatientAllergies from "./pages/DoctorPatientAllergies.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -126,6 +130,42 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="P">
                 <PatientVitals />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/PatientConditions"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DoctorPatientConditions />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/PatientDashboard/Conditions"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <PatientConditions />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/PatientDashboard/Allergies"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <PatientAllergies />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/PatientAllergies"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DoctorPatientAllergies />
               </ProtectedRoute>
             }
           />

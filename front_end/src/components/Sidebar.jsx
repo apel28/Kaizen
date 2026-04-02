@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import kaizenLogo from "../assets/kaizen-logo.webp";
-import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Activity, Stethoscope } from "lucide-react";
+import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Activity, Stethoscope, AlertTriangle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const navItems = [
@@ -9,8 +9,9 @@ const navItems = [
   { label: "Appointment",  icon: <Calendar />,      path: "/Appointment" },
   { label: "Vitals",       icon: <Activity />,      path: "/PatientDashboard/Vitals" },
   { label: "Conditions",   icon: <Stethoscope />,   path: "/PatientDashboard/Conditions" },
-  { label: "Tests",        icon: <FlaskConical />,  path: null },
+  { label: "Allergies",    icon: <AlertTriangle />, path: "/PatientDashboard/Allergies" },
   { label: "Prescription", icon: <FileText />,      path: null },
+  { label: "Tests",        icon: <FlaskConical />,  path: null },
 ];
 
 const Sidebar = () => {

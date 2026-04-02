@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import kaizenLogo from "../assets/kaizen-logo.webp";
-import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Stethoscope } from "lucide-react";
+import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Stethoscope, AlertTriangle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const navItems = [
@@ -10,7 +10,7 @@ const navItems = [
   { label: "Availability", icon: <Calendar />,     path: "/DoctorDashboard/Availability" },
   { label: "Vitals",       icon: <Clock />,         path: "/DoctorDashboard/PatientVitals" },
   { label: "Conditions",   icon: <Stethoscope />, path: "/DoctorDashboard/PatientConditions" },
-  { label: "Unknown 5",   icon: <Pill />,         path: null },
+  { label: "Allergies",    icon: <AlertTriangle />, path: "/DoctorDashboard/PatientAllergies" },
 ];
 
 const DoctorSidebar = () => {

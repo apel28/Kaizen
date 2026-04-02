@@ -91,7 +91,7 @@ const TagBlock = ({ label, onRemove, sublabel }) => (
 
 // ─── Reusable: Section Card wrapper ───────────────────────────────────────────
 const Section = ({ icon: Icon, title, children }) => (
-  <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm space-y-4">
+  <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 space-y-4">
     <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
       <Icon size={18} className="text-blue-400" />
       {title}
@@ -143,6 +143,7 @@ const Prescription = () => {
   const [note, setNote] = useState("");
   const [allergy, setAllergy] = useState("");
   const [billAmount, setBillAmount] = useState("");
+  const [admission, setAdmission] = useState(false);
 
   // Status
   const [status, setStatus] = useState({ loading: false, error: "", success: "" });
@@ -217,6 +218,7 @@ const Prescription = () => {
       bill_amount: billAmount || 0,
       note: note || null,
       allergy: allergy ? { allergy_trigger: allergy, severity: "Mild" } : null,
+      admission: admission,
     };
 
     try {
@@ -233,6 +235,7 @@ const Prescription = () => {
       setNote("");
       setAllergy("");
       setBillAmount("");
+      setAdmission(false);
       setMedResetKey((k) => k + 1);
       setTestResetKey((k) => k + 1);
     } catch (err) {
@@ -457,6 +460,16 @@ const Prescription = () => {
                 value={billAmount}
                 onChange={(e) => setBillAmount(e.target.value)}
                 className="w-full bg-gray-900/60 border border-gray-600 hover:border-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 outline-none transition-all"
+              />
+            </div>
+
+            {/* Admit Patient */}
+            <div className="flex items-center gap-3">
+              <Button
+                text={admission ? "✓ Patient Admitted" : "Admit Patient"}
+                type="button"
+                onClick={() => setAdmission((v) => !v)}
+                color="bg-gray-700"
               />
             </div>
           </Section>

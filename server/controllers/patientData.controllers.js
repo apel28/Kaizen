@@ -18,11 +18,15 @@ export async function getPatientsForDoctor(req, res) {
 
         // Get distinct patient_ids who have visited this doctor
         const result = await pool.query(
-            `SELECT DISTINCT patient_id FROM visits WHERE doctor_id = $1`,
+            `SELECT DISTINCT v.patient_id,
+                    p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name AS name
+             FROM visits v
+             JOIN patients p ON v.patient_id = p.patient_id
+             WHERE v.doctor_id = $1`,
             [doctorId]
         );
 
-        res.status(200).json({ data: result.rows.map(row => row.patient_id) });
+        res.status(200).json({ data: result.rows });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

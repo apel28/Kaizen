@@ -9,11 +9,14 @@ import DoctorProfile from "./pages/doctorProfile.jsx";
 import Experience from "./pages/Experience.jsx"
 import Qualification from "./pages/Qualification.jsx"
 import Prescription from "./pages/Prescription.jsx"
+import Availability from "./pages/Availability.jsx"
 
 import LandingPg from "./pages/landingPg.jsx";
 import PDashboard from "./pages/pDashboard.jsx";
 import PatientProfile from "./pages/patientProfile.jsx";
 import Appointment from "./pages/Appointment.jsx";
+import PatientVitals from "./pages/PatientVitals.jsx";
+import DoctorPatientVitals from "./pages/DoctorPatientVitals.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -96,6 +99,33 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="D">
                 <Prescription />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/Availability"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <Availability />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/PatientVitals"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DoctorPatientVitals />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/PatientDashboard/Vitals"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <PatientVitals />
               </ProtectedRoute>
             }
           />

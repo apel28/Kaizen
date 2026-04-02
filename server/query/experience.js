@@ -9,13 +9,7 @@ export async function insertExperience(doctorId, experiences) {
         `,
         [
             doctorId,
-<<<<<<< HEAD
-            experiences.institute,
-||||||| 2f1fb71
-            experiences.institue,
-=======
             experiences.institute, 
->>>>>>> origin/skb
             experiences.role,
             experiences.start_date,
             experiences.end_date || null

@@ -18,7 +18,7 @@ const Sidebar = ({ idx }) => {
   const navigate = useNavigate();
 
   return (
-    <aside className="w-64 border border-gray-700 bg-gray-800/50 text-white p-6 rounded-l-2xl font-sans">
+    <aside className="w-64 shrink-0 sticky top-0 h-[calc(100vh-2rem)] flex flex-col border border-gray-700 bg-gray-800/50 text-white p-6 rounded-2xl font-sans overflow-y-auto">
       <div className="flex justify-center items-center">
         <img src={kaizenLogo} alt="Kaizen Logo" className="w-40 mb-10 max-w-full" />
       </div>

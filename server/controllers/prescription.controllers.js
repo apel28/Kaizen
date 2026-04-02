@@ -205,7 +205,11 @@ export async function getTodaysPatients(req, res) {
         const doctorId = doctorProfile.doctor_id;
 
         const result = await pool.query(
-            `SELECT DISTINCT patient_id FROM appointments WHERE doctor_id = $1 AND date = CURRENT_DATE`,
+            `SELECT DISTINCT a.patient_id,
+                    p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name AS name
+             FROM appointments a
+             JOIN patients p ON a.patient_id = p.patient_id
+             WHERE a.doctor_id = $1 AND a.date = CURRENT_DATE`,
             [doctorId]
         );
 

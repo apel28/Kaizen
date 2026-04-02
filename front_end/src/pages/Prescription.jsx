@@ -91,7 +91,7 @@ const TagBlock = ({ label, onRemove, sublabel }) => (
 
 // ─── Reusable: Section Card wrapper ───────────────────────────────────────────
 const Section = ({ icon: Icon, title, children }) => (
-  <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm space-y-4">
+  <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 space-y-4">
     <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
       <Icon size={18} className="text-blue-400" />
       {title}

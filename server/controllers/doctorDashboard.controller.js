@@ -13,7 +13,7 @@ export async function doctorDashboardData(req, res) {
         const doctorId = doctorProfile.doctor_id;
         const doctorName = doctorProfile.doctor_name;
 
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toLocaleDateString();
 
         const appointments = await getAppointmentsByDoctorForDate(doctorId, today);
 

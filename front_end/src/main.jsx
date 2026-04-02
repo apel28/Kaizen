@@ -9,6 +9,7 @@ import DoctorProfile from "./pages/doctorProfile.jsx";
 import Experience from "./pages/Experience.jsx"
 import Qualification from "./pages/Qualification.jsx"
 import Prescription from "./pages/Prescription.jsx"
+import Availability from "./pages/Availability.jsx"
 
 import LandingPg from "./pages/landingPg.jsx";
 import PDashboard from "./pages/pDashboard.jsx";
@@ -96,6 +97,15 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="D">
                 <Prescription />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/Availability"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <Availability />
               </ProtectedRoute>
             }
           />

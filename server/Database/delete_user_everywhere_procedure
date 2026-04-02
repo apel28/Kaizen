@@ -1,0 +1,53 @@
+-- Deletes everything tied to a given user_id across the database.
+-- user_id may map to: patient, doctor (and also nurse/staff/etc via user_id).
+--
+-- Strategy:
+-- 1) Resolve patient_id / doctor_id from the given user_id.
+-- 2) Delete from tables that do NOT have ON DELETE CASCADE FKs (or may block deletion).
+-- 3) Delete the user row; existing ON DELETE CASCADE constraints clean up the rest.
+
+CREATE OR REPLACE PROCEDURE delete_user_everywhere(p_user_id varchar)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_patient_id int;
+	v_doctor_id  int;
+BEGIN
+	-- Resolve IDs (if any).
+	SELECT p.patient_id INTO v_patient_id
+	FROM patient p
+	WHERE p.user_id = p_user_id;
+
+	SELECT d.doctor_id INTO v_doctor_id
+	FROM doctor d
+	WHERE d.user_id = p_user_id;
+
+	-- Remove user-scoped rows that don't cascade from "user".
+	DELETE FROM refresh_tokens rt WHERE rt.user_id = p_user_id;
+	DELETE FROM role r WHERE r.user_id = p_user_id;
+
+	-- Remove admitted rows (no ON DELETE CASCADE on FKs here).
+	IF v_patient_id IS NOT NULL THEN
+		DELETE FROM admitted a WHERE a.patient_id = v_patient_id;
+	END IF;
+	IF v_doctor_id IS NOT NULL THEN
+		DELETE FROM admitted a WHERE a.doctor_id = v_doctor_id;
+	END IF;
+
+	-- Remove patient-scoped rows that do NOT cascade from patient.
+	IF v_patient_id IS NOT NULL THEN
+		DELETE FROM vitals v WHERE v.patient_id = v_patient_id;
+		DELETE FROM bills b WHERE b.patient_id = v_patient_id;
+		DELETE FROM medicines m WHERE m.patient_id = v_patient_id;
+		DELETE FROM test_order t WHERE t.patient_id = v_patient_id;
+		DELETE FROM test_orders t2 WHERE t2.patient_id = v_patient_id;
+	END IF;
+
+	-- Now delete the user.
+	-- This cascades to: profile/patient/doctor/nurse/staff/attendance/salary/payments/notification, etc
+	-- based on your schema.
+	DELETE FROM "user" u
+	WHERE u.user_id = p_user_id;
+END;
+$$;
+

@@ -5,12 +5,12 @@ import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut } from "lu
 import { useAuth } from "../context/AuthContext";
 
 const navItems = [
-  { label: "Home",      icon: <House />,        path: "/DoctorDashboard" },
-  { label: "Unknown 1", icon: <Calendar />,     path: null },
-  { label: "Unknown 2", icon: <FileText />,     path: null },
-  { label: "Unknown 3", icon: <Clock />,        path: null },
-  { label: "Unknown 4", icon: <FlaskConical />, path: null },
-  { label: "Unknown 5", icon: <Pill />,         path: null },
+  { label: "Home",         icon: <House />,        path: "/DoctorDashboard" },
+  { label: "Prescription", icon: <FileText />,     path: "/DoctorDashboard/Prescription" },
+  { label: "Unknown 2",   icon: <Calendar />,     path: null },
+  { label: "Unknown 3",   icon: <Clock />,        path: null },
+  { label: "Unknown 4",   icon: <FlaskConical />, path: null },
+  { label: "Unknown 5",   icon: <Pill />,         path: null },
 ];
 
 const DoctorSidebar = ({ idx }) => {
@@ -18,7 +18,7 @@ const DoctorSidebar = ({ idx }) => {
   const navigate = useNavigate();
 
   return (
-    <aside className="w-64 border border-gray-700 bg-gray-800/50 text-white p-6 rounded-l-2xl font-sans">
+    <aside className="w-64 shrink-0 sticky top-0 h-[calc(100vh-2rem)] flex flex-col border border-gray-700 bg-gray-800/50 text-white p-6 rounded-2xl font-sans overflow-y-auto">
       <div className="flex justify-center items-center">
         <img src={kaizenLogo} alt="Kaizen Logo" className="w-40 mb-10 max-w-full" />
       </div>

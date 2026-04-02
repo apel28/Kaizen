@@ -15,6 +15,8 @@ import LandingPg from "./pages/landingPg.jsx";
 import PDashboard from "./pages/pDashboard.jsx";
 import PatientProfile from "./pages/patientProfile.jsx";
 import Appointment from "./pages/Appointment.jsx";
+import PatientVitals from "./pages/PatientVitals.jsx";
+import DoctorPatientVitals from "./pages/DoctorPatientVitals.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -106,6 +108,24 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="D">
                 <Availability />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/PatientVitals"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DoctorPatientVitals />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/PatientDashboard/Vitals"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <PatientVitals />
               </ProtectedRoute>
             }
           />

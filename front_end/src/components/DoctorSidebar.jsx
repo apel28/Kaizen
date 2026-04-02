@@ -8,7 +8,7 @@ const navItems = [
   { label: "Home",         icon: <House />,        path: "/DoctorDashboard" },
   { label: "Prescription", icon: <FileText />,     path: "/DoctorDashboard/Prescription" },
   { label: "Availability", icon: <Calendar />,     path: "/DoctorDashboard/Availability" },
-  { label: "Unknown 3",   icon: <Clock />,        path: null },
+  { label: "Vitals",       icon: <Clock />,         path: "/DoctorDashboard/PatientVitals" },
   { label: "Unknown 4",   icon: <FlaskConical />, path: null },
   { label: "Unknown 5",   icon: <Pill />,         path: null },
 ];

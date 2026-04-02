@@ -11,6 +11,7 @@ import experienceRoutes from "./routes/experience.route.js"
 import qualificationRoutes from "./routes/qualification.route.js"
 import availabilityRoutes from "./routes/availability.route.js"
 import prescriptionRoutes from "./routes/prescription.route.js"
+import patientDataRoutes from "./routes/patientData.route.js"
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use("/api/experience", experienceRoutes);
 app.use("/api/qualification", qualificationRoutes);
 app.use("/api/availability", availabilityRoutes);
 app.use("/api/prescription", prescriptionRoutes);
+app.use("/api/patient-data", patientDataRoutes);
 
 app.listen(5001, () => {
     console.log("Server started on node 5001");

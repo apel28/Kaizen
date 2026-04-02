@@ -5,7 +5,7 @@ import { apiGet, apiPost, apiDelete } from "../utils/api";
 import { Clock, ChevronDown, Plus, Trash2, CalendarDays } from "lucide-react";
 
 const WEEK_DAYS = [
-  "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
+  "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN",
 ];
 
 const DURATIONS = [0,1,2,3,4,5];
@@ -35,15 +35,15 @@ const DayColumn = ({ day, slots, onDelete }) => (
     ) : (
       slots.map((s) => (
         <div
-          key={s.availability_id}
+          key={s.a_id}
           className="flex items-center justify-between bg-blue-600/10 border border-blue-500/30 rounded-xl px-3 py-2"
         >
           <div>
             <p className="text-sm text-white font-medium">{s.slot_time}</p>
-            <p className="text-xs text-gray-400">{s.slot_duration_minutes} min</p>
+            <p className="text-xs text-gray-400">{s.slot_duration_minutes} patient(s)</p>
           </div>
           <button
-            onClick={() => onDelete(s.availability_id)}
+            onClick={() => onDelete(s.a_id)}
             className="text-gray-500 hover:text-red-400 transition-colors ml-2"
             title="Remove slot"
           >
@@ -64,9 +64,9 @@ const Availability = () => {
 
   // New slot form state
   const [form, setForm] = useState({
-    week_day: "Monday",
+    week_day: "MON",
     slot_time: "09:00",
-    slot_duration_minutes: 30,
+    slot_duration_minutes: 3,
   });
   const [adding, setAdding] = useState(false);
 
@@ -113,7 +113,7 @@ const Availability = () => {
     setError("");
     try {
       await apiDelete(`/availability/${aId}`);
-      setSlots((prev) => prev.filter((s) => s.availability_id !== aId));
+      setSlots((prev) => prev.filter((s) => s.a_id !== aId));
     } catch (err) {
       setError(err.message);
     }

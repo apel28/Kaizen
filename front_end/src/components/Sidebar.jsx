@@ -1,15 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import kaizenLogo from "../assets/kaizen-logo.webp";
-import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Activity } from "lucide-react";
+import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Activity, Stethoscope } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const navItems = [
   { label: "Home",         icon: <House />,         path: "/PatientDashboard" },
   { label: "Appointment",  icon: <Calendar />,      path: "/Appointment" },
   { label: "Vitals",       icon: <Activity />,      path: "/PatientDashboard/Vitals" },
+  { label: "Conditions",   icon: <Stethoscope />,   path: "/PatientDashboard/Conditions" },
   { label: "Tests",        icon: <FlaskConical />,  path: null },
-  { label: "Medication",   icon: <Pill />,          path: null },
   { label: "Prescription", icon: <FileText />,      path: null },
 ];
 

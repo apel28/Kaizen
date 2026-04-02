@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION medicine_archive_fn()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO past_medicines (patient_id, medicine_id, history_id)
+    VALUES (OLD.patient_id, OLD.medicine_id, OLD.history_id);
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER medicine_archive
+BEFORE DELETE
+ON medicines
+FOR EACH ROW
+EXECUTE FUNCTION medicine_archive_fn();

@@ -96,18 +96,50 @@ export async function getPatientMedications(req, res) {
         const { patient_id } = req.params;
 
         const result = await pool.query(
-            `SELECT m.*, am.name, am.brand, am.generic_name, am.ppu, mh.condition, v.date
+            `SELECT m.*, am.name, am.brand, am.generic_name, mh.condition, v.date, 'Current' AS status
              FROM medicines m
              JOIN all_medicines am ON m.medicine_id = am.medicine_id
              JOIN medical_history mh ON m.history_id = mh.history_id
              JOIN diagnosis d ON mh.history_id = d.history_id
              JOIN visits v ON d.visit_id = v.visit_id
              WHERE m.patient_id = $1
-             ORDER BY v.date DESC`,
+
+             UNION ALL
+
+             SELECT pm.*, am.name, am.brand, am.generic_name, mh.condition, v.date, 'Past' AS status
+             FROM past_medicines pm
+             JOIN all_medicines am ON pm.medicine_id = am.medicine_id
+             JOIN medical_history mh ON pm.history_id = mh.history_id
+             JOIN diagnosis d ON mh.history_id = d.history_id
+             JOIN visits v ON d.visit_id = v.visit_id
+             WHERE pm.patient_id = $1
+
+             ORDER BY status DESC, date DESC`,
             [patient_id]
         );
 
         res.status(200).json({ data: result.rows });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+export async function deletePatientMedications(req, res) {
+    try {
+        const { patient_id, medicine_id } = req.params;
+
+        const deleteResult = await pool.query(
+            `DELETE FROM medicines
+             WHERE patient_id = $1
+               AND medicine_id = $2`,
+            [patient_id, medicine_id]
+        );
+
+        if (deleteResult.rowCount === 0) {
+            return res.status(404).json({ error: 'No medicine found for this patient with the given medicine_id' });
+        }
+
+        res.status(200).json({ message: 'Medicine deleted successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -11,6 +11,8 @@ router.get('/', verifyAuth, async (req, res) => {
         return patientDashboardData(req, res);
     } else if (req.user.role === 'D') {
         return doctorDashboardData(req, res);
+    } else if (req.user.role === 'A') {
+        return res.status(200).json({ role: 'A', user_id: req.user.user_id });
     } else {
         return res.status(403).json({ error: 'Invalid role' });
     }

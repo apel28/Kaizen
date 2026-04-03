@@ -119,6 +119,8 @@ export async function register(req, res) {
         VALUES ($1);
         `, [user_id]);
     }
+
+    // role 0 = administrator: user + profile + role only (no doctor/patient/nurse/staff row)
     
     res.status(201).json({
         result:"ok",

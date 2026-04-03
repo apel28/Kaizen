@@ -3,8 +3,9 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const ROLE_REDIRECTS = {
-  P: "/pDashboard",
-  D: "/dDashboard",
+  P: "/PatientDashboard",
+  D: "/DoctorDashboard",
+  A: "/AdminDashboard",
 };
 
 /**

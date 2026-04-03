@@ -5,7 +5,11 @@ import { Eye, EyeOff } from "lucide-react";
 import { apiPost } from "../../utils/api";
 import { useAuth } from "../../context/AuthContext";
 
-const ROLE_REDIRECTS = { P: "/PatientDashboard", D: "/DoctorDashboard" };
+const ROLE_REDIRECTS = {
+  P: "/PatientDashboard",
+  D: "/DoctorDashboard",
+  A: "/AdminDashboard",
+};
 
 const LoginBlock = ({ onToggle }) => {
   const [showPassword, setShowPassword] = useState(false);

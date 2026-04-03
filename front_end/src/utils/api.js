@@ -12,10 +12,20 @@ export const apiPost = async (endpoint, data) => {
       body: JSON.stringify(data),
     });
 
-    const result = await response.json();
+    let result;
+    try {
+      result = await response.json();
+    } catch {
+      result = {};
+    }
 
     if (!response.ok) {
-      throw new Error(result.error || "Something went wrong");
+      const msg =
+        result.error ||
+        result.message ||
+        response.statusText ||
+        "Something went wrong";
+      throw new Error(msg);
     }
 
     return result;

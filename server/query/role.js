@@ -15,7 +15,11 @@ export async function getRole(userId) {
 
     const role = result.rows[0].role_id;
 
-    if(role == 1) return 'D';
-    else if(role == 2) return 'P';
- 
+    if (role == 0) return "A";
+    if (role == 1) return "D";
+    if (role == 2) return "P";
+    if (role == 3) return "N";
+    if (role == 4) return "S";
+
+    return null;
 }

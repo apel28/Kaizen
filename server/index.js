@@ -1,3 +1,4 @@
+import "./loadEnv.js";
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -12,6 +13,7 @@ import qualificationRoutes from "./routes/qualification.route.js"
 import availabilityRoutes from "./routes/availability.route.js"
 import prescriptionRoutes from "./routes/prescription.route.js"
 import patientDataRoutes from "./routes/patientData.route.js"
+import adminRoutes from "./routes/admin.route.js"
 
 const app = express();
 
@@ -33,6 +35,7 @@ app.use("/api/qualification", qualificationRoutes);
 app.use("/api/availability", availabilityRoutes);
 app.use("/api/prescription", prescriptionRoutes);
 app.use("/api/patient-data", patientDataRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.listen(5001, () => {
     console.log("Server started on node 5001");

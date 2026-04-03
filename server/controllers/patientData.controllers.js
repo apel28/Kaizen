@@ -27,8 +27,6 @@ export async function getPatientsForDoctor(req, res) {
             [doctorId]
         );
 
-        console.log(result.rows);
-
         res.status(200).json({ data: result.rows });
     } catch (err) {
         res.status(500).json({ error: err.message });

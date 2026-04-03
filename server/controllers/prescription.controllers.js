@@ -147,14 +147,15 @@ export async function addPrescription(req, res) {
         // 10. If admission
         if (admission) {
             const admission_id = Number(patient_id) + Number(doctorId) + Number(visit_id);
-
+            
             await client.query(
                 `UPDATE visits SET admission_id = $1 WHERE visit_id = $2`,
                 [admission_id, visit_id]
             );
-
+            
             // Add to admit_queue
             if (conditions && conditions.length > 0) {
+                console.log(conditions[0].department_id)
                 await client.query(
                     `INSERT INTO admit_queue (admission_id, date, department_id, priority) VALUES ($1, CURRENT_DATE, $2, $3)`,
                     [admission_id, conditions[0].department_id, 1]  // Using first condition's department, priority 1

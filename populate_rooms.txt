@@ -1,0 +1,39 @@
+-- Assumes departments 1–20 already exist.
+-- Ward: ward_number restarts at 1 per department; max 2 wards per department.
+-- Room: max 2 rooms per ward.
+-- Bed: max 2 beds per room. Column is `occupied` ('n' = vacant / available, 'y' = occupied).
+
+INSERT INTO ward (department_id, ward_number) VALUES
+(1, 1), (1, 2),
+(2, 1), (2, 2),
+(3, 1), (3, 2),
+(4, 1), (4, 2),
+(5, 1), (5, 2),
+(6, 1), (6, 2),
+(7, 1), (7, 2),
+(8, 1), (8, 2),
+(9, 1), (9, 2),
+(10, 1), (10, 2),
+(11, 1), (11, 2),
+(12, 1), (12, 2),
+(13, 1), (13, 2),
+(14, 1), (14, 2),
+(15, 1), (15, 2),
+(16, 1), (16, 2),
+(17, 1), (17, 2),
+(18, 1), (18, 2),
+(19, 1), (19, 2),
+(20, 1), (20, 2);
+
+-- 40 wards → 80 rooms (two rows per ward_id). Requires empty `room` or run once on fresh DB.
+-- If ward_id does not start at 1, replace ranges below with your actual ward_id values.
+
+INSERT INTO room (ward_id)
+SELECT w FROM generate_series(1, 40) AS w
+CROSS JOIN generate_series(1, 2) AS r;
+
+-- 80 rooms → 160 beds (two beds per room_id). Vacant beds use occupied = 'n'.
+
+INSERT INTO bed (room_id, occupied)
+SELECT rm, 'n' FROM generate_series(1, 80) AS rm
+CROSS JOIN generate_series(1, 2) AS b;

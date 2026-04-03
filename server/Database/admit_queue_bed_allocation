@@ -1,0 +1,101 @@
+-- Simple bed lookup and admit-on-queue-insert (no row locking).
+--
+-- 1) find_available_bed_in_department(department_id)
+--    Returns one free bed in that department (occupied = 'n'), or no rows.
+--
+-- 2) try_admit_from_queue(admission_id)
+--    If the row exists in admit_queue and a free bed exists for its department,
+--    marks the bed occupied, inserts admitted, deletes the queue row.
+--
+-- 3) Trigger: after insert on admit_queue, runs try_admit_from_queue(NEW.admission_id).
+
+CREATE OR REPLACE FUNCTION find_available_bed_in_department(p_department_id INT)
+RETURNS TABLE (
+	department_id INT,
+	ward_id INT,
+	room_id INT,
+	bed_id INT
+)
+LANGUAGE sql
+STABLE
+AS $$
+	SELECT w.department_id, w.ward_id, r.room_id, b.bed_id
+	FROM bed b
+	JOIN room r ON r.room_id = b.room_id
+	JOIN ward w ON w.ward_id = r.ward_id
+	WHERE w.department_id = p_department_id
+	  AND b.occupied = 'n'
+	ORDER BY w.ward_id, r.room_id, b.bed_id
+	LIMIT 1;
+$$;
+
+
+CREATE OR REPLACE FUNCTION try_admit_from_queue(p_admission_id BIGINT)
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	v_queue_dept INT;
+	v_department_id INT;
+	v_ward_id INT;
+	v_room_id INT;
+	v_bed_id INT;
+	v_patient_id INT;
+	v_doctor_id INT;
+BEGIN
+	SELECT aq.department_id
+	INTO v_queue_dept
+	FROM admit_queue aq
+	WHERE aq.admission_id = p_admission_id;
+
+	IF v_queue_dept IS NULL THEN
+		RETURN;
+	END IF;
+
+	SELECT f.department_id, f.ward_id, f.room_id, f.bed_id
+	INTO v_department_id, v_ward_id, v_room_id, v_bed_id
+	FROM find_available_bed_in_department(v_queue_dept) AS f;
+
+	IF v_bed_id IS NULL THEN
+		RETURN;
+	END IF;
+
+	SELECT v.patient_id, v.doctor_id
+	INTO v_patient_id, v_doctor_id
+	FROM visits v
+	WHERE v.admission_id = p_admission_id;
+
+	IF v_patient_id IS NULL OR v_doctor_id IS NULL THEN
+		RETURN;
+	END IF;
+
+	UPDATE bed
+	SET occupied = 'y'
+	WHERE bed_id = v_bed_id;
+
+	INSERT INTO admitted (patient_id, doctor_id, department_id, ward_id, room_id, bed_id)
+	VALUES (v_patient_id, v_doctor_id, v_department_id, v_ward_id, v_room_id, v_bed_id);
+
+	DELETE FROM admit_queue
+	WHERE admission_id = p_admission_id;
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION admit_queue_after_insert_fn()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	PERFORM try_admit_from_queue(NEW.admission_id);
+	RETURN NEW;
+END;
+$$;
+
+
+DROP TRIGGER IF EXISTS admit_queue_try_admit_t ON admit_queue;
+
+CREATE TRIGGER admit_queue_try_admit_t
+AFTER INSERT ON admit_queue
+FOR EACH ROW
+EXECUTE FUNCTION admit_queue_after_insert_fn();

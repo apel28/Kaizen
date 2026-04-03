@@ -142,3 +142,21 @@ export async function deletePatientMedications(req, res) {
         res.status(500).json({ error: err.message });
     }
 }
+
+// Get patient reports from the last X days (default 30)
+export async function getPatientReports(patient_id, { sinceDays = 30 } = {}) {
+  // Get all test_reports for this patient from the last X days
+  const result = await pool.query(
+    `SELECT report_id, report_path, patient_id
+     FROM test_reports
+     WHERE patient_id = $1
+       AND report_id IN (
+         SELECT report_id FROM test_reports tr
+         JOIN visits v ON tr.patient_id = v.patient_id
+         WHERE v.patient_id = $1 AND v.date >= NOW() - INTERVAL '${sinceDays} days'
+       )
+     ORDER BY report_id DESC`,
+    [patient_id]
+  );
+  return result.rows;
+}

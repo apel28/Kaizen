@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiGet, apiPut } from "../utils/api";
+import { apiGet, apiPut, apiDelete } from "../utils/api";
 import Button from "../components/Button";
+import { useAuth } from "../context/AuthContext";
+import { User } from "lucide-react";
 
 const INIT = {
   first_name: "", middle_name: "", last_name: "",
@@ -19,6 +21,7 @@ function Field({ label, children, wide }) {
 }
 
 export default function PatientProfile() {
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState(INIT);
   const [nid, setNid] = useState("—");
@@ -89,8 +92,17 @@ export default function PatientProfile() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (!window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) return;
+    try {
+      await apiDelete("/profile");
+      logout();
+    } catch (err) {
+      setMsg({ text: err.message || "Failed to delete account.", ok: false });
+    }
+  };
+
   const input = "w-full bg-gray-900/60 border border-gray-600 rounded-xl px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors";
-  const initials = [form.first_name, form.last_name].filter(Boolean).map((n) => n[0]).join("").toUpperCase() || "—";
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center p-6 bg-gradient-to-br from-[#0a0a3a] to-black bg-fixed font-['Segoe_UI',sans-serif]">
@@ -102,7 +114,7 @@ export default function PatientProfile() {
         {/* Header */}
         <div className="flex items-center gap-5 mb-8 pb-6 border-b border-gray-700">
           <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-900/30 shrink-0">
-            {initials}
+            <User />
           </div>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -172,7 +184,14 @@ export default function PatientProfile() {
               </div>
             )}
 
-            <div className="flex justify-end">
+            <div className="flex justify-between items-center mt-6 pt-6 border-t border-gray-700">
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-6 rounded-xl transition-colors shadow-lg shadow-red-900/20"
+              >
+                Delete Account
+              </button>
               <Button text={saving ? "Saving…" : "Save Changes"} type="submit" disabled={saving} />
             </div>
           </form>

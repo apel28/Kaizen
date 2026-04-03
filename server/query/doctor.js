@@ -18,10 +18,11 @@ export async function getDoctorProfile(userId) {
     const result = await pool.query(
         `
         SELECT d.doctor_id,
-               (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS doctor_name
+               pf.*,
+               (pf.first_name || ' ' || COALESCE(pf.middle_name || ' ', '') || pf.last_name) AS doctor_name
         FROM doctor d
         JOIN "user" u ON d.user_id = u.user_id
-        JOIN profile p ON u.user_id = p.user_id
+        JOIN profile pf ON u.user_id = pf.user_id
         WHERE u.user_id = $1
         `,
         [userId]

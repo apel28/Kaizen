@@ -18,7 +18,7 @@ const MedicationList = () => {
   }, []);
 
   return (
-    <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm h-full flex flex-col">
+    <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-bold">Active Medications</h3>
       </div>

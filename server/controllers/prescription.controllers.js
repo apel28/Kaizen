@@ -284,12 +284,13 @@ export async function getPrescriptionByVisitId(req, res) {
             [visit_id]
         );
 
-        // Get medicines
+        // Get medicines (distinct to avoid duplicates from multi-condition inserts)
         const medicinesResult = await pool.query(
-            `SELECT am.* 
+            `SELECT DISTINCT ON (am.medicine_id) am.* 
              FROM medicines m 
              JOIN all_medicines am ON m.medicine_id = am.medicine_id 
-             WHERE m.history_id IN (SELECT history_id FROM diagnosis WHERE visit_id = $1)`,
+             WHERE m.history_id IN (SELECT history_id FROM diagnosis WHERE visit_id = $1)
+             ORDER BY am.medicine_id`,
             [visit_id]
         );
 
@@ -301,10 +302,10 @@ export async function getPrescriptionByVisitId(req, res) {
 
         // Get test orders
         const testsResult = await pool.query(
-            `SELECT at.* 
-             FROM test_orders to 
-             JOIN all_test at ON to.test_id = at.test_id 
-             WHERE to.visit_id = $1`,
+            `SELECT atest.* 
+             FROM test_orders tord 
+             JOIN all_test atest ON tord.test_id = atest.test_id 
+             WHERE tord.visit_id = $1`,
             [visit_id]
         );
 

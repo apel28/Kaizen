@@ -32,7 +32,7 @@ const DDashboard = () => {
   const appointments = data?.appointments ?? [];
   const displayName = data?.doctorName ?? "—";
   const displayInitials = data?.doctorName
-    ? data.doctorName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+    ? data.doctorName.replace(/^Dr\.\s*/i, "").split(" ").filter(Boolean).map((n) => n[0]).join("").slice(0, 2).toUpperCase()
     : "—";
   const doctorId = data?.doctorId ?? "—";
 

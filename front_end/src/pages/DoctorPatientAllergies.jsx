@@ -93,18 +93,34 @@ const DoctorPatientAllergies = () => {
                 </div>
               </div>
               
-              {allergy.trigger_meds && (
-                <div className="bg-gray-800/80 rounded-xl p-4 border border-gray-700 mt-2">
-                  <p className="text-xs uppercase tracking-widest mb-2 opacity-70">Triggering Medicines</p>
-                  <div className="flex flex-wrap gap-2">
-                    {allergy.trigger_meds.split(',').map((med, idx) => (
-                      <span key={idx} className="bg-red-900/40 text-red-300 border border-red-800/50 px-3 py-1 rounded-full text-sm font-medium">
-                        {med.trim()}
-                      </span>
-                    ))}
+              {allergy.trigger_meds && (() => {
+                // Robustly parse either Postgres array string {"a","b"} or JSON string ["a","b"]
+                let meds = [];
+                const str = allergy.trigger_meds;
+                if (str.startsWith('{')) {
+                  meds = str.replace(/[{}]/g, '').split(',').map(m => m.trim().replace(/^"|"$/g, ''));
+                } else if (str.startsWith('[')) {
+                  try { meds = JSON.parse(str); } catch { meds = str.split(','); }
+                } else {
+                  meds = str.split(',').map(m => m.trim());
+                }
+                
+                const finalMeds = (Array.isArray(meds) ? meds : [meds]).filter(Boolean);
+                if (finalMeds.length === 0) return null;
+
+                return (
+                  <div className="bg-gray-800/80 rounded-xl p-4 border border-gray-700 mt-2">
+                    <p className="text-xs uppercase tracking-widest mb-2 opacity-70">Triggering Medicines</p>
+                    <div className="flex flex-wrap gap-2">
+                      {finalMeds.map((med, idx) => (
+                        <span key={idx} className="bg-red-900/40 text-red-300 border border-red-800/50 px-3 py-1 rounded-full text-sm font-medium">
+                          {med}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           )
         )}

@@ -340,6 +340,69 @@ export async function getPrescriptionByVisitId(req, res) {
     }
 }
 
+export async function getVisits(req, res) {
+    try {
+        const role = req.user.role;
+        const requestedPatientId = req.query.patient_id;
+        const requestedDoctorId = req.query.doctor_id;
+
+        let patientId;
+        let doctorId;
+
+        if (role === 'P') {
+            const patientProfile = await getPatientProfile(req.user.user_id);
+            if (!patientProfile) {
+                return res.status(404).json({ error: 'Patient profile not found' });
+            }
+            patientId = patientProfile.patient_id;
+
+            if (requestedPatientId && Number(requestedPatientId) !== Number(patientId)) {
+                return res.status(403).json({ error: 'Patient can only access their own visits' });
+            }
+
+            doctorId = requestedDoctorId ? Number(requestedDoctorId) : null;
+
+        } else if (role === 'D') {
+            const doctorProfile = await getDoctorProfile(req.user.user_id);
+            if (!doctorProfile) {
+                return res.status(404).json({ error: 'Doctor not found' });
+            }
+            const myDoctorId = doctorProfile.doctor_id;
+
+            if (!requestedPatientId) {
+                return res.status(400).json({ error: 'patient_id required for doctor requests' });
+            }
+
+            patientId = Number(requestedPatientId);
+            doctorId = requestedDoctorId ? Number(requestedDoctorId) : myDoctorId;
+
+            if (doctorId !== myDoctorId) {
+                return res.status(403).json({ error: 'Doctor can only query with their own doctor_id' });
+            }
+
+        } else {
+            return res.status(403).json({ error: 'Invalid role' });
+        }
+
+        let query = `SELECT visit_id, patient_id, doctor_id, date, admission_id FROM visits WHERE patient_id = $1`;
+        const params = [patientId];
+
+        if (doctorId) {
+            query += ` AND doctor_id = $2`;
+            params.push(doctorId);
+        }
+
+        query += ` ORDER BY date DESC`;
+
+        const result = await pool.query(query, params);
+
+        res.status(200).json({ data: result.rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+}
+
 export async function getDepartments(req, res) {
     try {
         const result = await pool.query(`SELECT department_id, name FROM departments`);

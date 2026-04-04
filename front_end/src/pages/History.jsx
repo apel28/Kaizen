@@ -112,7 +112,7 @@ const PrescriptionDetail = ({ visitId }) => {
         <Section icon={FlaskConical} title="Lab Tests" color="text-yellow-400">
           <div className="flex flex-wrap gap-2">
             {data.test_orders.map((t, i) => (
-              <Badge key={i} color="green">{t.name}</Badge>
+              <Badge key={i} color="green">{t.test_name}</Badge>
             ))}
           </div>
         </Section>

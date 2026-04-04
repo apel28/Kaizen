@@ -24,6 +24,7 @@ import DoctorPatientAllergies from "./pages/DoctorPatientAllergies.jsx";
 import PatientMedications from "./pages/PatientMedications.jsx";
 import DoctorPatientMedications from "./pages/DoctorPatientMedications.jsx";
 import PatientPrescriptions from "./pages/PatientPrescriptions.jsx";
+import DoctorPatientTestReports from "./pages/DoctorPatientTestReports.jsx";
 import History from "./pages/History.jsx";
 import PatientTestOrders from "./pages/PatientTestOrders.jsx";
 import PatientTestReports from "./pages/PatientTestReports.jsx";
@@ -130,6 +131,15 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="D">
                 <DoctorPatientVitals />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/DoctorDashboard/PatientTestReports"
+            element={
+              <ProtectedRoute allowedRole="D">
+                <DoctorPatientTestReports />
               </ProtectedRoute>
             }
           />

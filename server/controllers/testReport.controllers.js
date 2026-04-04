@@ -58,7 +58,7 @@ export async function getTestReportsListHandler(req, res) {
             return res.status(404).json({ error: "Doctor not found" });
         }
 
-        const filterPatientRaw = req.body?.patient_id;
+        const filterPatientRaw = req.body?.patient_id || req.query?.patient_id;
         if (filterPatientRaw !== undefined && filterPatientRaw !== null && String(filterPatientRaw).trim() !== "") {
             const filterPatientId = Number(filterPatientRaw);
             if (!Number.isInteger(filterPatientId) || filterPatientId < 1) {

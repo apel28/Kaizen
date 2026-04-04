@@ -24,34 +24,32 @@ const Sidebar = () => {
   const { pathname } = useLocation();
 
   return (
-    <aside className="w-64 shrink-0 sticky top-0 h-[calc(100vh-2rem)] flex flex-col border border-gray-700 bg-gray-800/50 text-white p-6 rounded-2xl font-sans overflow-y-auto">
+    <aside className="w-64 shrink-0 sticky top-0 h-[calc(100vh-2rem)] flex flex-col border border-gray-700 bg-gray-800/50 text-white p-4 rounded-2xl font-sans overflow-hidden">
       <div className="flex justify-center items-center">
-        <img src={kaizenLogo} alt="Kaizen Logo" className="w-40 mb-10 max-w-full" />
+        <img src={kaizenLogo} alt="Kaizen Logo" className="w-40 mb-6 max-w-full" />
       </div>
-      <nav>
+      <nav className="flex-1 overflow-y-auto scrollbar-hide">
         <ul>
           {navItems.map(({ label, icon, path }, index) => (
             <li
               key={label}
               onClick={() => path && navigate(path)}
-              className={`mb-4 p-2 rounded-lg transition-all ${path && pathname === path ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50"}`}
+              className={`mb-1 p-2 rounded-lg transition-all flex items-center gap-3 ${path && pathname === path ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50 text-xs"}`}
             >
-              <div className="flex items-center gap-2">
+              <div className="shrink-0 scale-90">
                 {icon}
-                {label}
               </div>
+              <span className="text-sm font-medium">{label}</span>
             </li>
           ))}
         </ul>
       </nav>
-      <div className="flex justify-center items-center">
+      <div className="mt-auto pt-4 flex justify-center items-center">
         <button
           onClick={logout}
-          className="mb-4 p-3 absolute bottom-4 rounded-lg cursor-pointer transition-all hover:bg-red-600/50"
+          className="w-full p-2 rounded-lg cursor-pointer transition-all hover:bg-red-600/50 flex items-center justify-center gap-2 text-sm border border-red-500/20"
         >
-          <div className="flex items-center gap-2">
-            <LogOut /> Log Out
-          </div>
+          <LogOut size={18} /> Log Out
         </button>
       </div>
     </aside>

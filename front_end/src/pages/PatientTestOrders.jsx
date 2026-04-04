@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Sidebar from "../components/Sidebar";
+import Button from "../components/Button";
 import { apiGet, apiPost } from "../utils/api";
 import { FlaskConical, DollarSign, Hash, CheckCircle, Loader } from "lucide-react";
 
@@ -18,7 +19,7 @@ const TestCard = ({ order, onOrder }) => {
     setOrdering(true);
     setErr("");
     try {
-      await onOrder(order.test_id, order.visit_id);
+      await onOrder(order.test_id, order.visit_id, order.order_id);
       setOrdered(true);
     } catch (e) {
       setErr(e.message);
@@ -69,21 +70,12 @@ const TestCard = ({ order, onOrder }) => {
       {/* Action */}
       {!ordered && (
         <div className="flex justify-end mt-auto pt-1">
-          <button
+          <Button
             onClick={handleOrder}
             disabled={ordering}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all"
-          >
-            {ordering ? (
-              <>
-                <Loader size={14} className="animate-spin" /> Ordering…
-              </>
-            ) : (
-              <>
-                <FlaskConical size={14} /> Order Now
-              </>
-            )}
-          </button>
+            text={ordering ? "Ordering…" : "Order Now"}
+            type="button"
+          />
         </div>
       )}
     </div>
@@ -127,8 +119,8 @@ const PatientTestOrders = () => {
   useEffect(() => { fetchOrders(); }, [fetchOrders]);
 
   // ── Order now ──
-  const handleOrder = async (test_id, visit_id) => {
-    await apiPost("/test-orders/order", { test_id, visit_id });
+  const handleOrder = async (test_id, visit_id, order_id) => {
+    await apiPost("/test-orders/order", { test_id, visit_id, order_id });
     // Silently refetch to stay in sync with server
     fetchOrders();
   };

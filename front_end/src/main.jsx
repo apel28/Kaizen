@@ -26,6 +26,7 @@ import DoctorPatientMedications from "./pages/DoctorPatientMedications.jsx";
 import PatientPrescriptions from "./pages/PatientPrescriptions.jsx";
 import History from "./pages/History.jsx";
 import PatientTestOrders from "./pages/PatientTestOrders.jsx";
+import PatientNotifications from "./pages/PatientNotifications.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -208,6 +209,15 @@ createRoot(document.getElementById("root")).render(
             element={
               <ProtectedRoute allowedRole="P">
                 <PatientTestOrders />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/PatientDashboard/Notifications"
+            element={
+              <ProtectedRoute allowedRole="P">
+                <PatientNotifications />
               </ProtectedRoute>
             }
           />

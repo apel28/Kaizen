@@ -15,6 +15,7 @@ import prescriptionRoutes from "./routes/prescription.route.js"
 import patientDataRoutes from "./routes/patientData.route.js"
 import testOrderRoutes from "./routes/testOrder.route.js"
 import notificationRoutes from "./routes/notification.route.js"
+import testReportRoutes from "./routes/testReport.route.js"
 import adminRoutes from "./routes/admin.route.js"
 
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api/availability", availabilityRoutes);
 app.use("/api/prescription", prescriptionRoutes);
 app.use("/api/patient-data", patientDataRoutes);
 app.use("/api/test-orders", testOrderRoutes);
+app.use("/api/test-reports", testReportRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/admin", adminRoutes);
 

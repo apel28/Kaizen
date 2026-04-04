@@ -43,37 +43,47 @@ export async function authorize(req, res) {
             { expiresIn: process.env.JWT_REFRESH_EXPIRES || "7d" }
         );
 
-        const hashedToken = await bcrypt.hash(refreshToken, 12);
-        const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
 
-        await pool.query(
-            `INSERT INTO refresh_tokens (user_id, token_hash, expires_at, ipaddress) 
-            VALUES ($1, $2, $3, $4)`,
-            [user.user_id, hashedToken, expiresAt, ipaddress]
-        );
+            const hashedToken = await bcrypt.hash(refreshToken, 12);
+            const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-        res.cookie("access_token", accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict",
-            maxAge: 15 * 60 * 1000, 
-        });
+            await client.query(
+                `INSERT INTO refresh_tokens (user_id, token_hash, expires_at, ipaddress) 
+                VALUES ($1, $2, $3, $4)`,
+                [user.user_id, hashedToken, expiresAt, ipaddress]
+            );
 
-        res.cookie("refresh_token", refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "Strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000, 
-        });
-        
-        const role = await getRole(user.user_id);
-        
-        res.locals.user_id = user.user_id
-        res.locals.role = role
-        
-        res.status(200).json({ message: "Login successful", user_id: user.user_id, role });
+            res.cookie("access_token", accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "Strict",
+                maxAge: 15 * 60 * 1000, 
+            });
 
+            res.cookie("refresh_token", refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "Strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000, 
+            });
+            
+            const role = await getRole(user.user_id, client);
+            
+            await client.query('COMMIT');
 
+            res.locals.user_id = user.user_id
+            res.locals.role = role
+            
+            res.status(200).json({ message: "Login successful", user_id: user.user_id, role });
+        } catch (dbErr) {
+            await client.query('ROLLBACK');
+            throw dbErr;
+        } finally {
+            client.release();
+        }
 
     } catch(error) {
         console.error(error);

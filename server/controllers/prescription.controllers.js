@@ -191,39 +191,55 @@ export async function addPrescription(req, res) {
 // Functions for front-end to fetch data for generating prescription
 
 export async function getAllMedicines(req, res) {
+    const client = await pool.connect();
     try {
-        const result = await pool.query(`SELECT * FROM all_medicines`);
+        await client.query('BEGIN');
+        const result = await client.query(`SELECT * FROM all_medicines`);
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getAllTests(req, res) {
+    const client = await pool.connect();
     try {
-        const result = await pool.query(`SELECT * FROM all_test`);
+        await client.query('BEGIN');
+        const result = await client.query(`SELECT * FROM all_test`);
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getTodaysPatients(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         if (req.user.role !== 'D') {
+            await client.query('ROLLBACK');
             return res.status(403).json({ error: "Only doctors can view patients" });
         }
 
         const userId = req.user.user_id;
-        const doctorProfile = await getDoctorProfile(userId);
+        const doctorProfile = await getDoctorProfile(userId, client);
 
         if (!doctorProfile) {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: "Doctor not found" });
         }
 
         const doctorId = doctorProfile.doctor_id;
 
-        const result = await pool.query(
+        const result = await client.query(
             `SELECT DISTINCT a.patient_id,
                     p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name AS name
             FROM appointments a
@@ -233,23 +249,30 @@ export async function getTodaysPatients(req, res) {
             [doctorId]
         );
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getPrescriptionByVisitId(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const { visit_id } = req.params;
 
         // Get visit details
-        const visitResult = await pool.query(
+        const visitResult = await client.query(
             `SELECT * FROM visits WHERE visit_id = $1`,
             [visit_id]
         );
 
         if (visitResult.rows.length === 0) {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: 'Visit not found' });
         }
 
@@ -261,21 +284,24 @@ export async function getPrescriptionByVisitId(req, res) {
         const role = req.user.role;
 
         if (role === 'D') {
-            const doctorProfile = await getDoctorProfile(userId);
+            const doctorProfile = await getDoctorProfile(userId, client);
             if (!doctorProfile || doctorProfile.doctor_id !== doctor_id) {
+                await client.query('ROLLBACK');
                 return res.status(403).json({ error: 'Unauthorized' });
             }
         } else if (role === 'P') {
-            const patientProfile = await getPatientProfile(userId);
+            const patientProfile = await getPatientProfile(userId, client);
             if (!patientProfile || patientProfile.patient_id !== patient_id) {
+                await client.query('ROLLBACK');
                 return res.status(403).json({ error: 'Unauthorized' });
             }
         } else {
+            await client.query('ROLLBACK');
             return res.status(403).json({ error: 'Invalid role' });
         }
 
         // Get conditions
-        const conditionsResult = await pool.query(
+        const conditionsResult = await client.query(
             `SELECT mh.condition, mh.department_id, mh.status, d.name as department_name 
              FROM diagnosis diag 
              JOIN medical_history mh ON diag.history_id = mh.history_id 
@@ -285,7 +311,7 @@ export async function getPrescriptionByVisitId(req, res) {
         );
 
         // Get medicines (distinct to avoid duplicates from multi-condition inserts)
-        const medicinesResult = await pool.query(
+        const medicinesResult = await client.query(
             `SELECT DISTINCT ON (am.medicine_id) am.* 
              FROM medicines m 
              JOIN all_medicines am ON m.medicine_id = am.medicine_id 
@@ -295,13 +321,13 @@ export async function getPrescriptionByVisitId(req, res) {
         );
 
         // Get vitals
-        const vitalsResult = await pool.query(
+        const vitalsResult = await client.query(
             `SELECT * FROM vitals WHERE visit_id = $1`,
             [visit_id]
         );
 
         // Get test orders
-        const testsResult = await pool.query(
+        const testsResult = await client.query(
             `SELECT atest.* 
              FROM test_orders tord 
              JOIN all_test atest ON tord.test_id = atest.test_id 
@@ -310,13 +336,13 @@ export async function getPrescriptionByVisitId(req, res) {
         );
 
         // Get prescription note
-        const prescriptionResult = await pool.query(
+        const prescriptionResult = await client.query(
             `SELECT * FROM prescription WHERE visit_id = $1`,
             [visit_id]
         );
 
         // Get allergy
-        const allergyResult = await pool.query(
+        const allergyResult = await client.query(
             `SELECT * FROM allergy WHERE patient_id = $1`,
             [patient_id]
         );
@@ -335,15 +361,21 @@ export async function getPrescriptionByVisitId(req, res) {
             allergy: allergyResult.rows[0] || null
         };
 
+        await client.query('COMMIT');
         res.status(200).json({ data: response });
     } catch (err) {
+        await client.query('ROLLBACK');
         console.error(err);
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getVisits(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const role = req.user.role;
         const requestedPatientId = req.query.patient_id;
         const requestedDoctorId = req.query.doctor_id;
@@ -352,26 +384,30 @@ export async function getVisits(req, res) {
         let doctorId;
 
         if (role === 'P') {
-            const patientProfile = await getPatientProfile(req.user.user_id);
+            const patientProfile = await getPatientProfile(req.user.user_id, client);
             if (!patientProfile) {
+                await client.query('ROLLBACK');
                 return res.status(404).json({ error: 'Patient profile not found' });
             }
             patientId = patientProfile.patient_id;
 
             if (requestedPatientId && Number(requestedPatientId) !== Number(patientId)) {
+                await client.query('ROLLBACK');
                 return res.status(403).json({ error: 'Patient can only access their own visits' });
             }
 
             doctorId = requestedDoctorId ? Number(requestedDoctorId) : null;
 
         } else if (role === 'D') {
-            const doctorProfile = await getDoctorProfile(req.user.user_id);
+            const doctorProfile = await getDoctorProfile(req.user.user_id, client);
             if (!doctorProfile) {
+                await client.query('ROLLBACK');
                 return res.status(404).json({ error: 'Doctor not found' });
             }
             const myDoctorId = doctorProfile.doctor_id;
 
             if (!requestedPatientId) {
+                await client.query('ROLLBACK');
                 return res.status(400).json({ error: 'patient_id required for doctor requests' });
             }
 
@@ -379,10 +415,12 @@ export async function getVisits(req, res) {
             doctorId = requestedDoctorId ? Number(requestedDoctorId) : myDoctorId;
 
             if (doctorId !== myDoctorId) {
+                await client.query('ROLLBACK');
                 return res.status(403).json({ error: 'Doctor can only query with their own doctor_id' });
             }
 
         } else {
+            await client.query('ROLLBACK');
             return res.status(403).json({ error: 'Invalid role' });
         }
 
@@ -396,20 +434,30 @@ export async function getVisits(req, res) {
 
         query += ` ORDER BY date DESC`;
 
-        const result = await pool.query(query, params);
+        const result = await client.query(query, params);
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         console.error(err);
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getDepartments(req, res) {
+    const client = await pool.connect();
     try {
-        const result = await pool.query(`SELECT department_id, name FROM departments`);
+        await client.query('BEGIN');
+        const result = await client.query(`SELECT department_id, name FROM departments`);
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }

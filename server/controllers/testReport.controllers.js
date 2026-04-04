@@ -5,8 +5,8 @@ import pool from "../db.js";
 import { getDoctorId } from "../query/doctor.js";
 import { getPatientId } from "../query/patient.js";
 
-async function doctorHasVisitedPatient(doctorId, patientId) {
-    const r = await pool.query(
+async function doctorHasVisitedPatient(doctorId, patientId, client = pool) {
+    const r = await client.query(
         `SELECT 1 FROM visits WHERE doctor_id = $1 AND patient_id = $2 LIMIT 1`,
         [doctorId, patientId]
     );
@@ -19,17 +19,23 @@ async function doctorHasVisitedPatient(doctorId, patientId) {
  * Doctors: optional `req.body.patient_id` — if set, filter to that patient (must have a visit with this doctor); if omitted, all reports for patients seen in `visits`.
  */
 export async function getTestReportsListHandler(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const role = req.user.role;
         if (role !== "P" && role !== "D") {
+            await client.query('ROLLBACK');
             return res.status(403).json({ error: "Only patients and doctors can view test reports" });
         }
 
         if (role === "P") {
-            const patientId = await getPatientId(req.user.user_id);
-            if (!patientId) return res.status(404).json({ error: "Patient not found" });
+            const patientId = await getPatientId(req.user.user_id, client);
+            if (!patientId) {
+                await client.query('ROLLBACK');
+                return res.status(404).json({ error: "Patient not found" });
+            }
 
-            const result = await pool.query(
+            const result = await client.query(
                 `SELECT tr.report_id,
                         tr.patient_id,
                         tr.test_id,
@@ -42,24 +48,30 @@ export async function getTestReportsListHandler(req, res) {
                 [patientId]
             );
 
+            await client.query('COMMIT');
             return res.status(200).json({ data: result.rows });
         }
 
-        const doctorId = await getDoctorId(req.user.user_id);
-        if (!doctorId) return res.status(404).json({ error: "Doctor not found" });
+        const doctorId = await getDoctorId(req.user.user_id, client);
+        if (!doctorId) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: "Doctor not found" });
+        }
 
         const filterPatientRaw = req.body?.patient_id;
         if (filterPatientRaw !== undefined && filterPatientRaw !== null && String(filterPatientRaw).trim() !== "") {
             const filterPatientId = Number(filterPatientRaw);
             if (!Number.isInteger(filterPatientId) || filterPatientId < 1) {
+                await client.query('ROLLBACK');
                 return res.status(400).json({ error: "Invalid patient_id" });
             }
-            const ok = await doctorHasVisitedPatient(doctorId, filterPatientId);
+            const ok = await doctorHasVisitedPatient(doctorId, filterPatientId, client);
             if (!ok) {
+                await client.query('ROLLBACK');
                 return res.status(403).json({ error: "You do not have visits with this patient" });
             }
 
-            const result = await pool.query(
+            const result = await client.query(
                 `SELECT tr.report_id,
                         tr.patient_id,
                         tr.test_id,
@@ -71,10 +83,11 @@ export async function getTestReportsListHandler(req, res) {
                  ORDER BY tr.report_id DESC`,
                 [filterPatientId]
             );
+            await client.query('COMMIT');
             return res.status(200).json({ data: result.rows });
         }
 
-        const result = await pool.query(
+        const result = await client.query(
             `SELECT tr.report_id,
                     tr.patient_id,
                     tr.test_id,
@@ -89,9 +102,13 @@ export async function getTestReportsListHandler(req, res) {
             [doctorId]
         );
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
@@ -110,19 +127,23 @@ function resolveReportPath(storedPath) {
  * Doctors: report’s patient must appear in `visits` with this doctor at least once.
  */
 export async function getTestReportFileHandler(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const role = req.user.role;
         if (role !== "P" && role !== "D") {
+            await client.query('ROLLBACK');
             return res.status(403).json({ error: "Only patients and doctors can download test reports" });
         }
 
         const reportIdRaw = req.body?.report_id;
         const report_id = Number(reportIdRaw);
         if (!Number.isInteger(report_id) || report_id < 1) {
+            await client.query('ROLLBACK');
             return res.status(400).json({ error: "Valid report_id is required" });
         }
 
-        const rowResult = await pool.query(
+        const rowResult = await client.query(
             `SELECT report_path, patient_id
              FROM test_reports
              WHERE report_id = $1`,
@@ -130,22 +151,31 @@ export async function getTestReportFileHandler(req, res) {
         );
 
         if (rowResult.rows.length === 0) {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: "Report not found" });
         }
 
         const { report_path: reportPath, patient_id: reportPatientId } = rowResult.rows[0];
 
         if (role === "P") {
-            const patientId = await getPatientId(req.user.user_id);
-            if (!patientId) return res.status(404).json({ error: "Patient not found" });
+            const patientId = await getPatientId(req.user.user_id, client);
+            if (!patientId) {
+                await client.query('ROLLBACK');
+                return res.status(404).json({ error: "Patient not found" });
+            }
             if (reportPatientId !== patientId) {
+                await client.query('ROLLBACK');
                 return res.status(403).json({ error: "Unauthorized" });
             }
         } else {
-            const doctorId = await getDoctorId(req.user.user_id);
-            if (!doctorId) return res.status(404).json({ error: "Doctor not found" });
-            const ok = await doctorHasVisitedPatient(doctorId, reportPatientId);
+            const doctorId = await getDoctorId(req.user.user_id, client);
+            if (!doctorId) {
+                await client.query('ROLLBACK');
+                return res.status(404).json({ error: "Doctor not found" });
+            }
+            const ok = await doctorHasVisitedPatient(doctorId, reportPatientId, client);
             if (!ok) {
+                await client.query('ROLLBACK');
                 return res.status(403).json({ error: "You do not have visits with this patient" });
             }
         }
@@ -153,6 +183,7 @@ export async function getTestReportFileHandler(req, res) {
         const absPath = resolveReportPath(reportPath);
 
         if (!absPath) {
+            await client.query('ROLLBACK');
             return res.status(500).json({ error: "Invalid stored report path" });
         }
 
@@ -160,12 +191,16 @@ export async function getTestReportFileHandler(req, res) {
         try {
             st = await stat(absPath);
         } catch {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: "Report file not found on server" });
         }
 
         if (!st.isFile()) {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: "Report path is not a file" });
         }
+
+        await client.query('COMMIT');
 
         const filename = path.basename(absPath) || `report-${report_id}.pdf`;
         const ext = path.extname(filename).toLowerCase();
@@ -184,6 +219,9 @@ export async function getTestReportFileHandler(req, res) {
         });
         stream.pipe(res);
     } catch (err) {
+        await client.query('ROLLBACK');
         if (!res.headersSent) res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }

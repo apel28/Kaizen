@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Sidebar from "../components/Sidebar";
 import Button from "../components/Button";
-import { apiGet } from "../utils/api";
+import { apiGet, API_BASE_URL } from "../utils/api";
 import { FileText, Download, Hash, Loader, DollarSign } from "lucide-react";
 
 // ─── Skeleton loader ───────────────────────────────────────────────────────────
@@ -28,7 +28,7 @@ const ReportCard = ({ report }) => {
     setLoadingMedia(true);
     setErr("");
     try {
-      const res = await fetch("/api/test-reports/download", {
+      const res = await fetch(`${API_BASE_URL}/test-reports/download`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

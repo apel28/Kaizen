@@ -1,7 +1,7 @@
 import pool from "../db.js";
 
-export async function insertAppointment(doctorId, patientId, date, slot, queue) {
-    const result = await pool.query(
+export async function insertAppointment(doctorId, patientId, date, slot, queue, client = pool) {
+    const result = await client.query(
         `
         INSERT INTO appointments (doctor_id, patient_id, "date", slot_time, queue)
         VALUES ($1, $2, $3, $4, $5)
@@ -13,7 +13,7 @@ export async function insertAppointment(doctorId, patientId, date, slot, queue) 
     return result.rows[0] ?? null;
 }
 
-export async function getAppointment({ appId = null, doctorId = null, patientId = null } = {}) {
+export async function getAppointment({ appId = null, doctorId = null, patientId = null } = {}, client = pool) {
     const clauses = [];
     const params = [];
 
@@ -34,7 +34,7 @@ export async function getAppointment({ appId = null, doctorId = null, patientId 
         throw new Error("getAppointment requires at least one of appId, doctorId, or patientId");
     }
 
-    const result = await pool.query(
+    const result = await client.query(
         `
         SELECT app_id, doctor_id, patient_id, date, slot_time, queue
         FROM appointments
@@ -46,8 +46,8 @@ export async function getAppointment({ appId = null, doctorId = null, patientId 
     return result.rows;
 }
 
-export async function deleteAppointment(appId) {
-    const result = await pool.query(
+export async function deleteAppointment(appId, client = pool) {
+    const result = await client.query(
         `
         DELETE FROM appointments
         WHERE app_id = $1
@@ -59,8 +59,8 @@ export async function deleteAppointment(appId) {
     return result.rows[0] ?? null;
 }
 
-export async function getAppointmentCountByDoctorDateTime(doctorId, date, slotTime) {
-    const result = await pool.query(
+export async function getAppointmentCountByDoctorDateTime(doctorId, date, slotTime, client = pool) {
+    const result = await client.query(
         `
         SELECT COUNT(*) AS count
         FROM appointments
@@ -72,8 +72,8 @@ export async function getAppointmentCountByDoctorDateTime(doctorId, date, slotTi
     return parseInt(result.rows[0].count, 10);
 }
 
-export async function getAppointmentsByPatient(patientId) {
-    const result = await pool.query(
+export async function getAppointmentsByPatient(patientId, client = pool) {
+    const result = await client.query(
         `
         SELECT a.app_id, a.date, a.slot_time, a.queue,
                (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS doctor_name
@@ -89,8 +89,8 @@ export async function getAppointmentsByPatient(patientId) {
     return result.rows;
 }
 
-export async function getAppointmentsByDoctorForDate(doctorId, date) {
-    const result = await pool.query(
+export async function getAppointmentsByDoctorForDate(doctorId, date, client = pool) {
+    const result = await client.query(
         `
         SELECT a.app_id, a.date, a.slot_time, a.queue,
                (p.first_name || ' ' || COALESCE(p.middle_name || ' ', '') || p.last_name) AS patient_name

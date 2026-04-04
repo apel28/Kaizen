@@ -75,15 +75,27 @@ export async function registerAdmin(req, res) {
         const user_id = await genUserIdAdmin();
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        await pool.query(
-            `INSERT INTO "user" (user_id, "password", email) VALUES ($1, $2, $3)`,
-            [user_id, hashedPassword, email]
-        );
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
 
-        await pool.query(
-            `INSERT INTO role (user_id, role_id) VALUES ($1, $2)`,
-            [user_id, 0]
-        );
+            await client.query(
+                `INSERT INTO "user" (user_id, "password", email) VALUES ($1, $2, $3)`,
+                [user_id, hashedPassword, email]
+            );
+
+            await client.query(
+                `INSERT INTO role (user_id, role_id) VALUES ($1, $2)`,
+                [user_id, 0]
+            );
+
+            await client.query('COMMIT');
+        } catch (dbErr) {
+            await client.query('ROLLBACK');
+            throw dbErr;
+        } finally {
+            client.release();
+        }
 
         res.status(201).json({
             user_id,

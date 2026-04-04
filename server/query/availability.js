@@ -1,7 +1,7 @@
 import pool from "../db.js"
 
-export async function insertAvailability(doctorId, slot) {
-    const result = await pool.query(
+export async function insertAvailability(doctorId, slot, client = pool) {
+    const result = await client.query(
         `
         INSERT INTO availability(doctor_id, week_day, slot_time, slot_duration_minutes)
         VALUES ($1, $2, $3, $4)
@@ -17,8 +17,8 @@ export async function insertAvailability(doctorId, slot) {
     return result.rows ?? null;
 }
 
-export async function deleteAvailability(aId) {
-    const result = await pool.query(
+export async function deleteAvailability(aId, client = pool) {
+    const result = await client.query(
         `
         DELETE from availability
         where a_id = $1
@@ -31,7 +31,7 @@ export async function deleteAvailability(aId) {
     return result.rows ?? null;
 }
 
-export async function getAvailability(doctorId, weekDay = null) {
+export async function getAvailability(doctorId, weekDay = null, client = pool) {
     let queryStr = `
         SELECT * 
         FROM availability
@@ -44,7 +44,7 @@ export async function getAvailability(doctorId, weekDay = null) {
         params.push(weekDay);
     }
 
-    const result = await pool.query(queryStr, params);
+    const result = await client.query(queryStr, params);
 
     return result.rows ?? null;
 }

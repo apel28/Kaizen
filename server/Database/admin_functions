@@ -1,0 +1,90 @@
+CREATE OR REPLACE FUNCTION get_admitted_patients()
+RETURNS TABLE(
+    ad_id BIGINT,
+    patient_id INTEGER,
+    doctor_id INTEGER,
+    department_id INTEGER,
+    ward_id INTEGER,
+    room_id INTEGER,
+    bed_id INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY SELECT * FROM admitted;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE PROCEDURE discharge_patient(p_ad_id INT, note TEXT)
+AS $$
+DECLARE
+    v_bed_id INT;
+BEGIN
+    SELECT bed_id INTO v_bed_id FROM admitted WHERE ad_id = p_ad_id;
+    DELETE FROM admitted WHERE ad_id = p_ad_id;
+    UPDATE bed SET occupied = 'n' WHERE bed_id = v_bed_id;
+    INSERT INTO discharge_summary (admission_id, date, note) VALUES (p_ad_id, CURRENT_DATE, note);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE PROCEDURE add_bill(p_patient_id INT, p_bill_name TEXT, p_bill_amount INT)
+AS $$
+BEGIN
+    INSERT INTO bills (patient_id, bill_name, bill_amount) VALUES (p_patient_id, p_bill_name, p_bill_amount);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE PROCEDURE punch_attendance(p_user_id INT, p_start_time TIME)
+AS $$
+BEGIN
+    INSERT INTO attendance (user_id, "date", start_time, end_time) VALUES (p_user_id, current_date, p_start_time, current_time);
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION get_workforce(p_role_id INT)
+RETURNS TABLE(
+    user_id VARCHAR(10),
+    email TEXT,
+    password TEXT,
+    role_id INT,
+    first_name TEXT,
+		middle_name TEXT,
+    last_name TEXT,
+    phone TEXT,
+    address TEXT,
+    dob DATE,
+    gender TEXT
+) AS $$
+    SELECT u.user_id, u.email, u.password, r.role_id,
+           p.first_name, p.middle_name, p.last_name, p.contact_info AS phone,
+           p.address, p.date_of_birth AS dob, p.gender
+    FROM "user" u
+    JOIN role r ON u.user_id = r.user_id
+    LEFT JOIN profile p ON u.user_id = p.user_id
+    WHERE r.role_id = $1;
+$$ LANGUAGE SQL;
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE add_test_report(p_t_id BIGINT, p_report_path TEXT)
+AS $$
+DECLARE
+    v_patient_id BIGINT;
+    i_test_id BIGINT;
+BEGIN
+    SELECT patient_id, test_id INTO v_patient_id, i_test_id FROM test_order WHERE t_id = p_t_id;
+    INSERT INTO test_reports (patient_id, report_path, test_id) VALUES (v_patient_id, p_report_path, i_test_id);
+    DELETE FROM test_order WHERE t_id = p_t_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+

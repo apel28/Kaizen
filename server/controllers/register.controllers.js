@@ -74,57 +74,70 @@ export async function register(req, res) {
 
     console.log(user_id);
 
-    const queryResultUser = await pool.query(`
-        INSERT INTO "user"
-        VALUES ($1, $2, $3)
-        RETURNING *; 
-        `,[user_id, hashedPassword, email]);
+    const client = await pool.connect();
 
-    const queryResultProfile = await pool.query(`
-        INSERT INTO profile
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        RETURNING *;
-        `, [user_id, first_name, middle_name, last_name, date_of_birth, address, contact_info, emergency_contact, gender, nid, nationality]);
+    try {
+        await client.query('BEGIN');
 
-    
-    const queryResultRole = await pool.query(`
-        INSERT INTO "role"(user_id, role_id)
-        VALUES ($1, $2);
-        `, [user_id, role]);
+        const queryResultUser = await client.query(`
+            INSERT INTO "user"
+            VALUES ($1, $2, $3)
+            RETURNING *; 
+            `, [user_id, hashedPassword, email]);
 
-    if(role == 1) {
-        const queryResultRole = await pool.query(`
-        INSERT INTO "doctor"(user_id)
-        VALUES ($1);
-        `, [user_id]);
+        const queryResultProfile = await client.query(`
+            INSERT INTO profile
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            RETURNING *;
+            `, [user_id, first_name, middle_name, last_name, date_of_birth, address, contact_info, emergency_contact, gender, nid, nationality]);
+
+        const queryResultRole = await client.query(`
+            INSERT INTO "role"(user_id, role_id)
+            VALUES ($1, $2);
+            `, [user_id, role]);
+
+        if (role == 1) {
+            await client.query(`
+            INSERT INTO "doctor"(user_id)
+            VALUES ($1);
+            `, [user_id]);
+        }
+
+        if (role == 2) {
+            await client.query(`
+            INSERT INTO "patient"(user_id)
+            VALUES ($1);
+            `, [user_id]);
+        }
+
+        if (role == 3) {
+            await client.query(`
+            INSERT INTO "nurse"(user_id)
+            VALUES ($1);
+            `, [user_id]);
+        }
+
+        if (role == 4) {
+            await client.query(`
+            INSERT INTO "staff"(user_id)
+            VALUES ($1);
+            `, [user_id]);
+        }
+        
+        // role 0 = administrator: user + profile + role only (no doctor/patient/nurse/staff row)
+
+        await client.query('COMMIT');
+        
+        res.status(201).json({
+            result: "ok",
+        });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error("Register transaction error:", error);
+        res.status(500).json({ error: error.message });
+    } finally {
+        client.release();
     }
-
-    if(role == 2) {
-        const queryResultRole = await pool.query(`
-        INSERT INTO "patient"(user_id)
-        VALUES ($1);
-        `, [user_id]);
-    }
-
-    if(role == 3) {
-        const queryResultRole = await pool.query(`
-        INSERT INTO "nurse"(user_id)
-        VALUES ($1);
-        `, [user_id]);
-    }
-
-    if(role == 4) {
-        const queryResultRole = await pool.query(`
-        INSERT INTO "staff"(user_id)
-        VALUES ($1);
-        `, [user_id]);
-    }
-
-    // role 0 = administrator: user + profile + role only (no doctor/patient/nurse/staff row)
-    
-    res.status(201).json({
-        result:"ok",
-    })
 }
 
 

@@ -64,21 +64,31 @@ export async function orderNowHandler(req, res) {
             return res.status(404).json({ error: "Test not found in your assigned orders" });
         }
 
-        const inserted = await pool.query(
-            `INSERT INTO test_order (test_id, patient_id, priority)
-             VALUES ($1, $2, $3)
-             RETURNING t_id, test_id, patient_id, priority;`,
-            [test_id, patientId, priority]
-        );
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
 
-        const deleted = await pool.query(
-            `
-            DELETE FROM test_orders
-            WHERE order_id = $1;`
-            ,[order_id]
-        );
+            const inserted = await client.query(
+                `INSERT INTO test_order (test_id, patient_id, priority)
+                 VALUES ($1, $2, $3)
+                 RETURNING t_id, test_id, patient_id, priority;`,
+                [test_id, patientId, priority]
+            );
 
-        res.status(201).json({ data: inserted.rows[0] });
+            await client.query(
+                `DELETE FROM test_orders
+                 WHERE order_id = $1;`,
+                [order_id]
+            );
+
+            await client.query('COMMIT');
+            res.status(201).json({ data: inserted.rows[0] });
+        } catch (dbErr) {
+            await client.query('ROLLBACK');
+            throw dbErr;
+        } finally {
+            client.release();
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

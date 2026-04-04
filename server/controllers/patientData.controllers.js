@@ -126,18 +126,31 @@ export async function deletePatientMedications(req, res) {
     try {
         const { patient_id, medicine_id } = req.params;
 
-        const deleteResult = await pool.query(
-            `DELETE FROM medicines
-             WHERE patient_id = $1
-               AND medicine_id = $2`,
-            [patient_id, medicine_id]
-        );
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
 
-        if (deleteResult.rowCount === 0) {
-            return res.status(404).json({ error: 'No medicine found for this patient with the given medicine_id' });
+            const deleteResult = await client.query(
+                `DELETE FROM medicines
+                 WHERE patient_id = $1
+                   AND medicine_id = $2`,
+                [patient_id, medicine_id]
+            );
+
+            if (deleteResult.rowCount === 0) {
+                await client.query('ROLLBACK');
+                client.release();
+                return res.status(404).json({ error: 'No medicine found for this patient with the given medicine_id' });
+            }
+
+            await client.query('COMMIT');
+            client.release();
+            res.status(200).json({ message: 'Medicine deleted successfully' });
+        } catch (dbErr) {
+            await client.query('ROLLBACK');
+            client.release();
+            throw dbErr;
         }
-
-        res.status(200).json({ message: 'Medicine deleted successfully' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

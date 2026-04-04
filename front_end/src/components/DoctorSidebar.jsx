@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 const navItems = [
   { label: "Home",         icon: <House />,        path: "/DoctorDashboard" },
   { label: "Prescription", icon: <FileText />,     path: "/DoctorDashboard/Prescription" },
-  { label: "Prescriptions", icon: <FileText />,     path: "/DoctorDashboard/PatientPrescriptions" },
+  { label: "History", icon: <FileText />,     path: "/DoctorDashboard/History" },
   { label: "Availability",  icon: <Calendar />,     path: "/DoctorDashboard/Availability" },
   { label: "Vitals",       icon: <Clock />,         path: "/DoctorDashboard/PatientVitals" },
   { label: "Conditions",   icon: <Stethoscope />, path: "/DoctorDashboard/PatientConditions" },

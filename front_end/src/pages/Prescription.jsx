@@ -414,7 +414,7 @@ const Prescription = () => {
                 {selectedTests.map((t) => (
                   <TagBlock
                     key={t.test_id}
-                    label={t.name}
+                    label={t.test_name}
                     onRemove={() =>
                       setSelectedTests((prev) => prev.filter((x) => x.test_id !== t.test_id))
                     }
@@ -425,7 +425,7 @@ const Prescription = () => {
             <SearchDropdown
               placeholder="Search test by name…"
               items={tests}
-              displayKey="name"
+              displayKey="test_name"
               onSelect={addTest}
               resetKey={testResetKey}
             />

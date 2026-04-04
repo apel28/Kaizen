@@ -32,21 +32,29 @@ export async function getLatestVitals(patientId) {
     const result = await pool.query(
         `
         SELECT *
-        FROM visits
-        WHERE patient_id = $1
+        FROM visits v
+        JOIN vitals vl using(visit_id)
+        WHERE v.patient_id = $1
+            AND (
+                vl.bp IS NOT NULL
+                OR vl.blood_sugar IS NOT NULL
+                OR vl.heart_rate IS NOT NULL    
+            )
         ORDER BY "date" desc;
         `, [patientId]
     );
+
 
     if (result.rows.length === 0) return null;
 
     const visitId = result.rows[0].visit_id;
 
+    
     const vitalsResult = await pool.query(
         `
-            SELECT bp, blood_sugar, heart_rate, "height", weight
-            FROM vitals
-            WHERE visit_id = $1;
+        SELECT bp, blood_sugar, heart_rate, "height", weight
+        FROM vitals
+        WHERE visit_id = $1;
         `, [visitId]
     )
     return vitalsResult.rows[0] ?? null;

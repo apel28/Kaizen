@@ -431,3 +431,5 @@ ALTER COLUMN ppu DROP NOT NULL;
 ALTER TABLE experience RENAME COLUMN institue TO institute;
 
 alter table test_reports add column test_id bigint REFERENCES all_test(test_id);
+
+alter table notification add column created_at date DEFAULT CURRENT_DATE;

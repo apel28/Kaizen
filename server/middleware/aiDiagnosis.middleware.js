@@ -8,7 +8,9 @@ import pool from '../db.js';
 export async function aiDiagnosisNotification(req, res, next) {
   try {
     const { user_id, role } = req.body || req.user || {};
-    if (role !== 'patient' || !user_id) return next();
+    if (role !== 'P' || !user_id) return next();
+
+    console.log("here")
 
     // Check if a notification was already sent today
     const today = new Date();
@@ -21,11 +23,15 @@ export async function aiDiagnosisNotification(req, res, next) {
 
     // 1. Gather patient data
 
-    const vitals = await getPatientVitals(user_id);
-    const conditions = await getPatientConditions(user_id);
+    let resu;
+
+    req.params.user_id = user_id;
+
+    const vitals = await getPatientVitals(req, resu);
+    const conditions = await getPatientConditions(req, resu);
     const reports = await getPatientReports(user_id, { sinceDays: 30 });
 
-    // Build doctors grouped by department
+    // Build doctors grouped by department        
     const departments = await getDepartments();
     const doctors = {};
     for (const dept of departments) {

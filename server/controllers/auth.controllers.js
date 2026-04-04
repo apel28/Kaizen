@@ -65,9 +65,14 @@ export async function authorize(req, res) {
             sameSite: "Strict",
             maxAge: 7 * 24 * 60 * 60 * 1000, 
         });
-
+        
         const role = await getRole(user.user_id);
+        
+        res.locals.user_id = user.user_id
+        res.locals.role = role
+        
         res.status(200).json({ message: "Login successful", user_id: user.user_id, role });
+
 
 
     } catch(error) {

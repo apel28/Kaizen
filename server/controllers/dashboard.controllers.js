@@ -30,17 +30,18 @@ export async function patientDashboardData(req, res) {
             'patientId': null,
         });
     }
- 
-    const bp = vitals.bp.split('/');
 
+    
+    const bp = vitals.bp ? vitals.bp.split('/') : [null, null];
+    
     const bmi = vitals.weight/(vitals.height*vitals.height);
 
     const patient_name = patient_prof.first_name + " " + (patient_prof.middle_name ? patient_prof.middle_name + " " : "") + patient_prof.last_name
 
     return res.json({
         'bp' : {
-            'systolic': Number(bp[0]),
-            'diastolic': Number(bp[1]),
+            'systolic': bp[0] ? Number(bp[0]) : null,
+            'diastolic': bp[1] ? Number(bp[1]): null,
         },
         'heart rate': vitals.heart_rate,
         'blood sugar': vitals.blood_sugar,

@@ -2,7 +2,7 @@
 import express from "express";
 import { authorize } from "../controllers/auth.controllers.js";
 import { verifyAuth } from "../middleware/auth.verifier.js";
-import { aiDiagnosisNotification } from "../middleware/aiDiagnosis.middleware.js";
+import { aiDiagnosisNotification } from "../utils/runAIdiagnostics.js";
 
 
 const router = express.Router();
@@ -13,10 +13,10 @@ router.post("/", async (req, res, next) => {
     await authorize(req, res);
     // If login was successful, req.body will have email/password, but response is already sent
     // So, re-query user_id and role from response if needed
-    if (res.statusCode === 200 && res.locals && res.locals.user_id && res.locals.role === 'patient') {
-        req.body.user_id = res.locals.user_id;
-        req.body.role = 'P';
-        await aiDiagnosisNotification(req, res, () => {});
+    console.log(res.statusCode);
+    if (res.statusCode === 200 && res.locals && res.locals.user_id && res.locals.role === 'P') {
+        const user_id = res.locals.user_id
+        aiDiagnosisNotification(user_id);
     }
 });
 

@@ -28,7 +28,7 @@ const ReportCard = ({ report }) => {
     setLoadingMedia(true);
     setErr("");
     try {
-      const res = await fetch("http://localhost:5001/api/test-reports/download", {
+      const res = await fetch("/api/test-reports/download", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

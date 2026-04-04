@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:5001/api";
+const API_BASE_URL = "/api";
 
 // POST helper — used for login, signup etc.
 export const apiPost = async (endpoint, data) => {

@@ -143,20 +143,31 @@ export async function deletePatientMedications(req, res) {
     }
 }
 
-// Get patient reports from the last X days (default 30)
-export async function getPatientReports(patient_id, { sinceDays = 30 } = {}) {
-  // Get all test_reports for this patient from the last X days
-  const result = await pool.query(
-    `SELECT report_id, report_path, patient_id
-     FROM test_reports
-     WHERE patient_id = $1
-       AND report_id IN (
-         SELECT report_id FROM test_reports tr
-         JOIN visits v ON tr.patient_id = v.patient_id
-         WHERE v.patient_id = $1 AND v.date >= NOW() - INTERVAL '${sinceDays} days'
-       )
-     ORDER BY report_id DESC`,
-    [patient_id]
-  );
-  return result.rows;
+export async function getPatientBills(req, res) {
+    try {
+        if (req.user.role !== 'P') {
+            return res.status(403).json({ error: "Only patients can view their bills" });
+        }
+        const userId = req.user.user_id;
+        const patientResult = await pool.query(
+            `SELECT patient_id FROM patient WHERE user_id = $1`,
+            [userId]
+        );
+
+        if (patientResult.rows.length === 0) {
+            return res.status(404).json({ error: "Patient not found" });
+        }
+        const patientId = patientResult.rows[0].patient_id;
+        const billsResult = await pool.query(
+            `SELECT * FROM bills WHERE patient_id = $1 ORDER BY bill_id DESC`,
+            [patientId]
+        );
+        res.status(200).json({
+            bills: billsResult.rows,
+            count: billsResult.rowCount
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
 }

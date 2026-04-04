@@ -8,7 +8,33 @@ const AppointmentsList = () => {
   const fetchAppointments = async () => {
     try {
       const data = await apiGet("/appointment");
-      setAppointments(data);
+      
+      const now = new Date();
+      const upcoming = data.filter((appt) => {
+        const apptDate = new Date(appt.date);
+        
+        const isFutureDay = 
+             apptDate.getFullYear() > now.getFullYear() ||
+             (apptDate.getFullYear() === now.getFullYear() && apptDate.getMonth() > now.getMonth()) ||
+             (apptDate.getFullYear() === now.getFullYear() && apptDate.getMonth() === now.getMonth() && apptDate.getDate() > now.getDate());
+             
+        if (isFutureDay) return true;
+
+        const isToday = apptDate.getFullYear() === now.getFullYear() && 
+                        apptDate.getMonth() === now.getMonth() && 
+                        apptDate.getDate() === now.getDate();
+
+        if (isToday && appt.slot_time) {
+          const [hours, minutes] = appt.slot_time.split(':');
+          const apptTime = new Date(now);
+          apptTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+          return apptTime > now; 
+        }
+
+        return false;
+      });
+
+      setAppointments(upcoming);
     } catch {
       setAppointments([]);
     } finally {

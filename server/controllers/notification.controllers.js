@@ -14,3 +14,13 @@ export async function getNotifications(user_id) {
   );
   return result.rows;
 }
+
+export async function getNotificationsHandler(req, res) {
+  try {
+    const user_id = req.user.user_id;
+    const notifications = await getNotifications(user_id);
+    res.status(200).json({ data: notifications });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}

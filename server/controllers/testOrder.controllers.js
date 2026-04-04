@@ -16,17 +16,17 @@ export async function getTestsToDoHandler(req, res) {
 
         const result = await pool.query(
             `SELECT
-                to.order_id,
-                to.test_id,
+                tor.order_id,
+                tor.test_id,
                 at.test_name,
                 at.price,
-                to.visit_id,
+                tor.visit_id,
                 v.doctor_id
-            FROM test_orders to
-            JOIN all_test at ON at.test_id = to.test_id
-            JOIN visits v ON v.visit_id = to.visit_id
-            WHERE to.patient_id = $1
-            ORDER BY to.visit_id DESC, to.order_id ASC;`,
+            FROM test_orders tor
+            JOIN all_test at ON at.test_id = tor.test_id
+            JOIN visits v ON v.visit_id = tor.visit_id
+            WHERE tor.patient_id = $1
+            ORDER BY tor.visit_id DESC, tor.order_id ASC;`,
             [patientId]
         );
 
@@ -74,8 +74,8 @@ export async function orderNowHandler(req, res) {
         const deleted = await pool.query(
             `
             DELETE FROM test_orders
-            WHERE order_id = $1;
-            `, [order_id]
+            WHERE order_id = $1;`
+            ,[order_id]
         );
 
         res.status(201).json({ data: inserted.rows[0] });

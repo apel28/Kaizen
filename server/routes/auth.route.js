@@ -13,7 +13,6 @@ router.post("/", async (req, res, next) => {
     await authorize(req, res);
     // If login was successful, req.body will have email/password, but response is already sent
     // So, re-query user_id and role from response if needed
-    console.log(res.statusCode);
     if (res.statusCode === 200 && res.locals && res.locals.user_id && res.locals.role === 'P') {
         const user_id = res.locals.user_id
         aiDiagnosisNotification(user_id);

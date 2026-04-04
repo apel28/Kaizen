@@ -11,7 +11,7 @@ const AppointmentsList = () => {
       
       const now = new Date();
       const upcoming = data.filter((appt) => {
-        const apptDate = new Date(appt.date);
+      const apptDate = new Date(appt.date);
         
         const isFutureDay = 
              apptDate.getFullYear() > now.getFullYear() ||
@@ -34,7 +34,7 @@ const AppointmentsList = () => {
         return false;
       });
 
-      setAppointments([]);
+      setAppointments(upcoming);
     } catch {
       setAppointments([]);
     } finally {

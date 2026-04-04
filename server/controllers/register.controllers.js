@@ -72,8 +72,6 @@ export async function register(req, res) {
     const user_id = await genUserId(role);
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    console.log(user_id);
-
     const client = await pool.connect();
 
     try {

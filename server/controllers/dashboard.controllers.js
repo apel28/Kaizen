@@ -7,6 +7,7 @@ export async function patientDashboardData(req, res) {
         await client.query('BEGIN');
         const user_id = req.user.user_id; //attached fromt the auth middleware using token
         const patient_prof = await patientCode.getPatientProfile(user_id, client);
+
         if(patient_prof.patient_id == null) {
             await client.query('ROLLBACK');
             return res.json({
@@ -21,6 +22,8 @@ export async function patientDashboardData(req, res) {
                 'patientId': null,
             });
         }
+        const patient_name = patient_prof.first_name + " " + (patient_prof.middle_name ? patient_prof.middle_name + " " : "") + patient_prof.last_name
+
         const vitals = await patientCode.getLatestVitals(patient_prof.patient_id, client);
         if(vitals == null) {
             await client.query('ROLLBACK');
@@ -32,16 +35,16 @@ export async function patientDashboardData(req, res) {
                 'heart rate': null,
                 'blood sugar': null,
                 'bmi': null,
-                'name': null,
-                'patientId': null,
+                'name': patient_name,
+                'patientId': patient_prof.patient_id,
             });
         }
 
         const bp = vitals.bp ? vitals.bp.split('/') : [null, null];
         
-        const bmi = vitals.weight/(vitals.height*vitals.height);
+        const bmi = (1.00*vitals.weight*100*100)/(vitals.height*vitals.height);
 
-        const patient_name = patient_prof.first_name + " " + (patient_prof.middle_name ? patient_prof.middle_name + " " : "") + patient_prof.last_name
+        
 
         await client.query('COMMIT');
         return res.json({

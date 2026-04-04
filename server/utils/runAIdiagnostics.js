@@ -71,6 +71,10 @@ export async function aiDiagnosisNotification(user_id) {
       doctors[dept.name] = deptDoctors;
     }
 
+    console.log(vitals);
+    console.log(conditions);
+    console.log(doctors);
+
     const aiMessage = await getDiagnosisNotification({ vitals, conditions, reports, doctors });
     const message = `AI diagnosis: ${aiMessage}`;
 

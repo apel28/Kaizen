@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import kaizenLogo from "../assets/kaizen-logo.webp";
-import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Activity, Stethoscope, AlertTriangle, Bell } from "lucide-react";
+import { House, Calendar, FileText, Clock, FlaskConical, Pill, LogOut, Activity, Stethoscope, AlertTriangle, Bell, Receipt } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { label: "Prescription", icon: <FileText />,      path: "/PatientDashboard/Prescriptions" },
   { label: "Tests Orders", icon: <FlaskConical />,  path: "/PatientDashboard/Tests" },
   { label: "Reports",      icon: <FileText />,      path: "/PatientDashboard/Reports" },
+  { label: "Bills",        icon: <Receipt />,       path: "/PatientDashboard/Bills" },
   { label: "Notifications",icon: <Bell />,          path: "/PatientDashboard/Notifications" },
 ];
 
@@ -33,7 +34,7 @@ const Sidebar = () => {
             <li
               key={label}
               onClick={() => path && navigate(path)}
-              className={`mb-4 p-3 rounded-lg transition-all ${path && pathname === path ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50"}`}
+              className={`mb-4 p-2 rounded-lg transition-all ${path && pathname === path ? "bg-blue-600" : "hover:bg-gray-800"} ${path ? "cursor-pointer" : "cursor-default opacity-50"}`}
             >
               <div className="flex items-center gap-2">
                 {icon}

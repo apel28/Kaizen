@@ -13,6 +13,7 @@ const navItems = [
   { label: "Conditions",   icon: <Stethoscope />, path: "/DoctorDashboard/PatientConditions" },
   { label: "Allergies",    icon: <AlertTriangle />, path: "/DoctorDashboard/PatientAllergies" },
   { label: "Medication",   icon: <Pill />,          path: "/DoctorDashboard/PatientMedications" },
+  { label: "Reports",      icon: <FileText />,      path: "/DoctorDashboard/PatientTestReports" },
 ];
 
 const DoctorSidebar = () => {

@@ -12,7 +12,8 @@ const navItems = [
   { label: "Allergies",    icon: <AlertTriangle />, path: "/PatientDashboard/Allergies" },
   { label: "Medication",   icon: <Pill />,          path: "/PatientDashboard/Medications" },
   { label: "Prescription", icon: <FileText />,      path: "/PatientDashboard/Prescriptions" },
-  { label: "Tests",        icon: <FlaskConical />,  path: "/PatientDashboard/Tests" },
+  { label: "Tests Orders", icon: <FlaskConical />,  path: "/PatientDashboard/Tests" },
+  { label: "Reports",      icon: <FileText />,      path: "/PatientDashboard/Reports" },
   { label: "Notifications",icon: <Bell />,          path: "/PatientDashboard/Notifications" },
 ];
 

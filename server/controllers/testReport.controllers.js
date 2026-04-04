@@ -109,7 +109,7 @@ function resolveReportPath(storedPath) {
  * Patients: only their own reports.
  * Doctors: report’s patient must appear in `visits` with this doctor at least once.
  */
-export async function getTestReportPdfHandler(req, res) {
+export async function getTestReportFileHandler(req, res) {
     try {
         const role = req.user.role;
         if (role !== "P" && role !== "D") {
@@ -168,8 +168,14 @@ export async function getTestReportPdfHandler(req, res) {
         }
 
         const filename = path.basename(absPath) || `report-${report_id}.pdf`;
+        const ext = path.extname(filename).toLowerCase();
+        let mimeType = "application/pdf";
+        if (ext === ".jpg" || ext === ".jpeg") mimeType = "image/jpeg";
+        else if (ext === ".png") mimeType = "image/png";
+        else if (ext === ".gif") mimeType = "image/gif";
+        else if (ext === ".webp") mimeType = "image/webp";
 
-        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Type", mimeType);
         res.setHeader("Content-Disposition", `inline; filename="${encodeURIComponent(filename)}"`);
 
         const stream = createReadStream(absPath);

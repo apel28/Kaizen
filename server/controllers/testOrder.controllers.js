@@ -42,7 +42,7 @@ export async function orderNowHandler(req, res) {
             return res.status(403).json({ error: "Only patients can order tests" });
         }
 
-        const { test_id, visit_id } = req.body;
+        const { test_id, visit_id, order_id } = req.body;
         const priority = req.body.priority ?? 1;
 
         if (!test_id || !visit_id) {
@@ -69,6 +69,13 @@ export async function orderNowHandler(req, res) {
              VALUES ($1, $2, $3)
              RETURNING t_id, test_id, patient_id, priority;`,
             [test_id, patientId, priority]
+        );
+
+        const deleted = await pool.query(
+            `
+            DELETE FROM test_orders
+            WHERE order_id = $1;
+            `, [order_id]
         );
 
         res.status(201).json({ data: inserted.rows[0] });

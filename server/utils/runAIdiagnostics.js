@@ -11,6 +11,11 @@ export async function getPatientVitals(patient_id) {
              FROM vitals v
              JOIN visits vis ON v.visit_id = vis.visit_id
              WHERE v.patient_id = $1
+             AND (
+                bp IS NOT NULL
+                OR heart_rate IS NOT NULL
+                OR blood_sugar IS NOT NULL
+              )
              ORDER BY vis.date DESC
              LIMIT 10`,
             [patient_id]
@@ -18,13 +23,12 @@ export async function getPatientVitals(patient_id) {
 
         return result.rows ?? null;
     } catch (err) {
-        
+        console.log(err)
     }
 }
 
 export async function getPatientConditions(patient_id) {
     try {
-        // Get conditions with latest first (by visit_id desc)
         const result = await pool.query(
             `SELECT mh.condition
              FROM medical_history mh
@@ -43,10 +47,9 @@ export async function getPatientConditions(patient_id) {
     }
 }
 
-// Middleware: after patient login, generate AI diagnosis notification (max once per day)
 export async function aiDiagnosisNotification(user_id) {
   try {
-    // Check if a notification was already sent today
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const { rows } = await pool.query(
@@ -55,16 +58,12 @@ export async function aiDiagnosisNotification(user_id) {
     );
     if (rows.length > 0) return;
 
-    const patient_id = getPatientId(user_id)
-
-    // 1. Gather patient data
+    const patient_id = await getPatientId(user_id)
 
     const vitals = await getPatientVitals(patient_id);
     const conditions = await getPatientConditions(patient_id);
-    // const reports = await getPatientReports(user_id, { sinceDays: 30 });
     const reports = null;
-
-    // Build doctors grouped by department        
+ 
     const departments = await getDepartments();
     const doctors = {};
     for (const dept of departments) {
@@ -72,14 +71,11 @@ export async function aiDiagnosisNotification(user_id) {
       doctors[dept.name] = deptDoctors;
     }
 
-    // 2. Call Gemini API
     const aiMessage = await getDiagnosisNotification({ vitals, conditions, reports, doctors });
     const message = `AI diagnosis: ${aiMessage}`;
 
-    // 3. Store notification (from: null for system)
     await addNotification({ from: null, user_id, message });
   } catch (err) {
     console.error('AI diagnosis middleware error:', err);
-    // Do not block login on AI failure
   }
 }

@@ -70,7 +70,7 @@ export async function authorize(req, res) {
                 maxAge: 7 * 24 * 60 * 60 * 1000, 
             });
             
-            const role = await getRole(user.user_id);
+            const role = await getRole(user.user_id, client);
             
             await client.query('COMMIT');
 

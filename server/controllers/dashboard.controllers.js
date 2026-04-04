@@ -1,56 +1,68 @@
+import pool from "../db.js";
 import * as patientCode from "../query/patient.js"
 
 export async function patientDashboardData(req, res) {
-    const user_id = req.user.user_id; //attached fromt the auth middleware using token
-    const patient_prof = await patientCode.getPatientProfile(user_id);
-    if(patient_prof.patient_id == null) {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const user_id = req.user.user_id; //attached fromt the auth middleware using token
+        const patient_prof = await patientCode.getPatientProfile(user_id, client);
+        if(patient_prof.patient_id == null) {
+            await client.query('ROLLBACK');
+            return res.json({
+                'bp' : {
+                    'systolic' : null,
+                    'diastolic': null,
+                },
+                'heart rate': null,
+                'blood sugar': null,
+                'bmi': null,
+                'name': null,
+                'patientId': null,
+            });
+        }
+        const vitals = await patientCode.getLatestVitals(patient_prof.patient_id, client);
+        if(vitals == null) {
+            await client.query('ROLLBACK');
+            return res.json({
+                'bp' : {
+                    'systolic' : null,
+                    'diastolic': null,
+                },
+                'heart rate': null,
+                'blood sugar': null,
+                'bmi': null,
+                'name': null,
+                'patientId': null,
+            });
+        }
+
+        const bp = vitals.bp ? vitals.bp.split('/') : [null, null];
+        
+        const bmi = vitals.weight/(vitals.height*vitals.height);
+
+        const patient_name = patient_prof.first_name + " " + (patient_prof.middle_name ? patient_prof.middle_name + " " : "") + patient_prof.last_name
+
+        await client.query('COMMIT');
         return res.json({
             'bp' : {
-                'systolic' : null,
-                'diastolic': null,
+                'systolic': bp[0] ? Number(bp[0]) : null,
+                'diastolic': bp[1] ? Number(bp[1]): null,
             },
-            'heart rate': null,
-            'blood sugar': null,
-            'bmi': null,
-            'name': null,
-            'patientId': null,
+            'heart rate': vitals.heart_rate,
+            'blood sugar': vitals.blood_sugar,
+            'bmi': bmi,
+            'name': patient_name,
+            'patientId': patient_prof.patient_id,
         });
+
+    } catch (err) {
+        await client.query('ROLLBACK');
+        res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
-    const vitals = await patientCode.getLatestVitals(patient_prof.patient_id);
-    if(vitals == null) {
-        return res.json({
-            'bp' : {
-                'systolic' : null,
-                'diastolic': null,
-            },
-            'heart rate': null,
-            'blood sugar': null,
-            'bmi': null,
-            'name': null,
-            'patientId': null,
-        });
-    }
-
-    
-    const bp = vitals.bp ? vitals.bp.split('/') : [null, null];
-    
-    const bmi = vitals.weight/(vitals.height*vitals.height);
-
-    const patient_name = patient_prof.first_name + " " + (patient_prof.middle_name ? patient_prof.middle_name + " " : "") + patient_prof.last_name
-
-    return res.json({
-        'bp' : {
-            'systolic': bp[0] ? Number(bp[0]) : null,
-            'diastolic': bp[1] ? Number(bp[1]): null,
-        },
-        'heart rate': vitals.heart_rate,
-        'blood sugar': vitals.blood_sugar,
-        'bmi': bmi,
-        'name': patient_name,
-        'patientId': patient_prof.patient_id,
-    });
-
-  }
+}
 
 // async function test() {
 //     const req = {

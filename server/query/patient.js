@@ -1,19 +1,19 @@
 import pool from "../db.js";
 import { getRole } from "./role.js";
 
-export async function getPatientId(userId) {
-    const result = await pool.query(
+export async function getPatientId(userId, client = pool) {
+    const result = await client.query(
         `SELECT patient_id FROM patient WHERE user_id = $1`,
         [userId]
     );
     return result.rows[0]?.patient_id ?? null;
 }
 
-export async function getPatientProfile(userId) {
+export async function getPatientProfile(userId, client = pool) {
 
-    if(await getRole(userId) != 'P') return null;
+    if(await getRole(userId, client) != 'P') return null;
 
-    const result = await pool.query(
+    const result = await client.query(
         `
         SELECT *
         FROM patient p
@@ -28,8 +28,8 @@ export async function getPatientProfile(userId) {
     return result.rows[0] ?? null;
 }
 
-export async function getLatestVitals(patientId) {
-    const result = await pool.query(
+export async function getLatestVitals(patientId, client = pool) {
+    const result = await client.query(
         `
         SELECT *
         FROM visits v
@@ -50,7 +50,7 @@ export async function getLatestVitals(patientId) {
     const visitId = result.rows[0].visit_id;
 
     
-    const vitalsResult = await pool.query(
+    const vitalsResult = await client.query(
         `
         SELECT bp, blood_sugar, heart_rate, "height", weight
         FROM vitals
@@ -60,7 +60,7 @@ export async function getLatestVitals(patientId) {
     return vitalsResult.rows[0] ?? null;
 }
 
-export async function updatePatientProfile(userId, profile) {
+export async function updatePatientProfile(userId, profile, client = pool) {
     const {
         first_name,
         middle_name,
@@ -74,7 +74,7 @@ export async function updatePatientProfile(userId, profile) {
         nationality
     } = profile;
 
-    const result = await pool.query(
+    const result = await client.query(
         `
         UPDATE profile
         SET first_name = $1,

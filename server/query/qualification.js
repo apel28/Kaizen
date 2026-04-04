@@ -2,9 +2,9 @@ import pool from "../db.js";
 
 //NO UPDATE, lagle delete kore abar insert korbe
 
-export async function insertQualifications(doctorId, qualifications) {
+export async function insertQualifications(doctorId, qualifications, client = pool) {
 
-    const result = await pool.query(
+    const result = await client.query(
         `
         INSERT INTO qualifications (doctor_id, degree_name, institute, "year", department_name)
         VALUES ($1, $2, $3, $4, $5)
@@ -22,8 +22,8 @@ export async function insertQualifications(doctorId, qualifications) {
     return result.rows[0] ?? null;
 }
 
-export async function getQualifications(doctorId) {
-    const result = await pool.query(
+export async function getQualifications(doctorId, client = pool) {
+    const result = await client.query(
         `
         SELECT q_id, degree_name, institute, "year", department_name
         FROM qualifications
@@ -36,8 +36,8 @@ export async function getQualifications(doctorId) {
     return result.rows ?? null;
 }
 
-export async function deleteQualification(doctorId, qualificationId) {
-    const result = await pool.query(
+export async function deleteQualification(doctorId, qualificationId, client = pool) {
+    const result = await client.query(
         `
         DELETE FROM qualifications
         WHERE doctor_id = $1

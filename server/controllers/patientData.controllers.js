@@ -2,22 +2,26 @@ import pool from "../db.js";
 import { getDoctorProfile } from "../query/doctor.js";
 
 export async function getPatientsForDoctor(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         if (req.user.role !== 'D') {
+            await client.query('ROLLBACK');
             return res.status(403).json({ error: "Only doctors can view their patients" });
         }
 
         const userId = req.user.user_id;
-        const doctorProfile = await getDoctorProfile(userId);
+        const doctorProfile = await getDoctorProfile(userId, client);
 
         if (!doctorProfile) {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: "Doctor not found" });
         }
 
         const doctorId = doctorProfile.doctor_id;
 
         // Get distinct patient_ids who have visited this doctor
-        const result = await pool.query(
+        const result = await client.query(
             `SELECT DISTINCT v.patient_id,
                     pf.first_name || ' ' || COALESCE(pf.middle_name || ' ', '') || pf.last_name AS name
             FROM visits v
@@ -27,18 +31,24 @@ export async function getPatientsForDoctor(req, res) {
             [doctorId]
         );
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getPatientConditions(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const { patient_id } = req.params;
 
         // Get conditions with latest first (by visit_id desc)
-        const result = await pool.query(
+        const result = await client.query(
             `SELECT mh.condition, mh.department_id, d.name as department_name, diag.visit_id, v.date
              FROM medical_history mh
              JOIN diagnosis diag ON mh.history_id = diag.history_id
@@ -49,17 +59,23 @@ export async function getPatientConditions(req, res) {
             [patient_id]
         );
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getPatientVitals(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const { patient_id } = req.params;
 
-        const result = await pool.query(
+        const result = await client.query(
             `SELECT v.*, vis.date
              FROM vitals v
              JOIN visits vis ON v.visit_id = vis.visit_id
@@ -68,32 +84,44 @@ export async function getPatientVitals(req, res) {
             [patient_id]
         );
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getPatientAllergies(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const { patient_id } = req.params;
 
-        const result = await pool.query(
+        const result = await client.query(
             `SELECT * FROM allergy WHERE patient_id = $1`,
             [patient_id]
         );
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows[0] || null });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
 export async function getPatientMedications(req, res) {
+    const client = await pool.connect();
     try {
+        await client.query('BEGIN');
         const { patient_id } = req.params;
 
-        const result = await pool.query(
+        const result = await client.query(
             `SELECT m.*, am.name, am.brand, am.generic_name, mh.condition, v.date, 'Current' AS status
              FROM medicines m
              JOIN all_medicines am ON m.medicine_id = am.medicine_id
@@ -116,9 +144,13 @@ export async function getPatientMedications(req, res) {
             [patient_id]
         );
 
+        await client.query('COMMIT');
         res.status(200).json({ data: result.rows });
     } catch (err) {
+        await client.query('ROLLBACK');
         res.status(500).json({ error: err.message });
+    } finally {
+        client.release();
     }
 }
 
@@ -156,10 +188,9 @@ export async function deletePatientMedications(req, res) {
     }
 }
 
-// Get patient reports from the last X days (default 30)
-export async function getPatientReports(patient_id, { sinceDays = 30 } = {}) {
+export async function getPatientReports(patient_id, { sinceDays = 30 } = {}, client = pool) {
   // Get all test_reports for this patient from the last X days
-  const result = await pool.query(
+  const result = await client.query(
     `SELECT report_id, report_path, patient_id
      FROM test_reports
      WHERE patient_id = $1

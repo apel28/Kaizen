@@ -1,7 +1,7 @@
 import pool from "../db.js";
 
-export async function getRole(userId) {
-    const result = await pool.query(
+export async function getRole(userId, client = pool) {
+    const result = await client.query(
         `
         SELECT role_id
         FROM role r

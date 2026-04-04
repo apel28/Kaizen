@@ -71,7 +71,15 @@ RETURNS TABLE(
 $$ LANGUAGE SQL;
 
 
-
+CREATE OR REPLACE FUNCTION get_test_orders()
+RETURNS TABLE(
+    t_id BIGINT,
+    test_id BIGINT,
+    patient_id INT,
+    priority INT
+) AS $$
+    SELECT * FROM test_order;
+$$ LANGUAGE SQL;
 
 
 CREATE OR REPLACE PROCEDURE add_test_report(p_t_id BIGINT, p_report_path TEXT)

@@ -34,7 +34,7 @@ const AppointmentsList = () => {
         return false;
       });
 
-      setAppointments(upcoming);
+      setAppointments([]);
     } catch {
       setAppointments([]);
     } finally {

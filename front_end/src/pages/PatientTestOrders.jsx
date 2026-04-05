@@ -4,12 +4,12 @@ import Button from "../components/Button";
 import { apiGet, apiPost } from "../utils/api";
 import { FlaskConical, DollarSign, Hash, CheckCircle, Loader } from "lucide-react";
 
-// ─── Skeleton loader ───────────────────────────────────────────────────────────
+
 const SkeletonCard = () => (
   <div className="bg-gray-800/50 border border-gray-700 rounded-2xl h-36 animate-pulse" />
 );
 
-// ─── Single test order card ────────────────────────────────────────────────────
+
 const TestCard = ({ order, onOrder }) => {
   const [ordering, setOrdering] = useState(false);
   const [ordered, setOrdered]   = useState(false);
@@ -34,7 +34,7 @@ const TestCard = ({ order, onOrder }) => {
         ? "bg-green-900/10 border-green-700/40"
         : "bg-gray-900/50 border-gray-700 hover:border-blue-500/50"
     }`}>
-      {/* Header */}
+
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           <FlaskConical size={18} className="text-blue-400 shrink-0" />
@@ -47,7 +47,7 @@ const TestCard = ({ order, onOrder }) => {
         )}
       </div>
 
-      {/* Meta */}
+
       <div className="flex flex-wrap gap-2 text-xs">
         {order.price != null && (
           <span className="flex items-center gap-1 bg-gray-800 text-gray-300 px-2 py-1 rounded-lg">
@@ -60,14 +60,14 @@ const TestCard = ({ order, onOrder }) => {
         </span>
       </div>
 
-      {/* Error */}
+
       {err && (
         <p className="text-xs text-red-400 bg-red-900/20 border border-red-700/40 rounded-lg px-3 py-1.5">
           {err}
         </p>
       )}
 
-      {/* Action */}
+
       {!ordered && (
         <div className="flex justify-end mt-auto pt-1">
           <Button
@@ -82,7 +82,7 @@ const TestCard = ({ order, onOrder }) => {
   );
 };
 
-// ─── Visit group header ────────────────────────────────────────────────────────
+
 const VisitGroup = ({ visitId, orders, onOrder }) => (
   <div className="space-y-3">
     <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest px-1">
@@ -96,13 +96,13 @@ const VisitGroup = ({ visitId, orders, onOrder }) => (
   </div>
 );
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
+
 const PatientTestOrders = () => {
   const [orders,  setOrders]  = useState([]);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState("");
 
-  // ── Fetch ──
+
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     setError("");
@@ -118,14 +118,14 @@ const PatientTestOrders = () => {
 
   useEffect(() => { fetchOrders(); }, [fetchOrders]);
 
-  // ── Order now ──
+
   const handleOrder = async (test_id, visit_id, order_id) => {
     await apiPost("/test-orders/order", { test_id, visit_id, order_id });
-    // Silently refetch to stay in sync with server
+
     fetchOrders();
   };
 
-  // ── Group orders by visit_id (already sorted by visit_id DESC from API) ──
+
   const grouped = orders.reduce((acc, o) => {
     const key = o.visit_id;
     if (!acc[key]) acc[key] = [];
@@ -133,7 +133,7 @@ const PatientTestOrders = () => {
     return acc;
   }, {});
 
-  // Keep visit order as returned by API (DESC)
+
   const visitIds = [...new Set(orders.map((o) => o.visit_id))];
 
   return (
@@ -141,7 +141,7 @@ const PatientTestOrders = () => {
       <Sidebar />
 
       <main className="flex-1 ml-6 space-y-6">
-        {/* Header */}
+
         <header className="flex items-center bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <FlaskConical className="text-blue-400 mr-3" size={28} />
           <div>
@@ -152,14 +152,14 @@ const PatientTestOrders = () => {
           </div>
         </header>
 
-        {/* Error */}
+
         {error && (
           <p className="text-sm text-red-400 bg-red-900/20 border border-red-700 rounded-xl px-4 py-3">
             {error}
           </p>
         )}
 
-        {/* Content */}
+
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}

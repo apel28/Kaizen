@@ -3,7 +3,7 @@ import DoctorSidebar from "../components/DoctorSidebar";
 import { apiGet } from "../utils/api";
 import { Activity, Heart, Droplets, Scale, Clock, ChevronDown } from "lucide-react";
 
-// ── Vital card ────────────────────────────────────────────────────────────────
+
 const VitalCard = ({ icon: Icon, label, value, unit, color = "text-blue-400" }) => (
   <div className="bg-gray-900/60 border border-gray-700 rounded-2xl p-5 flex items-center gap-4">
     <div className={`${color} shrink-0`}><Icon size={24} /></div>
@@ -17,7 +17,7 @@ const VitalCard = ({ icon: Icon, label, value, unit, color = "text-blue-400" }) 
   </div>
 );
 
-// ── Visit vitals row ──────────────────────────────────────────────────────────
+
 const VisitRow = ({ row }) => {
   const bmi = row.height && row.weight
     ? (row.weight / ((row.height / 100) ** 2)).toFixed(1)
@@ -38,7 +38,7 @@ const VisitRow = ({ row }) => {
   );
 };
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+
 const DoctorPatientVitals = () => {
   const [patients, setPatients]       = useState([]);
   const [selectedId, setSelectedId]   = useState("");
@@ -47,7 +47,7 @@ const DoctorPatientVitals = () => {
   const [loadingV, setLoadingV]       = useState(false);
   const [error, setError]             = useState("");
 
-  // Load patient list once
+
   useEffect(() => {
     apiGet("/patient-data/doctor/patients")
       .then((res) => setPatients(res.data || []))
@@ -55,7 +55,7 @@ const DoctorPatientVitals = () => {
       .finally(() => setLoadingP(false));
   }, []);
 
-  // Load vitals when patient changes
+
   useEffect(() => {
     if (!selectedId) return setVitals([]);
     setLoadingV(true);
@@ -71,7 +71,7 @@ const DoctorPatientVitals = () => {
       <DoctorSidebar />
 
       <main className="flex-1 ml-6 space-y-5">
-        {/* Header */}
+
         <header className="flex items-center bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <Activity className="text-blue-400 mr-3" size={28} />
           <div>
@@ -82,7 +82,7 @@ const DoctorPatientVitals = () => {
           </div>
         </header>
 
-        {/* Patient selector */}
+
         <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6">
           <label className="block text-xs text-gray-400 mb-2">Select Patient</label>
           <div className="relative">
@@ -103,12 +103,12 @@ const DoctorPatientVitals = () => {
           </div>
         </div>
 
-        {/* Error */}
+
         {error && (
           <p className="text-sm text-red-400 bg-red-900/20 border border-red-700 rounded-xl px-4 py-3">{error}</p>
         )}
 
-        {/* Vitals */}
+
         {selectedId && (
           loadingV ? (
             <div className="space-y-4">

@@ -97,7 +97,7 @@ const DoctorPatientMedications = () => {
           </div>
         </header>
 
-        {/* Patient selector */}
+
         <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6">
           <label className="block text-xs text-gray-400 mb-2">Select Patient</label>
           <div className="relative">

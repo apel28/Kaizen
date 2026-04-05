@@ -1,6 +1,6 @@
 export const API_BASE_URL = "/api";
 
-// POST helper — used for login, signup etc.
+
 export const apiPost = async (endpoint, data) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -35,8 +35,7 @@ export const apiPost = async (endpoint, data) => {
   }
 };
 
-// GET helper — used for protected data fetching (dashboard, profile, etc.)
-// credentials: "include" is critical — it sends the httpOnly JWT cookies
+
 export const apiGet = async (endpoint) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -57,7 +56,7 @@ export const apiGet = async (endpoint) => {
   }
 };
 
-// PUT helper — used for updating profile data
+
 export const apiPut = async (endpoint, data) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -82,7 +81,7 @@ export const apiPut = async (endpoint, data) => {
   }
 };
 
-// DELETE helper — used for cancelling appointments etc.
+
 export const apiDelete = async (endpoint) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {

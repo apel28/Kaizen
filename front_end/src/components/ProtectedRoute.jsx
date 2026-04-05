@@ -8,13 +8,7 @@ const ROLE_REDIRECTS = {
   A: "/AdminDashboard",
 };
 
-/**
- * ProtectedRoute — wraps any route that requires authentication.
- *
- * Props:
- *   children     — the page to render if auth passes
- *   allowedRole  — optional: 'P' or 'D'. If set, only that role can access.
- */
+
 const ProtectedRoute = ({ children, allowedRole }) => {
   const { user, authLoading } = useAuth();
 
@@ -30,7 +24,7 @@ const ProtectedRoute = ({ children, allowedRole }) => {
   }
 
   if (!user) {
-    return <Navigate to="/" replace />; // 'replace' prevents user from going back to protected page with back button
+    return <Navigate to="/" replace />;
   }
 
   if (allowedRole && user.role !== allowedRole) {

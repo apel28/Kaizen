@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import { apiGet } from "../utils/api";
 import { Activity, Heart, Droplets, Scale, Clock } from "lucide-react";
 
-// ── Single vital row card ─────────────────────────────────────────────────────
+
 const VitalCard = ({ icon: Icon, label, value, unit, color = "text-blue-400" }) => (
   <div className="bg-gray-900/60 border border-gray-700 rounded-2xl p-5 flex items-center gap-4">
     <div className={`${color} shrink-0`}>
@@ -19,7 +19,7 @@ const VitalCard = ({ icon: Icon, label, value, unit, color = "text-blue-400" }) 
   </div>
 );
 
-// ── Vitals row (one visit) ────────────────────────────────────────────────────
+
 const VisitRow = ({ row }) => {
   const bmi = row.height && row.weight
     ? (row.weight / ((row.height / 100) ** 2)).toFixed(1)
@@ -40,7 +40,7 @@ const VisitRow = ({ row }) => {
   );
 };
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+
 const PatientVitals = () => {
   const [vitals, setVitals] = useState([]);
   const [loading, setLoading] = useState(true);

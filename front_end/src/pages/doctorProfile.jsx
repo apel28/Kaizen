@@ -99,7 +99,7 @@ export default function DoctorProfile() {
 
   return (
     <div className="text-white min-h-screen flex flex-col items-center p-6 bg-gradient-to-br from-[#0a0a3a] to-black bg-fixed font-['Segoe_UI',sans-serif]">
-      {/* Top nav row */}
+
       <div className="w-full max-w-4xl mb-6 flex items-center gap-3">
         <Button text="Back" onClick={() => navigate(-1)} />
         <Button text="Experience"   onClick={() => navigate("/DoctorDashboard/Profile/Experience")} />
@@ -107,7 +107,7 @@ export default function DoctorProfile() {
       </div>
 
       <div className="w-full max-w-4xl bg-gray-800/50 rounded-2xl border border-gray-700 backdrop-blur-sm p-8">
-        {/* Header */}
+
         <div className="flex items-center gap-5 mb-8 pb-6 border-b border-gray-700">
           <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center font-bold text-2xl shadow-lg shadow-blue-900/30 shrink-0">
             <User />
@@ -127,7 +127,7 @@ export default function DoctorProfile() {
           </div>
         ) : (
           <form onSubmit={onSubmit} noValidate>
-            {/* Read-only NID */}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
               <Field label="National ID (NID)">
                 <div className="w-full bg-gray-900/30 border border-gray-700 rounded-xl px-4 py-2.5 text-gray-400 text-sm cursor-not-allowed">

@@ -6,7 +6,7 @@ import {
   FlaskConical, Activity, Stethoscope, StickyNote, AlertTriangle,
 } from "lucide-react";
 
-// ── Helpers ────────────────────────────────────────────────────────────────────
+
 const fmtDate = (d) =>
   d ? new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 
@@ -24,7 +24,7 @@ const Badge = ({ children, color = "blue" }) => {
   );
 };
 
-// ── Prescription Detail Panel ──────────────────────────────────────────────────
+
 const PrescriptionDetail = ({ visitId }) => {
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,7 +59,7 @@ const PrescriptionDetail = ({ visitId }) => {
   return (
     <div className="mt-4 space-y-3 border-t border-gray-700 pt-4">
 
-      {/* Conditions */}
+
       {data.conditions?.length > 0 && (
         <Section icon={Stethoscope} title="Conditions">
           <div className="flex flex-wrap gap-2">
@@ -73,7 +73,7 @@ const PrescriptionDetail = ({ visitId }) => {
         </Section>
       )}
 
-      {/* Medicines */}
+
       {data.medicines?.length > 0 && (
         <Section icon={Pill} title="Medicines" color="text-purple-400">
           <div className="flex flex-wrap gap-2">
@@ -87,7 +87,7 @@ const PrescriptionDetail = ({ visitId }) => {
         </Section>
       )}
 
-      {/* Vitals */}
+
       {data.vitals && (data.vitals.bp || data.vitals.blood_sugar || data.vitals.heart_rate || data.vitals.height || data.vitals.weight) && (
         <Section icon={Activity} title="Vitals" color="text-green-400">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -107,7 +107,7 @@ const PrescriptionDetail = ({ visitId }) => {
         </Section>
       )}
 
-      {/* Tests */}
+
       {data.test_orders?.length > 0 && (
         <Section icon={FlaskConical} title="Lab Tests" color="text-yellow-400">
           <div className="flex flex-wrap gap-2">
@@ -118,14 +118,14 @@ const PrescriptionDetail = ({ visitId }) => {
         </Section>
       )}
 
-      {/* Doctor's Note */}
+
       {data.prescription_note && (
         <Section icon={StickyNote} title="Doctor's Note" color="text-gray-400">
           <p className="text-sm text-gray-300 leading-relaxed">{data.prescription_note}</p>
         </Section>
       )}
 
-      {/* Allergy */}
+
       {data.allergy && (
         <Section icon={AlertTriangle} title="Allergy on Record" color="text-red-400">
           <p className="text-sm font-semibold text-white">{data.allergy.allergy_trigger}</p>
@@ -147,7 +147,7 @@ const PrescriptionDetail = ({ visitId }) => {
   );
 };
 
-// ── Visit Row (accordion) ──────────────────────────────────────────────────────
+
 const VisitRow = ({ visit, index }) => {
   const [open, setOpen] = useState(false);
 
@@ -187,7 +187,7 @@ const VisitRow = ({ visit, index }) => {
   );
 };
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+
 const PatientPrescriptions = () => {
   const [visits, setVisits]   = useState([]);
   const [loading, setLoading] = useState(true);
@@ -205,7 +205,7 @@ const PatientPrescriptions = () => {
       <Sidebar />
 
       <main className="flex-1 ml-6 space-y-5">
-        {/* Header */}
+
         <header className="flex items-center bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <FileText className="text-blue-400 mr-3" size={28} />
           <div>
@@ -216,12 +216,12 @@ const PatientPrescriptions = () => {
           </div>
         </header>
 
-        {/* Error */}
+
         {error && (
           <p className="text-sm text-red-400 bg-red-900/20 border border-red-700 rounded-xl px-4 py-3">{error}</p>
         )}
 
-        {/* Visit list */}
+
         {loading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (

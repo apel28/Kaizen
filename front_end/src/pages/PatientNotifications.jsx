@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import { apiGet } from "../utils/api";
 import { Bell, Sparkles, AlertCircle, Clock } from "lucide-react";
 
-// Helper to format timestamps
+
 const formatTime = (isoString) => {
   const date = new Date(isoString);
   return date.toLocaleString('en-US', { 
@@ -16,7 +16,7 @@ const NotificationCard = ({ notification }) => {
   const message = notification.message || "";
   const isAI = message.startsWith("AI diagnosis:");
   
-  // Clean up the prefix if it's AI
+
   const displayMessage = isAI ? message.replace("AI diagnosis:", "").trim() : message;
 
   return (
@@ -25,14 +25,14 @@ const NotificationCard = ({ notification }) => {
         ? "bg-purple-900/10 border-purple-500/30" 
         : "bg-gray-800/50 border-gray-700"
     }`}>
-      {/* Icon Section */}
+
       <div className={`p-2 rounded-xl shrink-0 ${
         isAI ? "bg-purple-600/20 text-purple-400" : "bg-blue-600/20 text-blue-400"
       }`}>
         {isAI ? <Sparkles size={20} /> : <Bell size={20} />}
       </div>
 
-      {/* Content Section */}
+
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2 mb-1">
           <h4 className={`text-sm font-semibold flex items-center gap-1 ${

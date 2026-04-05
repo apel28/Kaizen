@@ -7,7 +7,7 @@ import {
   FlaskConical, Activity, StickyNote, AlertTriangle, DollarSign,
 } from "lucide-react";
 
-// ─── Reusable: Searchable Dropdown ────────────────────────────────────────────
+
 const SearchDropdown = ({
   placeholder,
   items = [],
@@ -20,7 +20,7 @@ const SearchDropdown = ({
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // Reset when parent signals via resetKey change
+
   useEffect(() => { setQuery(""); }, [resetKey]);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ const SearchDropdown = ({
   );
 };
 
-// ─── Reusable: Selected Item Tags ─────────────────────────────────────────────
+
 const TagBlock = ({ label, onRemove, sublabel }) => (
   <div className="flex items-center gap-2 bg-blue-600/20 border border-blue-500/40 rounded-xl px-3 py-2 text-sm">
     <div className="flex-1">
@@ -89,7 +89,7 @@ const TagBlock = ({ label, onRemove, sublabel }) => (
   </div>
 );
 
-// ─── Reusable: Section Card wrapper ───────────────────────────────────────────
+
 const Section = ({ icon: Icon, title, children }) => (
   <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 space-y-4">
     <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
@@ -100,7 +100,7 @@ const Section = ({ icon: Icon, title, children }) => (
   </div>
 );
 
-// ─── Reusable: Styled input ────────────────────────────────────────────────────
+
 const StyledInput = ({ label, type = "text", value, onChange, placeholder = "" }) => (
   <div>
     {label && <label className="block text-xs text-gray-400 mb-1">{label}</label>}
@@ -114,32 +114,32 @@ const StyledInput = ({ label, type = "text", value, onChange, placeholder = "" }
   </div>
 );
 
-// ─── Main Component ────────────────────────────────────────────────────────────
+
 const Prescription = () => {
-  // Data from API
+
   const [patients, setPatients] = useState([]);
   const [medicines, setMedicines] = useState([]);
   const [tests, setTests] = useState([]);
   const [departments, setDepartments] = useState([]);
 
-  // Selected patient
+
   const [selectedPatient, setSelectedPatient] = useState(null);
 
-  // Conditions: array of { condition, department }
+
   const [conditionText, setConditionText] = useState("");
   const [selectedDept, setSelectedDept] = useState(null);
   const [conditions, setConditions] = useState([]);
 
-  // Medicines: array of medicine objects
+
   const [selectedMedicines, setSelectedMedicines] = useState([]);
 
-  // Tests: array of test objects
+
   const [selectedTests, setSelectedTests] = useState([]);
 
-  // Vitals
+
   const [vitals, setVitals] = useState({ bp: "", blood_sugar: "", heart_rate: "", height: "", weight: "" });
 
-  // Notes, allergy, bill
+
   const [note, setNote] = useState("");
   const [allergy, setAllergy] = useState("");
   const [triggerMed, setTriggerMed] = useState("");   // current input
@@ -154,7 +154,7 @@ const Prescription = () => {
   const [medResetKey, setMedResetKey] = useState(0);
   const [testResetKey, setTestResetKey] = useState(0);
 
-  // ── Fetch reference data once ──
+
   useEffect(() => {
     apiGet("/prescription/patients/today")
       .then((r) => setPatients(r.data || []))
@@ -170,7 +170,7 @@ const Prescription = () => {
       .catch(console.error);
   }, []);
 
-  // ── Add condition block ──
+
   const addCondition = () => {
     if (!conditionText.trim() || !selectedDept) return;
     setConditions((prev) => [
@@ -181,7 +181,7 @@ const Prescription = () => {
     setSelectedDept(null);
   };
 
-  // ── Add medicine (avoid duplicates) ──
+
   const addMedicine = (med) => {
     if (!med) return;
     if (selectedMedicines.find((m) => m.medicine_id === med.medicine_id)) return;
@@ -189,7 +189,7 @@ const Prescription = () => {
     setMedResetKey((k) => k + 1);
   };
 
-  // ── Add test (avoid duplicates) ──
+
   const addTest = (test) => {
     if (!test) return;
     if (selectedTests.find((t) => t.test_id === test.test_id)) return;
@@ -197,7 +197,7 @@ const Prescription = () => {
     setTestResetKey((k) => k + 1);
   };
 
-  // ── Submit ──
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedPatient) return setStatus({ loading: false, error: "Please select a patient.", success: "" });
@@ -252,7 +252,7 @@ const Prescription = () => {
       <DoctorSidebar />
 
       <main className="flex-1 ml-6 space-y-6">
-        {/* Page Header */}
+
         <header className="flex items-center mb-2 bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <FileText className="text-blue-400 mr-3" size={28} />
           <div>
@@ -265,7 +265,7 @@ const Prescription = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* ── Patient Selector ── */}
+
           <Section icon={User} title="Patient">
             <div>
               <label className="block text-xs text-gray-400 mb-2">Today's Patients</label>
@@ -295,9 +295,9 @@ const Prescription = () => {
             </div>
           </Section>
 
-          {/* ── Conditions + Department ── */}
+
           <Section icon={Activity} title="Conditions & Diagnosis">
-            {/* Existing condition tags */}
+
             {conditions.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
                 {conditions.map((c, i) => (
@@ -317,7 +317,7 @@ const Prescription = () => {
                 value={conditionText}
                 onChange={(e) => setConditionText(e.target.value)}
               />
-              {/* Department dropdown */}
+
               <div className="relative">
                 <select
                   className="w-full bg-gray-900/60 border border-gray-600 hover:border-blue-500 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white outline-none appearance-none transition-all cursor-pointer"
@@ -347,7 +347,7 @@ const Prescription = () => {
             </div>
           </Section>
 
-          {/* ── Medicines ── */}
+
           <Section icon={Pill} title="Medicines">
             {selectedMedicines.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
@@ -372,7 +372,7 @@ const Prescription = () => {
             />
           </Section>
 
-          {/* ── Vitals ── */}
+
           <Section icon={Activity} title="Vitals">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <StyledInput
@@ -407,7 +407,7 @@ const Prescription = () => {
             />
           </Section>
 
-          {/* ── Tests ── */}
+
           <Section icon={FlaskConical} title="Lab Tests">
             {selectedTests.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-2">
@@ -431,7 +431,7 @@ const Prescription = () => {
             />
           </Section>
 
-          {/* ── Notes + Allergy + Bill ── */}
+
           <Section icon={StickyNote} title="Additional Details">
             <div>
               <label className="block text-xs text-gray-400 mb-1">Doctor's Notes</label>
@@ -444,7 +444,7 @@ const Prescription = () => {
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Known Allergies */}
+
               <div>
                 <label className="flex items-center gap-1 text-xs text-gray-400 mb-1">
                   <AlertTriangle size={12} className="text-yellow-400" /> Known Allergies
@@ -457,7 +457,7 @@ const Prescription = () => {
                 />
               </div>
 
-              {/* Trigger Medicines */}
+
               <div>
                 <label className="flex items-center gap-1 text-xs text-gray-400 mb-1">
                   <AlertTriangle size={12} className="text-orange-400" /> Trigger Medicines
@@ -512,7 +512,7 @@ const Prescription = () => {
               />
             </div>
 
-            {/* Admit Patient */}
+
             <div className="flex items-center gap-3">
               <Button
                 text={admission ? "✓ Patient Admitted" : "Admit Patient"}
@@ -523,7 +523,7 @@ const Prescription = () => {
             </div>
           </Section>
 
-          {/* ── Status messages + Submit ── */}
+
           {status.error && (
             <p className="text-sm text-red-400 bg-red-900/20 border border-red-700 rounded-xl px-4 py-3">
               {status.error}

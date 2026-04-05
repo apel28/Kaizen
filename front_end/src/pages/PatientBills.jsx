@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import { apiGet } from "../utils/api";
 import { Receipt, DollarSign, CreditCard, Clock, FileText } from "lucide-react";
 
-// ── Single bill row card ──────────────────────────────────────────────────────
+
 const BillCard = ({ bill }) => (
   <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-5 hover:bg-gray-800/80 transition-all group">
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -32,14 +32,14 @@ const BillCard = ({ bill }) => (
   </div>
 );
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+
 const PatientBills = () => {
   const [bills, setBills] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch bills for the logged in patient
+
     apiGet("/patient-data/bills")
       .then((res) => {
         setBills(res.bills || []);

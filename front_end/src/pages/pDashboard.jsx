@@ -26,9 +26,8 @@ const PDashboard = () => {
     };
 
     fetchDashboard();
-  }, []); // Empty array = runs once on mount
+  }, []); 
 
-  // Derive stats from live server data
   const stats = [
     {
       title: "Blood Pressure",
@@ -60,7 +59,7 @@ const PDashboard = () => {
     },
   ];
 
-  // Derive display name and patient ID from live data
+
   const displayName = DbData?.name ?? "—";
   const displayInitials = DbData?.name
     ? DbData.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
@@ -72,7 +71,7 @@ const PDashboard = () => {
       <Sidebar />
       <main className="flex-1 ml-6">
 
-        {/* Header */}
+
         <header className="flex justify-between items-center mb-8 bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <div>
             <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -99,14 +98,14 @@ const PDashboard = () => {
           </div>
         </header>
 
-        {/* Error State */}
+
         {error && (
           <div className="mb-6 p-4 bg-red-900/30 border border-red-700 rounded-2xl text-red-400 text-sm">
             {error}
           </div>
         )}
 
-        {/* Loading skeleton for stat cards */}
+
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -124,7 +123,7 @@ const PDashboard = () => {
           </div>
         )}
 
-        {/* Lists (static placeholders — server endpoints not yet implemented) */}
+
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
           <AppointmentsList />
           <MedicationList />

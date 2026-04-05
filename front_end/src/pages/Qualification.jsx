@@ -23,9 +23,9 @@ export default function Qualification() {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState({ text: "", ok: true });
 
-  // Placeholder for fetching data — API to be added later
+
   useEffect(() => {
-    // Example fetch structure:
+
     apiGet("/qualification")
       .then(setQualifications)
       .catch(err => console.log(err))
@@ -89,7 +89,7 @@ export default function Qualification() {
           </div>
         </div>
 
-        {/* Existing Data View */}
+
         <div className="mb-10">
           <h2 className="text-lg font-semibold mb-4 text-gray-300">Added Qualifications</h2>
           {loading ? (
@@ -119,7 +119,7 @@ export default function Qualification() {
           )}
         </div>
 
-        {/* Form */}
+
         <div className="border-t border-gray-700 pt-8">
           <h2 className="text-lg font-semibold mb-5 text-gray-300">Add New Qualification</h2>
           <form onSubmit={onSubmit} noValidate>

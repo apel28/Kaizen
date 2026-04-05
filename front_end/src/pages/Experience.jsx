@@ -87,7 +87,7 @@ export default function Experience() {
           </div>
         </div>
 
-        {/* Existing Data View */}
+
         <div className="mb-10">
           <h2 className="text-lg font-semibold mb-4 text-gray-300">Added Experience</h2>
           {loading ? (
@@ -116,7 +116,7 @@ export default function Experience() {
           )}
         </div>
 
-        {/* Form */}
+
         <div className="border-t border-gray-700 pt-8">
           <h2 className="text-lg font-semibold mb-5 text-gray-300">Add New Experience</h2>
           <form onSubmit={onSubmit} noValidate>

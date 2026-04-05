@@ -4,12 +4,12 @@ import Button from "../components/Button";
 import { apiGet, API_BASE_URL } from "../utils/api";
 import { FileText, Download, Hash, Loader, DollarSign } from "lucide-react";
 
-// ─── Skeleton loader ───────────────────────────────────────────────────────────
+
 const SkeletonCard = () => (
   <div className="bg-gray-800/50 border border-gray-700 rounded-2xl h-36 animate-pulse" />
 );
 
-// ─── Single test report card ───────────────────────────────────────────────────
+
 const ReportCard = ({ report }) => {
   const [loadingMedia, setLoadingMedia] = useState(false);
   const [mediaUrl, setMediaUrl] = useState(null);
@@ -17,7 +17,6 @@ const ReportCard = ({ report }) => {
   const [err, setErr] = useState("");
 
   const handleView = async () => {
-    // If already open, close it
     if (mediaUrl) {
       URL.revokeObjectURL(mediaUrl);
       setMediaUrl(null);
@@ -58,7 +57,7 @@ const ReportCard = ({ report }) => {
 
   return (
     <div className={`bg-gray-900/50 border border-gray-700 hover:border-blue-500/50 rounded-2xl p-5 flex flex-col gap-3 transition-all ${mediaUrl ? 'col-span-1 sm:col-span-2 lg:col-span-3' : ''}`}>
-      {/* Header */}
+
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           <FileText size={18} className="text-blue-400 shrink-0" />
@@ -66,7 +65,7 @@ const ReportCard = ({ report }) => {
         </div>
       </div>
 
-      {/* Additional Details */}
+
       <div className="flex flex-wrap gap-3 text-sm mt-1">
         <div className="bg-gray-800/80 px-3 py-1.5 rounded-lg border border-gray-700 font-medium text-gray-300 flex items-center gap-2">
           <Hash size={14} className="text-gray-500" />
@@ -80,14 +79,14 @@ const ReportCard = ({ report }) => {
         )}
       </div>
 
-      {/* Error */}
+
       {err && (
         <p className="text-xs text-red-400 bg-red-900/20 border border-red-700/40 rounded-lg px-3 py-1.5 mt-2">
           {err}
         </p>
       )}
 
-      {/* Media Viewer */}
+
       {mediaUrl && (
         <div className="mt-4 rounded-xl overflow-hidden border border-gray-700 bg-black/50 p-2 flex justify-center items-center flex-col gap-2">
            {isImage ? (
@@ -98,7 +97,7 @@ const ReportCard = ({ report }) => {
         </div>
       )}
 
-      {/* Action */}
+
       <div className="flex justify-end mt-4 pt-4 border-t border-gray-800">
         <Button
           onClick={handleView}
@@ -116,7 +115,7 @@ const ReportCard = ({ report }) => {
   );
 };
 
-// ─── Main Page ─────────────────────────────────────────────────────────────────
+
 const PatientTestReports = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -142,7 +141,7 @@ const PatientTestReports = () => {
       <Sidebar />
 
       <main className="flex-1 ml-6 space-y-6">
-        {/* Header */}
+
         <header className="flex items-center bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <FileText className="text-blue-400 mr-3" size={28} />
           <div>
@@ -153,14 +152,14 @@ const PatientTestReports = () => {
           </div>
         </header>
 
-        {/* Error */}
+
         {error && (
           <p className="text-sm text-red-400 bg-red-900/20 border border-red-700 rounded-xl px-4 py-3">
             {error}
           </p>
         )}
 
-        {/* Content */}
+
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}

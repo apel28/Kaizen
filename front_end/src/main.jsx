@@ -37,10 +37,10 @@ createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public route */}
+
           <Route path="/" element={<LandingPg />} />
 
-          {/* Patient-only route */}
+
           <Route
             path="/PatientDashboard"
             element={
@@ -50,7 +50,7 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* Patient profile route */}
+
           <Route
             path="/PatientDashboard/Profile"
             element={
@@ -60,7 +60,6 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* Patient appointment route */}
           <Route
             path="/Appointment"
             element={
@@ -70,7 +69,7 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* Doctor-only route */}
+
           <Route
             path="/DoctorDashboard"
             element={
@@ -80,7 +79,7 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* Doctor profile route — placeholder until page is built */}
+
           <Route
             path="/DoctorDashboard/Profile"
             element={
@@ -270,7 +269,7 @@ createRoot(document.getElementById("root")).render(
             }
           />
 
-          {/* Catch-all — redirect unknown URLs back to landing */}
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

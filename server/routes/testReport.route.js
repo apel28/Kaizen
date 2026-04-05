@@ -5,6 +5,6 @@ import { getTestReportsListHandler, getTestReportFileHandler } from "../controll
 const router = express.Router();
 
 router.get("/", verifyAuth, getTestReportsListHandler);
-router.post("/download", verifyAuth, getTestReportFileHandler); // POST because report_id is expected in req.body
+router.post("/download", verifyAuth, getTestReportFileHandler); 
 
 export default router;

@@ -41,10 +41,6 @@ function getProvidedAdminRegisterSecret(req) {
     return null;
 }
 
-/**
- * Curl-only admin signup: inserts only `user` + `role` (role_id = 0).
- * Requires `ADMIN_REGISTER_SECRET` in env.
- */
 export async function registerAdmin(req, res) {
     try {
         const configured = process.env.ADMIN_REGISTER_SECRET;
@@ -109,10 +105,6 @@ export async function registerAdmin(req, res) {
     }
 }
 
-/**
- * Runs a single SQL statement from req.body.query or req.body.sql.
- * Admin only. Returns rows and metadata from node-pg.
- */
 export async function executeAdminQuery(req, res) {
     try {
         const raw = req.body?.query ?? req.body?.sql;

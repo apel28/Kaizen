@@ -2,7 +2,6 @@
 import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Initialize the Google Generative AI client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
   model: "gemini-2.5-flash",
@@ -11,16 +10,15 @@ const model = genAI.getGenerativeModel({
   }
 });
 
-// Call Gemini API for AI diagnosis notification using GoogleGenerativeAI SDK
 export async function getDiagnosisNotification({ vitals, conditions, reports, doctors }) {
-  // vitals is an array of rows — format each one
+
   const vitalsText = vitals && vitals.length > 0
     ? vitals.map((v, i) =>
         `Record ${i + 1}: HR ${v.heart_rate ?? 'N/A'}, BP ${v.bp ?? 'N/A'}, Blood Sugar ${v.blood_sugar ?? 'N/A'} mg/dL`
       ).join(' | ')
     : 'No vitals available';
 
-  // conditions is an array of { condition: '...' } objects
+
   const conditionsText = conditions && conditions.length > 0
     ? conditions.map(c => c.condition).join(', ')
     : 'No conditions recorded';

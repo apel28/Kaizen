@@ -122,7 +122,6 @@ export async function register(req, res) {
             `, [user_id]);
         }
         
-        // role 0 = administrator: user + profile + role only (no doctor/patient/nurse/staff row)
 
         await client.query('COMMIT');
         

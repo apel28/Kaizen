@@ -38,7 +38,6 @@ const LoginBlock = ({ onToggle }) => {
 
   const inputClasses =
     "w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all";
-  // className for login block
 
   return (
     <div className="login-block w-full max-w-md p-8 bg-gray-900/80 border border-gray-700 rounded-2xl shadow-2xl backdrop-blur-sm">
@@ -54,7 +53,7 @@ const LoginBlock = ({ onToggle }) => {
           placeholder="Enter your email"
           className={inputClasses}
           value={email}
-          onChange={(e) => setEmail(e.target.value)} // Front end and react email synced
+          onChange={(e) => setEmail(e.target.value)} 
           required
         />
 
@@ -90,7 +89,7 @@ const LoginBlock = ({ onToggle }) => {
           <Button
             text={loading ? "Signing In..." : "Sign In"}
             type="submit"
-            disabled={loading} // Disables button while loading
+            disabled={loading} 
           />
         </div>
       </form>

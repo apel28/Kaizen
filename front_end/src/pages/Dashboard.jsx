@@ -42,7 +42,7 @@ const Dashboard = () => {
               Overview
             </h2>
             <p className="text-gray-400 mt-1">Welcome, Alex.</p>
-            {/* Name should be added later */}
+            
           </div>
           <div className="flex items-center bg-gray-700/30 px-4 py-2 rounded-xl border border-gray-600">
             <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center font-bold text-lg mr-3 shadow-lg shadow-blue-900/20">
@@ -50,9 +50,9 @@ const Dashboard = () => {
             </div>
             <div>
               <p className="font-bold">Alex</p>
-              {/* Name should be added later */}
+              
               <p className="text-xs text-gray-400 font-mono">
-                Patient ID: #8821 {/* Patient ID should be added later */}
+                Patient ID: #8821 
               </p>
             </div>
           </div>

@@ -1,13 +1,3 @@
--- Simple bed lookup and admit-on-queue-insert (no row locking).
---
--- 1) find_available_bed_in_department(department_id)
---    Returns one free bed in that department (occupied = 'n'), or no rows.
---
--- 2) try_admit_from_queue(admission_id)
---    If the row exists in admit_queue and a free bed exists for its department,
---    marks the bed occupied, inserts admitted, deletes the queue row.
---
--- 3) Trigger: after insert on admit_queue, runs try_admit_from_queue(NEW.admission_id).
 
 CREATE OR REPLACE FUNCTION find_available_bed_in_department(p_department_id INT)
 RETURNS TABLE (

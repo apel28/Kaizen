@@ -38,8 +38,7 @@ export async function getDoctorsHandler(req, res) {
 }
 
 export async function getSlotsHandler(req, res) {
-    // Currently, slotsAvailableByDate is imported from a service, not a direct DB query. It handles its own DB queries.
-    // If slotsAvailableByDate doesn't accept client, we leave it as is or pass it if updated.
+
     try {
         const { doctorId, date } = req.query;
         if (!doctorId || !date) return res.status(400).json({ error: "doctorId and date required" });

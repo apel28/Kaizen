@@ -13,11 +13,6 @@ async function doctorHasVisitedPatient(doctorId, patientId, client = pool) {
     return r.rows.length > 0;
 }
 
-/**
- * Lists every report row with its test name (join `all_test` on `test_id`).
- * Patients: their own reports only (body unused).
- * Doctors: optional `req.body.patient_id` — if set, filter to that patient (must have a visit with this doctor); if omitted, all reports for patients seen in `visits`.
- */
 export async function getTestReportsListHandler(req, res) {
     const client = await pool.connect();
     try {
@@ -121,11 +116,7 @@ function resolveReportPath(storedPath) {
     return path.normalize(path.join(base, trimmed));
 }
 
-/**
- * Expects `req.body.report_id`. Streams the PDF at `report_path`.
- * Patients: only their own reports.
- * Doctors: report’s patient must appear in `visits` with this doctor at least once.
- */
+
 export async function getTestReportFileHandler(req, res) {
     const client = await pool.connect();
     try {

@@ -48,7 +48,7 @@ export async function removeAvailability(req, res) {
             return res.status(403).json({ error: "Only doctors can manage availability" });
         }
 
-        const aId = req.params.aId; // or req.body.aId
+        const aId = req.params.aId;
 
         const result = await deleteAvailability(aId, client);
 
@@ -85,7 +85,7 @@ export async function viewAvailability(req, res) {
         }
 
         const doctorId = doctorProfile.doctor_id;
-        const weekDay = req.query.weekDay; // optional
+        const weekDay = req.query.weekDay; 
 
         const result = await getAvailability(doctorId, weekDay, client);
 

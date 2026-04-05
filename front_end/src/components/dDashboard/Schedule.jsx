@@ -41,12 +41,12 @@ const Schedule = ({ appointments = [], date, loading, onCancel }) => {
               key={appt.app_id}
               className="flex items-center gap-4 bg-gray-900/50 border border-gray-700 rounded-xl px-4 py-3 hover:border-blue-500/50 transition-colors"
             >
-              {/* Queue badge */}
+              
               <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-full bg-blue-600/20 border border-blue-500/40 text-blue-400 font-bold text-sm">
                 #{index + 1}
               </div>
 
-              {/* Patient info */}
+              
               <div className="flex-1 min-w-0">
                 <p className="font-semibold truncate flex items-center gap-1.5">
                   <User size={13} className="text-gray-400 shrink-0" />
@@ -54,12 +54,12 @@ const Schedule = ({ appointments = [], date, loading, onCancel }) => {
                 </p>
               </div>
 
-              {/* Slot pill */}
+             
               <span className="shrink-0 text-xs bg-gray-700/60 border border-gray-600 text-gray-300 px-3 py-1 rounded-full">
                 {appt.slot_time}
               </span>
 
-              {/* Cancel button */}
+              
               <Button
                 text="Cancel"
                 onClick={() => handleCancel(appt)}
@@ -69,14 +69,6 @@ const Schedule = ({ appointments = [], date, loading, onCancel }) => {
           ))}
         </ul>
       )}
-
-      {/* Summary count footer */}
-      {/* {!loading && appointments.length > 0 && (
-        <p className="mt-4 text-xs text-gray-500 text-right">
-          {appointments.length} patient{appointments.length > 1 ? "s" : ""} today
-        </p>
-      )} */}
-
     </div>
   );
 };

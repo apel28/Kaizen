@@ -6,7 +6,7 @@ import { getRole } from "../query/role.js";
 export async function authorize(req, res) {
 
     const {email, password} = req.body;
-    const ipaddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress; //*write how this works*
+    const ipaddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress; 
     try {
 
         const queryResult = await pool.query(`

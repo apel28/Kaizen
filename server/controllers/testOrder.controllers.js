@@ -1,10 +1,7 @@
 import pool from "../db.js";
 import { getPatientId } from "../query/patient.js";
 
-// Patient presses "Order Now":
-// - Frontend already shows which tests to do from `test_orders`
-// - We insert into `test_order` using (test_id, patient_id)
-// - Schema note: `test_order` requires `priority`, so we default it to 1 (or use request priority if provided).
+
 export async function getTestsToDoHandler(req, res) {
     const client = await pool.connect();
     try {
@@ -69,7 +66,7 @@ export async function orderNowHandler(req, res) {
             return res.status(404).json({ error: "Patient not found" });
         }
 
-        // Ensure this test is actually assigned to this patient via test_orders.
+
         const assigned = await client.query(
             `SELECT 1
              FROM test_orders

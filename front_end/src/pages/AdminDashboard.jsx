@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  /** Full API response: { command, rowCount, rows, fields } */
+  
   const [results, setResults] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,12 +36,12 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-black text-white relative flex flex-col font-mono p-8 overflow-hidden">
       
-      {/* Background massive letters */}
+      
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none">
         <h1 className="text-[25vw] font-black tracking-tighter text-white">ADMIN</h1>
       </div>
 
-      {/* Header */}
+      
       <header className="flex justify-between items-center mb-10 z-10">
         <div className="flex items-center gap-3">
           <Database size={32} className="text-gray-500" />
@@ -56,10 +56,10 @@ export default function AdminDashboard() {
         </button>
       </header>
 
-      {/* Main Content */}
+      
       <main className="flex-1 z-10 flex flex-col gap-6 max-w-7xl mx-auto w-full">
         
-        {/* Editor Section */}
+        
         <section className="flex flex-col gap-3">
           <label className="text-gray-500 text-sm font-bold tracking-wider">SQL EDITOR</label>
           <div className="relative">
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
           )}
         </section>
 
-        {/* Results Section */}
+        
         {results && (
           <section className="flex flex-col gap-3 flex-1 overflow-hidden">
             <div className="flex flex-wrap justify-between items-center gap-2 text-gray-500 text-sm font-bold tracking-wider">

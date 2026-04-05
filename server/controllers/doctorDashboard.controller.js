@@ -22,8 +22,8 @@ export async function doctorDashboardData(req, res) {
         const appointments = await getAppointmentsByDoctorForDate(doctorId, today, client);
 
         const totalToday = appointments.length;
-        const nowTime = new Date().toTimeString().split(' ')[0]; // HH:MM:SS
-
+        const nowTime = new Date().toTimeString().split(' ')[0]; 
+        
         const upcomingAppointments = appointments.filter((a) => a.slot_time > nowTime);
         const appointmentsLeft = upcomingAppointments.length;
         const nextSlot = upcomingAppointments.length > 0 ? upcomingAppointments[0] : null;

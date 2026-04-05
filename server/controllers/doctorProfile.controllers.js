@@ -24,7 +24,7 @@ export const updateDoctorProfile = async (req, res) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
-        // The profile table is shared — same update function works for any role
+
         const updated = await getDoctor.updateDoctorProfile(req.user.user_id, req.body, client);
         if (!updated) {
             await client.query('ROLLBACK');

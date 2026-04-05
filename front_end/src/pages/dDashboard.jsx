@@ -62,7 +62,7 @@ const DDashboard = () => {
       <DoctorSidebar />
       <main className="flex-1 ml-6">
 
-        {/* Header */}
+        
         <header className="flex justify-between items-center mb-8 bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <div>
             <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
@@ -73,7 +73,7 @@ const DDashboard = () => {
             </p>
           </div>
 
-          {/* Profile button */}
+        
           <div
             className="flex items-center bg-gray-700/30 px-4 py-2 rounded-xl border border-gray-600 cursor-pointer hover:border-blue-500 hover:bg-gray-600/30 transition-all"
             onClick={() => navigate("/DoctorDashboard/Profile")}
@@ -91,14 +91,14 @@ const DDashboard = () => {
           </div>
         </header>
 
-        {/* Error state */}
+        
         {error && (
           <div className="mb-6 p-4 bg-red-900/30 border border-red-700 rounded-2xl text-red-400 text-sm">
             {error}
           </div>
         )}
 
-        {/* Stat cards */}
+        
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -113,7 +113,7 @@ const DDashboard = () => {
           </div>
         )}
 
-        {/* Today's schedule */}
+        
         <Schedule appointments={appointments} date={data?.date} loading={loading} onCancel={handleCancel} />
 
       </main>

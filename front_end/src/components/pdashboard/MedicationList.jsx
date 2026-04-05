@@ -9,7 +9,7 @@ const MedicationList = () => {
     apiGet("/profile")
       .then((profile) => apiGet(`/patient-data/${profile.patient_id}/medications`))
       .then((res) => {
-        // Filter only 'Current' medications
+        
         const currentMeds = (res.data || []).filter((m) => m.status === "Current");
         setMedications(currentMeds);
       })

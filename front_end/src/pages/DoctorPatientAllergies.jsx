@@ -51,7 +51,7 @@ const DoctorPatientAllergies = () => {
           </div>
         </header>
 
-        {/* Patient selector */}
+        
         <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6">
           <label className="block text-xs text-gray-400 mb-2">Select Patient</label>
           <div className="relative">
@@ -94,7 +94,7 @@ const DoctorPatientAllergies = () => {
               </div>
               
               {allergy.trigger_meds && (() => {
-                // Robustly parse either Postgres array string {"a","b"} or JSON string ["a","b"]
+                
                 let meds = [];
                 const str = allergy.trigger_meds;
                 if (str.startsWith('{')) {

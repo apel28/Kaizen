@@ -10,7 +10,7 @@ const WEEK_DAYS = [
 
 const DURATIONS = [0,1,2,3,4,5];
 
-// ── Reusable styled select ────────────────────────────────────────────────────
+
 const StyledSelect = ({ value, onChange, children, disabled = false }) => (
   <div className="relative">
     <select
@@ -26,7 +26,7 @@ const StyledSelect = ({ value, onChange, children, disabled = false }) => (
   </div>
 );
 
-// ── Day column showing its slots ───────────────────────────────────────────────
+
 const DayColumn = ({ day, slots, onDelete }) => (
   <div className="bg-gray-900/40 border border-gray-700 rounded-2xl p-4 flex flex-col gap-3 min-h-[8rem]">
     <h4 className="text-sm font-semibold text-blue-400 mb-1">{day}</h4>
@@ -55,14 +55,14 @@ const DayColumn = ({ day, slots, onDelete }) => (
   </div>
 );
 
-// ── Main page ─────────────────────────────────────────────────────────────────
+
 const Availability = () => {
-  const [slots, setSlots] = useState([]);           // all fetched slots
+  const [slots, setSlots] = useState([]);      
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // New slot form state
+  
   const [form, setForm] = useState({
     week_day: "MON",
     slot_time: "09:00",
@@ -70,7 +70,7 @@ const Availability = () => {
   });
   const [adding, setAdding] = useState(false);
 
-  // ── Fetch availability ──
+  
   const fetchSlots = async () => {
     setLoading(true);
     setError("");
@@ -86,7 +86,7 @@ const Availability = () => {
 
   useEffect(() => { fetchSlots(); }, []);
 
-  // ── Add slot ──
+  
   const handleAdd = async (e) => {
     e.preventDefault();
     setAdding(true);
@@ -108,7 +108,7 @@ const Availability = () => {
     }
   };
 
-  // ── Delete slot ──
+  
   const handleDelete = async (aId) => {
     setError("");
     try {
@@ -119,7 +119,7 @@ const Availability = () => {
     }
   };
 
-  // Group slots by day for the weekly grid
+  
   const byDay = WEEK_DAYS.reduce((acc, day) => {
     acc[day] = slots.filter((s) => s.week_day === day);
     return acc;
@@ -131,7 +131,7 @@ const Availability = () => {
 
       <main className="flex-1 ml-6 space-y-6">
 
-        {/* Header */}
+        
         <header className="flex items-center bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <CalendarDays className="text-blue-400 mr-3" size={28} />
           <div>
@@ -142,7 +142,7 @@ const Availability = () => {
           </div>
         </header>
 
-        {/* ── Add Slot Form ── */}
+        
         <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-5">
             <Plus size={18} className="text-blue-400" /> Add New Slot
@@ -150,7 +150,7 @@ const Availability = () => {
 
           <form onSubmit={handleAdd} className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
 
-            {/* Day */}
+            
             <div>
               <label className="block text-xs text-gray-400 mb-1">Day of Week</label>
               <StyledSelect
@@ -163,7 +163,7 @@ const Availability = () => {
               </StyledSelect>
             </div>
 
-            {/* Time */}
+            
             <div>
               <label className="block text-xs text-gray-400 mb-1">Start Time</label>
               <div className="flex items-center gap-2 bg-gray-900/60 border border-gray-600 hover:border-blue-500 focus-within:border-blue-500 rounded-xl px-4 py-3 transition-all">
@@ -177,7 +177,7 @@ const Availability = () => {
               </div>
             </div>
 
-            {/* Duration */}
+            
             <div>
               <label className="block text-xs text-gray-400 mb-1">Patients per slot </label>
               <StyledSelect
@@ -190,7 +190,7 @@ const Availability = () => {
               </StyledSelect>
             </div>
 
-            {/* Submit */}
+            
             <div className="sm:col-span-3 flex justify-end pt-1">
               <Button
                 text={adding ? "Adding…" : "Add Slot"}
@@ -200,7 +200,7 @@ const Availability = () => {
             </div>
           </form>
 
-          {/* Feedback */}
+          
           {error && (
             <p className="mt-4 text-sm text-red-400 bg-red-900/20 border border-red-700 rounded-xl px-4 py-3">
               {error}
@@ -213,7 +213,7 @@ const Availability = () => {
           )}
         </div>
 
-        {/* ── Weekly Grid ── */}
+        
         <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white mb-5">
             <CalendarDays size={18} className="text-blue-400" /> Weekly Schedule

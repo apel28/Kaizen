@@ -18,17 +18,17 @@ export async function addPrescription(req, res) {
 
     const {
         patient_id,
-        conditions, // array of {condition, department_id, status}
+        conditions,
         vitals,
-        medicines, // global array of {medicine_id}
+        medicines, 
         tests,
         bill_amount,
         admission,
         note,
-        allergy // {allergy_trigger, trigger_meds, severity}
+        allergy 
     } = req.body;
 
-    // Check for allergies before proceeding
+
     const allergyCheck = await pool.query(
         `SELECT * FROM allergy WHERE patient_id = $1`,
         [patient_id]
@@ -43,7 +43,7 @@ export async function addPrescription(req, res) {
             triggers = rawTriggers;
         } else if (typeof rawTriggers === 'string') {
             triggers = rawTriggers
-                .replace(/^\{|\}$/g, '') // remove Postgres array braces
+                .replace(/^\{|\}$/g, '') 
                 .split(',')
                 .map(str => str.trim().replace(/^['"]|['"]$/g, ''))
                 .filter(Boolean);
@@ -73,20 +73,20 @@ export async function addPrescription(req, res) {
     try {
         await client.query('BEGIN');
 
-        // 1. Add visit
+
         const visitResult = await client.query(
             `INSERT INTO visits (patient_id, doctor_id, date) VALUES ($1, $2, CURRENT_DATE) RETURNING *`,
             [patient_id, doctorId]
         );
         const visit_id = visitResult.rows[0].visit_id;
 
-        // 2. Add prescription
+
         await client.query(
             `INSERT INTO prescription (patient_id, visit_id, note) VALUES ($1, $2, $3)`,
             [patient_id, visit_id, note || null]
         );
 
-        // 3. Add vitals (if provided)
+
         if (vitals) {
             await client.query(
                 `INSERT INTO vitals (visit_id, patient_id, bp, blood_sugar, heart_rate, height, weight) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
@@ -94,29 +94,29 @@ export async function addPrescription(req, res) {
             );
         }
 
-        // 4-7. Add medical_history, diagnosis, treatment_plan, and medicines for each condition
+
         if (conditions && conditions.length > 0) {
             for (const cond of conditions) {
-                // Add medical_history
+
                 const histResult = await client.query(
                     `INSERT INTO medical_history (patient_id, condition, department_id, status) VALUES ($1, $2, $3, $4) RETURNING history_id`,
                     [patient_id, cond.condition, cond.department_id, 'a']
                 );
                 const history_id = histResult.rows[0].history_id;
 
-                // Add diagnosis
+
                 await client.query(
                     `INSERT INTO diagnosis (history_id, visit_id) VALUES ($1, $2)`,
                     [history_id, visit_id]
                 );
 
-                // Add treatment_plan
+
                 await client.query(
                     `INSERT INTO treatment_plan (patient_id, history_id) VALUES ($1, $2)`,
                     [patient_id, history_id]
                 );
 
-                // Add medicines (global, added to each history)
+
                 if (medicines && medicines.length > 0) {
                     for (const med of medicines) {
                         await client.query(
@@ -128,13 +128,13 @@ export async function addPrescription(req, res) {
             }
         }
 
-        // 8. Add bills
+
         await client.query(
             `INSERT INTO bills (patient_id, bill_name, bill_amount) VALUES ($1, $2, $3)`,
             [patient_id, 'Visit Fees', bill_amount]
         );
 
-        // 9. Add test_orders (if provided)
+
         if (tests && tests.length > 0) {
             for (const test of tests) {
                 await client.query(
@@ -144,7 +144,7 @@ export async function addPrescription(req, res) {
             }
         }
 
-        // 10. If admission
+
         if (admission) {
             const admission_id = Number(patient_id) + Number(doctorId) + Number(visit_id);
             
@@ -153,7 +153,7 @@ export async function addPrescription(req, res) {
                 [admission_id, visit_id]
             );
             
-            // Add to admit_queue
+
             if (conditions && conditions.length > 0) {
                 console.log(conditions[0].department_id)
                 await client.query(
@@ -163,7 +163,7 @@ export async function addPrescription(req, res) {
             }
         }
 
-        // 11. Insert or update allergy
+
         if (allergy) {
             await client.query(
                 `INSERT INTO allergy (patient_id, allergy_trigger, trigger_meds, severity) 
@@ -188,7 +188,6 @@ export async function addPrescription(req, res) {
     }
 }
 
-// Functions for front-end to fetch data for generating prescription
 
 export async function getAllMedicines(req, res) {
     const client = await pool.connect();

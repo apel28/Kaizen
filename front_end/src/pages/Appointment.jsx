@@ -4,16 +4,16 @@ import Button from "../components/Button";
 import { apiGet, apiPost } from "../utils/api";
 import { Calendar, Search, Clock, ChevronDown } from "lucide-react";
 
-// Reusable searchable combobox — custom built to match Kaizen's dark theme
+
 const SearchDropdown = ({ placeholder, items = [], onSelect, onQueryChange, disabled, displayKey = "name", value }) => {
   const [query, setQuery] = useState(value || "");
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // Sync when parent resets value (e.g. form clear)
+  
   useEffect(() => { setQuery(value || ""); }, [value]);
 
-  // Close dropdown on outside click
+  
   useEffect(() => {
     const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener("mousedown", handler);
@@ -28,8 +28,8 @@ const SearchDropdown = ({ placeholder, items = [], onSelect, onQueryChange, disa
     const val = e.target.value;
     setQuery(val);
     setOpen(true);
-    onSelect(null);  // clear previous selection while typing
-    if (onQueryChange) onQueryChange(val);  // trigger server search for doctors
+    onSelect(null);  
+    if (onQueryChange) onQueryChange(val); 
   };
 
   return (
@@ -73,12 +73,12 @@ const Appointment = () => {
 
   const today = new Date().toISOString().split("T")[0];
 
-  // Load all departments once on mount
+  
   useEffect(() => {
     apiGet("/appointment/departments").then(setDepartments).catch(console.error);
   }, []);
 
-  // Reload doctors when dept or free-text query changes
+  
   useEffect(() => {
     const params = new URLSearchParams();
     if (form.dept) params.set("departmentId", form.dept.department_id);
@@ -86,7 +86,7 @@ const Appointment = () => {
     apiGet(`/appointment/doctors?${params}`).then(setDoctors).catch(console.error);
   }, [form.dept, doctorQuery]);
 
-  // Load available slots when both doctor and date are set
+  
   useEffect(() => {
     if (!form.doctor || !form.date) return setSlots([]);
     apiGet(`/appointment/slots?doctorId=${form.doctor.doctor_id}&date=${form.date}`)
@@ -126,7 +126,7 @@ const Appointment = () => {
         <form onSubmit={handleSubmit}>
           <div className="bg-gray-800/50 p-6 rounded-2xl border border-gray-700 backdrop-blur-sm space-y-5">
 
-            {/* Department (optional filter) */}
+            
             <div>
               <label className="block text-sm text-gray-400 mb-2">
                 Department <span className="text-gray-600">(optional)</span>
@@ -140,7 +140,7 @@ const Appointment = () => {
               />
             </div>
 
-            {/* Doctor */}
+            
             <div>
               <label className="block text-sm text-gray-400 mb-2">Doctor</label>
               <SearchDropdown
@@ -153,7 +153,7 @@ const Appointment = () => {
               />
             </div>
 
-            {/* Date — locked until doctor is selected */}
+            
             <div>
               <label className="block text-sm text-gray-400 mb-2">Date</label>
               <div className={`flex items-center gap-2 bg-gray-900/60 border rounded-xl px-4 py-3 transition-all ${!form.doctor ? "opacity-40 border-gray-700" : "border-gray-600 hover:border-blue-500"}`}>
@@ -169,7 +169,7 @@ const Appointment = () => {
               </div>
             </div>
 
-            {/* Available time slots */}
+            
             {slots.length > 0 && (
               <div>
                 <label className="block text-sm text-gray-400 mb-3">

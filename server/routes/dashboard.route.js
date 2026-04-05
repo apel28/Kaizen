@@ -5,7 +5,6 @@ import { verifyAuth } from '../middleware/auth.verifier.js';
 
 const router = express.Router();
 
-// Single dashboard route that handles both roles
 router.get('/', verifyAuth, async (req, res) => {
     if (req.user.role === 'P') {
         return patientDashboardData(req, res);

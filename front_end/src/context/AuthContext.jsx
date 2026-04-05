@@ -3,9 +3,9 @@ import { apiGet } from "../utils/api";
 
 const AuthContext = createContext(null);
 
-// The Provider wraps the whole app and manages who is logged in
+
 export function AuthProvider({ children }) {
-  // user = { role: 'P' | 'D' } logged in, null logged out
+  
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -13,11 +13,11 @@ export function AuthProvider({ children }) {
     const restoreSession = async () => {
       try {
         const data = await apiGet("/signin");
-        setUser({ role: data.role }); // cookies were valid, restore user
+        setUser({ role: data.role }); 
       } catch {
-        setUser(null); // cookies missing or expired, treat as logged out
+        setUser(null);
       } finally {
-        setAuthLoading(false); // verification done either way
+        setAuthLoading(false);
       }
     };
 
@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
   );
 }
 
-// Custom hook — lets any component access auth state with one line
+
 export function useAuth() {
   return useContext(AuthContext);
 }

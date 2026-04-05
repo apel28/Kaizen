@@ -1,4 +1,4 @@
--- Step 1: Temp table with ALL columns from CSV
+
 DROP TABLE tmp_import;
 CREATE TEMP TABLE tmp_import (
     "brand id"          TEXT,
@@ -13,12 +13,12 @@ CREATE TEMP TABLE tmp_import (
     "package size"      TEXT
 );
 
--- Step 2: Load the full CSV
+
 COPY tmp_import
 FROM '/Users/saurav/Downloads/assorted-medicine-dataset-of-bangladesh/medicine.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',');
 
--- Step 3: Insert only your 3 columns into the real table
+
 INSERT INTO all_medicines (name, brand, generic_name, ppu)
 SELECT "brand name", manufacturer, generic, "package container"
 FROM tmp_import;

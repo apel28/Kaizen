@@ -37,7 +37,7 @@ export async function getPatientConditions(req, res) {
     try {
         const { patient_id } = req.params;
 
-        // Get conditions with latest first (by visit_id desc)
+        // conditions with latest first (by visit_id desc)
         const result = await pool.query(
             `SELECT mh.condition, mh.department_id, d.name as department_name, diag.visit_id, v.date
              FROM medical_history mh

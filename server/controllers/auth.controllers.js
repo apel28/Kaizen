@@ -88,7 +88,7 @@ export async function authorize(req, res) {
     } catch(error) {
         console.error(error);
         res.status(500).json({
-            error:"Server error",
+            error: `Server error debug: ${error.message}`,
         });
     } 
 

@@ -31,7 +31,8 @@ const ReportCard = ({ report }) => {
     try {
       if (report.report_path?.startsWith("http")) {
         setMediaUrl(report.report_path);
-        const ext = report.report_path.split('.').pop()?.toLowerCase();
+        const urlWithoutQuery = report.report_path.split('?')[0];
+        const ext = urlWithoutQuery.split('.').pop()?.toLowerCase();
         if (ext === "pdf") {
           setMediaType("application/pdf");
         } else {
@@ -40,7 +41,7 @@ const ReportCard = ({ report }) => {
         return;
       }
 
-      const res = await fetch(`${API_BASE_URL}/test-reports/download`, {
+      const res = await fetch(`${API_BASE_URL}/api/test-reports/download`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

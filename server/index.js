@@ -1,48 +1,8 @@
 import "./loadEnv.js";
-import express from 'express';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
+import app from "./app.js";
 
-import registerRoutes from "./routes/register.route.js"
-import authRoutes from "./routes/auth.route.js"
-import dashboardRoutes from "./routes/dashboard.route.js"
-import profileRoutes from "./routes/profile.route.js"
-import appointmentRoutes from "./routes/appointment.route.js"
-import experienceRoutes from "./routes/experience.route.js"
-import qualificationRoutes from "./routes/qualification.route.js"
-import availabilityRoutes from "./routes/availability.route.js"
-import prescriptionRoutes from "./routes/prescription.route.js"
-import patientDataRoutes from "./routes/patientData.route.js"
-import testOrderRoutes from "./routes/testOrder.route.js"
-import notificationRoutes from "./routes/notification.route.js"
-import testReportRoutes from "./routes/testReport.route.js"
-import adminRoutes from "./routes/admin.route.js"
-
-const app = express();
-
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
-
-app.use(express.json());
-app.use(cookieParser());
-
-app.use("/api/signup", registerRoutes);
-app.use("/api/signin", authRoutes);
-app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/profile", profileRoutes);
-app.use("/api/appointment", appointmentRoutes);
-app.use("/api/experience", experienceRoutes);
-app.use("/api/qualification", qualificationRoutes);
-app.use("/api/availability", availabilityRoutes);
-app.use("/api/prescription", prescriptionRoutes);
-app.use("/api/patient-data", patientDataRoutes);
-app.use("/api/test-orders", testOrderRoutes);
-app.use("/api/test-reports", testReportRoutes);
-app.use("/api/notifications", notificationRoutes);
-app.use("/api/admin", adminRoutes);
-
-app.listen(5001, () => {
-    console.log("Server started on node 5001");
+// Start server for local development
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
 });

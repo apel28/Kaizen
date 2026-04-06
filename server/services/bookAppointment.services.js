@@ -5,7 +5,7 @@ export async function slotsAvailableByDate(doctorId, date) {
     const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const d = new Date(date);
     const targetDay = days[d.getDay()];
-
+x
     const availabilityResult = await getAvailability(doctorId, targetDay);
 
     if (!availabilityResult || availabilityResult.length === 0) return [];

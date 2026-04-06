@@ -1,0 +1,23 @@
+[build]
+  command = "cd front_end && npm install && npm run build && cd ../server && npm install"
+  functions = "netlify/functions"
+  publish = "front_end/dist"
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["pg"]
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[dev]
+  functions = "netlify/functions"
+  publish = "front_end/dist"
+  command = "cd front_end && npm run dev"

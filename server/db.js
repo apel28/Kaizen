@@ -1,12 +1,9 @@
 import {Pool} from 'pg';
-import dotenv from 'dotenv'
-import path from 'path';
-import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config({ path: path.join(__dirname, '.env') });
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 const config = process.env.DATABASE_URL 
   ? { connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }

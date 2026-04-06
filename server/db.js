@@ -5,6 +5,12 @@ if (process.env.NODE_ENV !== "production") {
   dotenv.config();
 }
 
+if (!process.env.DATABASE_URL) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("CRITICAL: process.env.DATABASE_URL is entirely undefined in production environment!");
+  }
+}
+
 const config = process.env.DATABASE_URL 
   ? { connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } }
   : {

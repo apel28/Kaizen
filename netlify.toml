@@ -3,6 +3,9 @@
   functions = "netlify/functions"
   publish = "front_end/dist"
 
+[build.environment]
+  SECRETS_SCAN_ENABLED = "false"
+
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["pg", "bcrypt"]

@@ -18,7 +18,9 @@ const ReportCard = ({ report }) => {
 
   const handleView = async () => {
     if (mediaUrl) {
-      URL.revokeObjectURL(mediaUrl);
+      if (!report.report_path?.startsWith("http")) {
+        URL.revokeObjectURL(mediaUrl);
+      }
       setMediaUrl(null);
       setMediaType(null);
       return;
@@ -27,6 +29,17 @@ const ReportCard = ({ report }) => {
     setLoadingMedia(true);
     setErr("");
     try {
+      if (report.report_path?.startsWith("http")) {
+        setMediaUrl(report.report_path);
+        const ext = report.report_path.split('.').pop()?.toLowerCase();
+        if (ext === "pdf") {
+          setMediaType("application/pdf");
+        } else {
+          setMediaType("image/jpeg"); // Default to image for Supabase bucket URLs as per user request
+        }
+        return;
+      }
+
       const res = await fetch(`${API_BASE_URL}/test-reports/download`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

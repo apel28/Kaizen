@@ -34,6 +34,7 @@ export async function getTestReportsListHandler(req, res) {
                 `SELECT tr.report_id,
                         tr.patient_id,
                         tr.test_id,
+                        tr.report_path,
                         at.test_name,
                         at.price
                  FROM test_reports tr
@@ -70,6 +71,7 @@ export async function getTestReportsListHandler(req, res) {
                 `SELECT tr.report_id,
                         tr.patient_id,
                         tr.test_id,
+                        tr.report_path,
                         at.test_name,
                         at.price
                  FROM test_reports tr
@@ -86,6 +88,7 @@ export async function getTestReportsListHandler(req, res) {
             `SELECT tr.report_id,
                     tr.patient_id,
                     tr.test_id,
+                    tr.report_path,
                     at.test_name,
                     at.price
              FROM test_reports tr

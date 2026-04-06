@@ -1,0 +1,20 @@
+{
+  "name": "kaizen-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd front_end && npm install && npm run build"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.101.1",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pdfkit": "^0.18.0",
+    "pg": "^8.18.0"
+  }
+}

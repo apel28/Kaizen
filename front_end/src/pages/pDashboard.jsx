@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import StatCard from "../components/pDashboard/StatCard";
-import AppointmentsList from "../components/pDashboard/AppointmentsList";
-import MedicationList from "../components/pDashboard/MedicationList";
+import StatCard from "../components/pdashboard/StatCard";
+import AppointmentsList from "../components/pdashboard/AppointmentsList";
+import MedicationList from "../components/pdashboard/MedicationList";
 import { apiGet } from "../utils/api";
 import { Activity, Droplets, Scale, Heart } from "lucide-react";
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DoctorSidebar from "../components/DoctorSidebar";
 import Schedule from "../components/dDashboard/Schedule";
-import StatCard from "../components/pDashboard/StatCard";
+import StatCard from "../components/pdashboard/StatCard";
 import { apiGet, apiDelete } from "../utils/api";
 import { Users, CalendarCheck, Clock } from "lucide-react";
 
